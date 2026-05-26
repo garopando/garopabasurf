@@ -80,8 +80,8 @@ export default function SilveiraSul() {
 
   useEffect(function() {
     Promise.all([
-      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period,ocean_current_velocity&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
-      fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&hourly=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
+      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period,ocean_current_velocity&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=16').then(function(r) { return r.json() }),
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&hourly=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo&forecast_days=16').then(function(r) { return r.json() }),
     ]).then(function(results) {
       setDados(results[0])
       setDadosMeteo(results[1])
@@ -89,7 +89,7 @@ export default function SilveiraSul() {
     })
   }, [])
 
-  const dadosGrafico = dados && dadosMeteo ? dados.hourly.wave_height.slice(0, 168).map(function(h, i) {
+  const dadosGrafico = dados && dadosMeteo ? dados.hourly.wave_height.slice(0, 384).map(function(h, i) {
     const hora = dados.hourly.time[i]
     const energia = h && dados.hourly.wave_period[i] ? Math.round(h * h * dados.hourly.wave_period[i] * 500) : 0
     return {
@@ -100,7 +100,7 @@ export default function SilveiraSul() {
       energia: energia,
       mare: dados.hourly.ocean_current_velocity ? parseFloat((dados.hourly.ocean_current_velocity[i] || 0).toFixed(2)) : 0,
     }
-  }).filter(function(_, i) { return i % 2 === 0 }) : []
+  }).filter(function(_, i) { return i % 1 === 0 }) : []
 
   return (
     <div className='min-h-screen bg-white'>
