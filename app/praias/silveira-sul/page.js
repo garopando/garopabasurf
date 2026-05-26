@@ -150,7 +150,7 @@ export default function SilveiraSul() {
                 <div key={i} className='rounded-2xl border border-gray-100 overflow-hidden'>
                   <div className='flex items-center gap-4 px-6 py-4 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
                     <div>
-                      <span className='text-gray-400 text-xs'>{label} · {data}</span>
+                      <span className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label} · {data}</span>
                       <div className='flex items-center gap-3 mt-1'>
                         <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{alturaMax.toFixed(1)}m</span>
                         <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
