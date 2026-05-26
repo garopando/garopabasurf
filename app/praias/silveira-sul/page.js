@@ -8,8 +8,8 @@ import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianG
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
-const LAT = -28.1850
-const LON = -48.6150
+const LAT = -28.044987
+const LON = -48.607301
 
 function getStatus(h) {
   if (!h || h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
