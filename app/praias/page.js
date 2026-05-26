@@ -21,7 +21,7 @@ export default function PraiasPage() {
     <div className='min-h-screen bg-white'>
       <Navbar />
       <div className='max-w-[70%] mx-auto pt-28 pb-16'>
-        <h1 className={lexend.className} style={{ fontSize: '40px', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '8px' }}>Praias</h1>
+        <h1 className={lexend.className} style={{ fontSize: '40px', fontWeight: '700', letterSpacing: '-0.03em', marginBottom: '8px', color: 'black' }}>Praias</h1>
         <p className='text-gray-500 text-base mb-10'>Escolha uma praia para ver a previsao de ondas.</p>
         <div className='grid grid-cols-3 gap-6'>
           {praias.map(function(praia) {
