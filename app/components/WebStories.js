@@ -12,7 +12,7 @@ export default function WebStories() {
 
   return (
     <section className='w-full py-10 bg-gray-100'>
-      <div className='max-w-[70%] mx-auto'>
+      <div className='max-w-[70%] mx-auto md:px-0 px-4'>
         <h2 className='text-2xl font-bold text-black mb-6' style={{ letterSpacing: '-0.06em' }}>Stories</h2>
         <div className='flex gap-4 overflow-x-auto pb-3' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {stories.map(function(story) {
