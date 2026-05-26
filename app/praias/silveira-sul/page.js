@@ -69,7 +69,7 @@ export default function SilveiraSul() {
 
   useEffect(function() {
     Promise.all([
-      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
+      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,ocean_current_velocity&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
       fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&hourly=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
     ]).then(function(results) {
       setDados(results[0])
@@ -88,6 +88,7 @@ export default function SilveiraSul() {
       swell: dados.hourly.swell_wave_height[i] ? parseFloat(parseFloat(dados.hourly.swell_wave_height[i]).toFixed(2)) : 0,
       vento: dadosMeteo.hourly.windspeed_10m[i] ? parseFloat(parseFloat(dadosMeteo.hourly.windspeed_10m[i]).toFixed(1)) : 0,
       energia: energia,
+      mare: dados.hourly.ocean_current_velocity && dados.hourly.ocean_current_velocity[i] ? parseFloat(parseFloat(dados.hourly.ocean_current_velocity[i]).toFixed(2)) : 0,
     }
   }).filter(function(_, i) { return i % 2 === 0 }) : []
 
@@ -177,6 +178,7 @@ export default function SilveiraSul() {
             <GraficoSecao titulo='Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' />
             <GraficoSecao titulo='Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' />
             <GraficoSecao titulo='Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' />
+            <GraficoSecao titulo='Corrente Marinha' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' />
           </div>
         )}
 
