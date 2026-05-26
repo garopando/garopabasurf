@@ -25,7 +25,7 @@ function getDirecao(graus) {
 }
 
 function getDiaSemana(offset) {
-  const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+  const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado']
   const d = new Date()
   d.setDate(d.getDate() + offset)
   const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : dias[d.getDay()]
@@ -46,7 +46,7 @@ function GraficoSecao({ titulo, dados, dataKey, cor, unidade }) {
           </defs>
           <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
           <XAxis dataKey='hora' tick={{ fontSize: 10, fill: '#9ca3af' }} interval={7} />
-          <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} unit={unidade} width={40} />
+          <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} unit={unidade} width={45} />
           <Tooltip formatter={function(v) { return [v + unidade] }} />
           <Area type='monotone' dataKey={dataKey} stroke={cor} strokeWidth={2} fill={'url(#color' + dataKey + ')'} />
         </AreaChart>
@@ -89,18 +89,17 @@ export default function SilveiraSul() {
     })
   }, [])
 
-  const dadosGrafico = dados && dadosMeteo ? dados.hourly.wave_height.slice(0, 384).map(function(h, i) {
+  const dadosGrafico = dados && dadosMeteo ? dados.hourly.wave_height.map(function(h, i) {
     const hora = dados.hourly.time[i]
     const energia = h && dados.hourly.wave_period[i] ? Math.round(h * h * dados.hourly.wave_period[i] * 500) : 0
     return {
-      hora: hora.slice(11, 16),
+      hora: hora.slice(5, 16).replace('T', ' '),
       ondas: h ? parseFloat(h.toFixed(2)) : 0,
       swell: dados.hourly.swell_wave_height[i] ? parseFloat(dados.hourly.swell_wave_height[i].toFixed(2)) : 0,
       vento: dadosMeteo.hourly.windspeed_10m[i] ? parseFloat(dadosMeteo.hourly.windspeed_10m[i].toFixed(1)) : 0,
       energia: energia,
-      mare: dados.hourly.ocean_current_velocity ? parseFloat((dados.hourly.ocean_current_velocity[i] || 0).toFixed(2)) : 0,
     }
-  }).filter(function(_, i) { return i % 1 === 0 }) : []
+  }).filter(function(_, i) { return i % 2 === 0 }) : []
 
   return (
     <div className='min-h-screen bg-white'>
@@ -150,7 +149,10 @@ export default function SilveiraSul() {
                 <div key={i} className='rounded-2xl border border-gray-100 overflow-hidden'>
                   <div className='flex items-center gap-4 px-6 py-4 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
                     <div>
-                      <span className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label} · {data}</span>
+                      <div className='flex items-center gap-3'>
+                        <span className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
+                        <span className='text-gray-400 text-sm'>{data}</span>
+                      </div>
                       <div className='flex items-center gap-3 mt-1'>
                         <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{alturaMax.toFixed(1)}m</span>
                         <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
@@ -185,7 +187,6 @@ export default function SilveiraSul() {
             <GraficoSecao titulo='≋ Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' />
             <GraficoSecao titulo='⇒ Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' />
             <GraficoSecao titulo='↑ Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' />
-            <GraficoSecao titulo='≋ Marés' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' />
           </div>
         )}
 
