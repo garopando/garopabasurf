@@ -64,8 +64,8 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
             <AreaChart data={dados} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id={'grad' + dataKey} x1='0' y1='0' x2='0' y2='1'>
-                  <stop offset='5%' stopColor={cor} stopOpacity={0.25}/>
-                  <stop offset='95%' stopColor={cor} stopOpacity={0}/>
+                  <stop offset='5%' stopColor={cor} stopOpacity={0.8}/>
+                  <stop offset='95%' stopColor={cor} stopOpacity={0.6}/>
                 </linearGradient>
               </defs>
               {referencias.map(function(r, i) {
