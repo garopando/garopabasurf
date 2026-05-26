@@ -296,7 +296,7 @@ export default function SilveiraSul() {
                 className={lexendNormal.className}
                 style={{ padding: '10px 20px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
               >
-                📍 Como chegar
+                <span className="material-icons" style={{ fontSize: "18px", verticalAlign: "middle", marginRight: "6px" }}>place</span>Como chegar
               </a>
             </div>
             <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
