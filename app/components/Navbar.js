@@ -14,11 +14,11 @@ export default function Navbar() {
           </a>
         </div>
         <ul className='flex gap-2'>
-          <li><a href='#' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Principal</a></li>
-          <li><a href='#' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Garopaba</a></li>
+          <li><a href='/' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Principal</a></li>
+          <li><a href='/garopaba' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Garopaba</a></li>
           <li><a href='/praias' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Praias</a></li>
-          <li><a href='#' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Noticias</a></li>
-          <li><a href='#' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Fale conosco</a></li>
+          <li><a href='/noticias' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Noticias</a></li>
+          <li><a href='/fale-conosco' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Fale conosco</a></li>
         </ul>
       </nav>
     </div>
