@@ -287,7 +287,7 @@ export default function SilveiraSul() {
         {aba === 'mapa' && (
           <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
             <iframe
-              src='https://www.google.com/maps/embed?pb=npm run devm14npm run devm12npm run devm3npm run devd2000npm run devd-48.607301npm run devd-28.044987npm run devm3npm run devf0npm run devf0npm run devf0npm run devm2npm run devi1024npm run devi768mkdir -p /Users/ailton/destinogaropaba/src/app/eventos && touch /Users/ailton/destinogaropaba/src/app/eventos/page.tsx && mkdir -p /Users/ailton/destinogaropaba/src/app/admin/eventos && touch /Users/ailton/destinogaropaba/src/app/admin/eventos/page.tsxf13.1sudo purgee1npm run devm2npm run devspt-BRnpm run devsbrmkdir -p /Users/ailton/destinogaropaba/src/app/eventos && touch /Users/ailton/destinogaropaba/src/app/eventos/page.tsx && mkdir -p /Users/ailton/destinogaropaba/src/app/admin/eventos && touch /Users/ailton/destinogaropaba/src/app/admin/eventos/page.tsxv1'
+              src='https://maps.google.com/maps?q=-28.044987,-48.607301&z=16&output=embed&t=k'
               width='100%'
               height='100%'
               style={{ border: 0 }}
