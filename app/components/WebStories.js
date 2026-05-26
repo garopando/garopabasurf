@@ -5,7 +5,7 @@ export default function WebStories() {
     <section className="w-full py-10 bg-gray-100">
       <div className="max-w-[70%] mx-auto">
         <h2 className={lexend.className} style={{ fontSize: "28px", letterSpacing: "-0.06em", color: "black", WebkitTextStroke: "0.5px black" }}>Stories</h2>
-        <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+        <div className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: "none", msOverflowStyle: "none", paddingLeft: '16px', paddingRight: '16px' }}>
 <a href="#" className="relative flex-shrink-0 overflow-hidden rounded-2xl group cursor-pointer" style={{ width: "130px", height: "210px" }}>
   <img src="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=80" alt="Silveira bombando" className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
