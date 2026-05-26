@@ -286,8 +286,8 @@ export default function SilveiraSul() {
 
         {aba === 'mapa' && (
           <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
-            <iframe
-              src={'https://maps.google.com/maps?q=' + LAT + ',' + LON + '&z=15&output=embed&t=k'}
+            <iframe id="windy-iframe"
+              src={'https://embed.windy.com/embed2.html?lat=' + LAT + '&lon=' + LON + '&detailLat=' + LAT + '&detailLon=' + LON + '&width=650&height=500&zoom=12&level=surface&overlay=waves&product=ecmwf&menu=&message=true&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1'}
               width='100%'
               height='100%'
               style={{ border: 0 }}
