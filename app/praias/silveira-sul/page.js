@@ -25,10 +25,10 @@ function getDirecao(graus) {
 }
 
 function getDiaSemana(offset) {
-  const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado']
+  const dias = ['Domingo','Segunda-feira','Terca-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sabado']
   const d = new Date()
   d.setDate(d.getDate() + offset)
-  const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : dias[d.getDay()]
+  const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanha' : dias[d.getDay()]
   return { label, data: d.getDate() + '/' + (d.getMonth()+1) }
 }
 
@@ -45,30 +45,13 @@ function GraficoSecao({ titulo, dados, dataKey, cor, unidade }) {
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
-          <XAxis dataKey='hora' tick={{ fontSize: 10, fill: '#9ca3af' }} interval={7} />
+          <XAxis dataKey='hora' tick={{ fontSize: 10, fill: '#9ca3af' }} interval={11} />
           <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} unit={unidade} width={45} />
           <Tooltip formatter={function(v) { return [v + unidade] }} />
           <Area type='monotone' dataKey={dataKey} stroke={cor} strokeWidth={2} fill={'url(#color' + dataKey + ')'} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
-  )
-}
-
-function MapaPrevisao({ lat, lon }) {
-  const [MapComponents, setMapComponents] = useState(null)
-  useEffect(function() {
-    Promise.all([import('react-leaflet'), import('leaflet/dist/leaflet.css')]).then(function([rl]) {
-      setMapComponents(rl)
-    })
-  }, [])
-  if (!MapComponents) return <div className='flex items-center justify-center h-96 text-gray-400'>Carregando mapa...</div>
-  const { MapContainer, TileLayer, Marker, Popup } = MapComponents
-  return (
-    <MapContainer center={[lat, lon]} zoom={14} style={{ height: '500px', width: '100%', borderRadius: '16px' }}>
-      <TileLayer url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' attribution='Tiles &copy; Esri' />
-      <Marker position={[lat, lon]}><Popup>Silveira Sul</Popup></Marker>
-    </MapContainer>
   )
 }
 
@@ -80,7 +63,7 @@ export default function SilveiraSul() {
 
   useEffect(function() {
     Promise.all([
-      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period,ocean_current_velocity&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=16').then(function(r) { return r.json() }),
+      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=16').then(function(r) { return r.json() }),
       fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&hourly=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo&forecast_days=16').then(function(r) { return r.json() }),
     ]).then(function(results) {
       setDados(results[0])
@@ -115,7 +98,7 @@ export default function SilveiraSul() {
               <button key={a} onClick={function() { setAba(a) }}
                 className={lexendNormal.className}
                 style={{ padding: '10px 24px', fontSize: '14px', color: aba === a ? 'black' : '#9ca3af', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', background: 'none', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
-                {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Gráficos' : 'Mapa'}
+                {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Graficos' : 'Mapa'}
               </button>
             )
           })}
@@ -124,7 +107,7 @@ export default function SilveiraSul() {
         {loading && (
           <div className='flex items-center gap-3 text-gray-400 py-20 justify-center'>
             <div className='w-5 h-5 border-2 border-gray-300 border-t-black rounded-full animate-spin' />
-            Carregando previsão...
+            Carregando previsao...
           </div>
         )}
 
@@ -156,7 +139,7 @@ export default function SilveiraSul() {
                       <div className='flex items-center gap-3 mt-1'>
                         <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{alturaMax.toFixed(1)}m</span>
                         <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
-                        <span className='text-gray-400 text-sm'>Direção: {getDirecao(dados.daily.wave_direction_dominant[i])} · Período: {dados.daily.wave_period_max[i].toFixed(0)}s</span>
+                        <span className='text-gray-400 text-sm'>Direcao: {getDirecao(dados.daily.wave_direction_dominant[i])} · Periodo: {dados.daily.wave_period_max[i].toFixed(0)}s</span>
                       </div>
                     </div>
                   </div>
@@ -167,8 +150,8 @@ export default function SilveiraSul() {
                           <span className='text-gray-400 text-xs font-medium'>{h.hora}</span>
                           <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{h.altura}m</span>
                           <div className='flex flex-col gap-1 mt-1'>
-                            <span className='text-gray-500 text-xs'>Direção: {h.direcao}</span>
-                            <span className='text-gray-500 text-xs'>Período: {h.periodo}s</span>
+                            <span className='text-gray-500 text-xs'>Direcao: {h.direcao}</span>
+                            <span className='text-gray-500 text-xs'>Periodo: {h.periodo}s</span>
                             <span className='text-gray-500 text-xs'>Swell: {h.swell}m</span>
                             <span className='text-gray-500 text-xs'>Vento: {h.vento}</span>
                           </div>
@@ -184,13 +167,25 @@ export default function SilveiraSul() {
 
         {!loading && dados && aba === 'graficos' && (
           <div className='flex flex-col gap-10'>
-            <GraficoSecao titulo='≋ Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' />
-            <GraficoSecao titulo='⇒ Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' />
-            <GraficoSecao titulo='↑ Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' />
+            <GraficoSecao titulo='Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' />
+            <GraficoSecao titulo='Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' />
+            <GraficoSecao titulo='Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' />
           </div>
         )}
 
-        {aba === 'mapa' && <MapaPrevisao lat={LAT} lon={LON} />}
+        {aba === 'mapa' && (
+          <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
+            <iframe
+              src={'https://maps.google.com/maps?q=' + LAT + ',' + LON + '&z=15&output=embed&t=k'}
+              width='100%'
+              height='100%'
+              style={{ border: 0 }}
+              allowFullScreen
+              loading='lazy'
+            />
+          </div>
+        )}
+
       </div>
       <Footer />
     </div>
