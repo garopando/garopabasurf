@@ -33,12 +33,12 @@ export default function Praias() {
         </div>
       </div>
 
-      <div className='md:hidden'>
+      <div className='md:hidden px-4'>
         <div className='flex items-center justify-between mb-4 px-4'>
           <h2 className={lexend.className} style={{ fontSize: '24px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Praias</h2>
           <a href='/praias' className='px-4 py-2 bg-black text-white rounded-[10px] text-xs font-medium'>Ver mais</a>
         </div>
-        <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingLeft: '16px', paddingRight: '16px', paddingBottom: '8px', scrollSnapType: 'x mandatory' }}>
+        <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollSnapType: 'x mandatory' }}>
           {praias.map(function(praia) {
             return (
               <a key={praia.nome} href={praia.href} className='flex-shrink-0 cursor-pointer'
