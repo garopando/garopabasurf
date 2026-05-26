@@ -288,7 +288,7 @@ export default function SilveiraSul() {
           <div>
             <div className='flex justify-end mb-3'>
               
-                href='https://www.google.com/maps/dir/?api=1&destination=-28.044987,-48.607301'
+                href='https://www.google.com/maps/dir/?api=1&amp;destination=-28.044987,-48.607301'
                 target='_blank'
                 className='px-5 py-3 bg-black text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition'
               >
