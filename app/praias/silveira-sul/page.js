@@ -287,7 +287,7 @@ export default function SilveiraSul() {
         {aba === 'mapa' && (
           <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
             <iframe
-              src='https://maps.google.com/maps?q=-28.044987,-48.607301&z=16&output=embed&t=k'
+              src='https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
               width='100%'
               height='100%'
               style={{ border: 0 }}
