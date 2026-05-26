@@ -12,16 +12,22 @@ const LAT = -28.1850
 const LON = -48.6150
 
 function getStatus(h) {
-  if (h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
+  if (!h || h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
   if (h < 1.0) return { label: 'Regular', color: '#f59e0b', bg: '#fffbeb' }
   if (h < 1.8) return { label: 'Bom', color: '#22c55e', bg: '#f0fdf4' }
-  if (h < 2.5) return { label: 'Ótimo', color: '#3b82f6', bg: '#eff6ff' }
+  if (h < 2.5) return { label: 'Otimo', color: '#3b82f6', bg: '#eff6ff' }
   return { label: 'Excelente', color: '#8b5cf6', bg: '#f5f3ff' }
 }
 
 function getDirecao(graus) {
+  if (graus === null || graus === undefined) return '-'
   const dirs = ['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO']
   return dirs[Math.round(graus / 22.5) % 16]
+}
+
+function fmt(val, dec) {
+  if (val === null || val === undefined) return '-'
+  return parseFloat(val).toFixed(dec)
 }
 
 function getDiaSemana(offset) {
@@ -69,17 +75,18 @@ export default function SilveiraSul() {
       setDados(results[0])
       setDadosMeteo(results[1])
       setLoading(false)
-    })
+    }).catch(function() { setLoading(false) })
   }, [])
 
   const dadosGrafico = dados && dadosMeteo ? dados.hourly.wave_height.map(function(h, i) {
     const hora = dados.hourly.time[i]
-    const energia = h && dados.hourly.wave_period[i] ? Math.round(h * h * dados.hourly.wave_period[i] * 500) : 0
+    const periodo = dados.hourly.wave_period[i]
+    const energia = h && periodo ? Math.round(h * h * periodo * 500) : 0
     return {
-      hora: hora.slice(5, 16).replace('T', ' '),
-      ondas: h ? parseFloat(h.toFixed(2)) : 0,
-      swell: dados.hourly.swell_wave_height[i] ? parseFloat(dados.hourly.swell_wave_height[i].toFixed(2)) : 0,
-      vento: dadosMeteo.hourly.windspeed_10m[i] ? parseFloat(dadosMeteo.hourly.windspeed_10m[i].toFixed(1)) : 0,
+      hora: hora ? hora.slice(5, 16).replace('T', ' ') : '',
+      ondas: h ? parseFloat(parseFloat(h).toFixed(2)) : 0,
+      swell: dados.hourly.swell_wave_height[i] ? parseFloat(parseFloat(dados.hourly.swell_wave_height[i]).toFixed(2)) : 0,
+      vento: dadosMeteo.hourly.windspeed_10m[i] ? parseFloat(parseFloat(dadosMeteo.hourly.windspeed_10m[i]).toFixed(1)) : 0,
       energia: energia,
     }
   }).filter(function(_, i) { return i % 2 === 0 }) : []
@@ -121,11 +128,11 @@ export default function SilveiraSul() {
                 const idx = horaBase + h
                 return {
                   hora: h + 'h',
-                  altura: dados.hourly.wave_height[idx] ? dados.hourly.wave_height[idx].toFixed(1) : '-',
-                  periodo: dados.hourly.wave_period[idx] ? dados.hourly.wave_period[idx].toFixed(0) : '-',
-                  direcao: dados.hourly.wave_direction[idx] ? getDirecao(dados.hourly.wave_direction[idx]) : '-',
-                  swell: dados.hourly.swell_wave_height[idx] ? dados.hourly.swell_wave_height[idx].toFixed(1) : '-',
-                  vento: dadosMeteo && dadosMeteo.hourly.windspeed_10m[idx] ? dadosMeteo.hourly.windspeed_10m[idx].toFixed(0) + 'km/h' : '-',
+                  altura: fmt(dados.hourly.wave_height[idx], 1),
+                  periodo: fmt(dados.hourly.wave_period[idx], 0),
+                  direcao: getDirecao(dados.hourly.wave_direction[idx]),
+                  swell: fmt(dados.hourly.swell_wave_height[idx], 1),
+                  vento: dadosMeteo && dadosMeteo.hourly.windspeed_10m[idx] ? fmt(dadosMeteo.hourly.windspeed_10m[idx], 0) + 'km/h' : '-',
                 }
               })
               return (
@@ -137,9 +144,9 @@ export default function SilveiraSul() {
                         <span className='text-gray-400 text-sm'>{data}</span>
                       </div>
                       <div className='flex items-center gap-3 mt-1'>
-                        <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{alturaMax.toFixed(1)}m</span>
+                        <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
                         <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
-                        <span className='text-gray-400 text-sm'>Direcao: {getDirecao(dados.daily.wave_direction_dominant[i])} · Periodo: {dados.daily.wave_period_max[i].toFixed(0)}s</span>
+                        <span className='text-gray-400 text-sm'>Direcao: {getDirecao(dados.daily.wave_direction_dominant[i])} · Periodo: {fmt(dados.daily.wave_period_max[i], 0)}s</span>
                       </div>
                     </div>
                   </div>
@@ -185,7 +192,6 @@ export default function SilveiraSul() {
             />
           </div>
         )}
-
       </div>
       <Footer />
     </div>
