@@ -10,6 +10,8 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 const LAT = -28.044987
 const LON = -48.607301
+const MAPS_URL = 'https://www.google.com/maps/dir/?api=1&destination=-28.044987,-48.607301'
+const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
 
 function getStatus(h) {
   if (!h || h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
@@ -277,27 +279,29 @@ export default function SilveiraSul() {
 
         {!loading && dados && aba === 'graficos' && (
           <div>
-            <GraficoComDias titulo='≋ Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' diasInfo={diasInfo} />
-            <GraficoComDias titulo='⇒ Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' diasInfo={diasInfoVento} />
-            <GraficoComDias titulo='↑ Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' diasInfo={diasInfo} />
-            <GraficoComDias titulo='≋ Marés' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' diasInfo={diasInfo} />
+            <GraficoComDias titulo='Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' diasInfo={diasInfo} />
+            <GraficoComDias titulo='Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' diasInfo={diasInfoVento} />
+            <GraficoComDias titulo='Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' diasInfo={diasInfo} />
+            <GraficoComDias titulo='Marés' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' diasInfo={diasInfo} />
           </div>
         )}
 
         {aba === 'mapa' && (
           <div>
             <div className='flex justify-end mb-3'>
-              
-                href='https://www.google.com/maps/dir/?api=1&amp;destination=-28.044987,-48.607301'
+              <a
+                href={MAPS_URL}
                 target='_blank'
-                className='px-5 py-3 bg-black text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition'
+                rel='noreferrer'
+                className={lexendNormal.className}
+                style={{ padding: '10px 20px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
               >
                 Como chegar
               </a>
             </div>
             <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
               <iframe
-                src='https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
+                src={MAPA_EMBED}
                 width='100%'
                 height='100%'
                 style={{ border: 0 }}
