@@ -3,7 +3,7 @@ import { Lexend } from 'next/font/google'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { useEffect, useState } from 'react'
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
@@ -32,31 +32,53 @@ function fmt(val, dec) {
 
 function getDiaSemana(offset) {
   const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado']
+  const abrev = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
   const d = new Date()
   d.setDate(d.getDate() + offset)
   const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : dias[d.getDay()]
-  return { label, data: d.getDate() + '/' + (d.getMonth()+1) }
+  const abreviado = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : abrev[d.getDay()] + ' ' + d.getDate()
+  return { label, abreviado, data: d.getDate() + '/' + (d.getMonth()+1) }
 }
 
-function GraficoSecao({ titulo, dados, dataKey, cor, unidade }) {
+function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
+  const referencias = diasInfo.map(function(d, i) {
+    return { x: i * 12, label: d.abreviado, min: d.min, max: d.max }
+  })
+
   return (
-    <div>
-      <h2 className={lexend.className} style={{ fontSize: '16px', color: 'black', letterSpacing: '-0.04em', marginBottom: '16px' }}>{titulo}</h2>
-      <ResponsiveContainer width='100%' height={220}>
-        <AreaChart data={dados}>
-          <defs>
-            <linearGradient id={'color' + dataKey} x1='0' y1='0' x2='0' y2='1'>
-              <stop offset='5%' stopColor={cor} stopOpacity={0.3}/>
-              <stop offset='95%' stopColor={cor} stopOpacity={0}/>
-            </linearGradient>
-          </defs>
-          <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
-          <XAxis dataKey='hora' tick={{ fontSize: 10, fill: '#9ca3af' }} interval={11} />
-          <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} unit={unidade} width={45} />
-          <Tooltip formatter={function(v) { return [v + unidade] }} />
-          <Area type='monotone' dataKey={dataKey} stroke={cor} strokeWidth={2} fill={'url(#color' + dataKey + ')'} />
-        </AreaChart>
-      </ResponsiveContainer>
+    <div className='mb-10'>
+      <p className={lexend.className} style={{ fontSize: '14px', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{titulo}</p>
+      <div style={{ overflowX: 'auto' }}>
+        <div style={{ minWidth: '900px' }}>
+          <div className='flex border-b border-gray-100 mb-2'>
+            {referencias.map(function(r, i) {
+              return (
+                <div key={i} style={{ flex: 1, borderRight: '1px solid #f0f0f0', padding: '6px 8px' }}>
+                  <p style={{ fontSize: '10px', color: '#9ca3af', fontWeight: '600', textTransform: 'uppercase' }}>{r.label}</p>
+                  <p style={{ fontSize: '11px', color: '#374151', fontWeight: '600' }}>{r.min}→{r.max}{unidade}</p>
+                </div>
+              )
+            })}
+          </div>
+          <ResponsiveContainer width='100%' height={160}>
+            <AreaChart data={dados} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id={'grad' + dataKey} x1='0' y1='0' x2='0' y2='1'>
+                  <stop offset='5%' stopColor={cor} stopOpacity={0.25}/>
+                  <stop offset='95%' stopColor={cor} stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              {referencias.map(function(r, i) {
+                return i > 0 ? <ReferenceLine key={i} x={r.x} stroke='#e5e7eb' strokeDasharray='0' /> : null
+              })}
+              <XAxis dataKey='hora' tick={{ fontSize: 9, fill: '#9ca3af' }} interval={5} />
+              <YAxis tick={{ fontSize: 9, fill: '#9ca3af' }} unit={unidade} width={38} />
+              <Tooltip formatter={function(v) { return [v + unidade] }} />
+              <Area type='monotone' dataKey={dataKey} stroke={cor} strokeWidth={1.5} fill={'url(#grad' + dataKey + ')'} dot={false} />
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </div>
   )
 }
@@ -83,14 +105,28 @@ export default function SilveiraSul() {
     const periodo = dados.hourly.wave_period[i]
     const energia = h && periodo ? Math.round(h * h * periodo * 500) : 0
     return {
-      hora: hora ? hora.slice(5, 16).replace('T', ' ') : '',
+      hora: hora ? hora.slice(11, 16) : '',
       ondas: h ? parseFloat(parseFloat(h).toFixed(2)) : 0,
-      swell: dados.hourly.swell_wave_height[i] ? parseFloat(parseFloat(dados.hourly.swell_wave_height[i]).toFixed(2)) : 0,
       vento: dadosMeteo.hourly.windspeed_10m[i] ? parseFloat(parseFloat(dadosMeteo.hourly.windspeed_10m[i]).toFixed(1)) : 0,
       energia: energia,
       mare: dados.hourly.ocean_current_velocity && dados.hourly.ocean_current_velocity[i] ? parseFloat(parseFloat(dados.hourly.ocean_current_velocity[i]).toFixed(2)) : 0,
     }
-  }).filter(function(_, i) { return i % 2 === 0 }) : []
+  }) : []
+
+  const diasInfo = dados ? dados.daily.wave_height_max.map(function(max, i) {
+    const { abreviado } = getDiaSemana(i)
+    const horaBase = i * 24
+    const min = dados.hourly.wave_height[horaBase + 18] ? parseFloat(dados.hourly.wave_height[horaBase + 18].toFixed(1)) : 0
+    return { abreviado, min: parseFloat(max ? max.toFixed(1) : 0), max: min }
+  }) : []
+
+  const diasInfoVento = dadosMeteo ? dadosMeteo.hourly.windspeed_10m.reduce(function(acc, v, i) {
+    const dia = Math.floor(i / 24)
+    if (!acc[dia]) acc[dia] = { min: v, max: v, abreviado: getDiaSemana(dia).abreviado }
+    if (v < acc[dia].min) acc[dia].min = v
+    if (v > acc[dia].max) acc[dia].max = v
+    return acc
+  }, []).map(function(d) { return { abreviado: d.abreviado, min: parseFloat(d.min.toFixed(0)), max: parseFloat(d.max.toFixed(0)) } }) : []
 
   return (
     <div className='min-h-screen bg-white'>
@@ -174,11 +210,11 @@ export default function SilveiraSul() {
         )}
 
         {!loading && dados && aba === 'graficos' && (
-          <div className='flex flex-col gap-10'>
-            <GraficoSecao titulo='Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' />
-            <GraficoSecao titulo='Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' />
-            <GraficoSecao titulo='Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' />
-            <GraficoSecao titulo='Corrente Marinha' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' />
+          <div>
+            <GraficoComDias titulo='≋ Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' diasInfo={diasInfo} />
+            <GraficoComDias titulo='⇒ Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' diasInfo={diasInfoVento} />
+            <GraficoComDias titulo='↑ Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' diasInfo={diasInfo} />
+            <GraficoComDias titulo='≋ Corrente Marinha' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' diasInfo={diasInfo} />
           </div>
         )}
 
