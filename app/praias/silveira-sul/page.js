@@ -32,54 +32,75 @@ function getDiaSemana(offset) {
   return { label, data: d.getDate() + '/' + (d.getMonth()+1) }
 }
 
+function GraficoSecao({ titulo, dados, dataKey, cor, unidade }) {
+  return (
+    <div>
+      <h2 className={lexend.className} style={{ fontSize: '16px', color: 'black', letterSpacing: '-0.04em', marginBottom: '16px' }}>{titulo}</h2>
+      <ResponsiveContainer width='100%' height={220}>
+        <AreaChart data={dados}>
+          <defs>
+            <linearGradient id={'color' + dataKey} x1='0' y1='0' x2='0' y2='1'>
+              <stop offset='5%' stopColor={cor} stopOpacity={0.3}/>
+              <stop offset='95%' stopColor={cor} stopOpacity={0}/>
+            </linearGradient>
+          </defs>
+          <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
+          <XAxis dataKey='hora' tick={{ fontSize: 10, fill: '#9ca3af' }} interval={7} />
+          <YAxis tick={{ fontSize: 10, fill: '#9ca3af' }} unit={unidade} width={40} />
+          <Tooltip formatter={function(v) { return [v + unidade] }} />
+          <Area type='monotone' dataKey={dataKey} stroke={cor} strokeWidth={2} fill={'url(#color' + dataKey + ')'} />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+  )
+}
+
 function MapaPrevisao({ lat, lon }) {
   const [MapComponents, setMapComponents] = useState(null)
-
   useEffect(function() {
-    Promise.all([
-      import('react-leaflet'),
-      import('leaflet/dist/leaflet.css'),
-    ]).then(function([rl]) {
+    Promise.all([import('react-leaflet'), import('leaflet/dist/leaflet.css')]).then(function([rl]) {
       setMapComponents(rl)
     })
   }, [])
-
   if (!MapComponents) return <div className='flex items-center justify-center h-96 text-gray-400'>Carregando mapa...</div>
-
   const { MapContainer, TileLayer, Marker, Popup } = MapComponents
-
   return (
-    <MapContainer center={[lat, lon]} zoom={13} style={{ height: '480px', width: '100%', borderRadius: '16px' }}>
-      <TileLayer
-        url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
-        attribution='Tiles &copy; Esri'
-      />
-      <Marker position={[lat, lon]}>
-        <Popup>Silveira Sul</Popup>
-      </Marker>
+    <MapContainer center={[lat, lon]} zoom={14} style={{ height: '500px', width: '100%', borderRadius: '16px' }}>
+      <TileLayer url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' attribution='Tiles &copy; Esri' />
+      <Marker position={[lat, lon]}><Popup>Silveira Sul</Popup></Marker>
     </MapContainer>
   )
 }
 
 export default function SilveiraSul() {
   const [dados, setDados] = useState(null)
+  const [dadosMeteo, setDadosMeteo] = useState(null)
   const [loading, setLoading] = useState(true)
   const [aba, setAba] = useState('resumo')
 
   useEffect(function() {
-    fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7')
-      .then(function(r) { return r.json() })
-      .then(function(data) { setDados(data); setLoading(false) })
+    Promise.all([
+      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period,ocean_current_velocity&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
+      fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&hourly=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
+    ]).then(function(results) {
+      setDados(results[0])
+      setDadosMeteo(results[1])
+      setLoading(false)
+    })
   }, [])
 
-  const dadosGrafico = dados ? dados.hourly.wave_height.slice(0, 168).map(function(h, i) {
+  const dadosGrafico = dados && dadosMeteo ? dados.hourly.wave_height.slice(0, 168).map(function(h, i) {
     const hora = dados.hourly.time[i]
+    const energia = h && dados.hourly.wave_period[i] ? Math.round(h * h * dados.hourly.wave_period[i] * 500) : 0
     return {
       hora: hora.slice(11, 16),
       ondas: h ? parseFloat(h.toFixed(2)) : 0,
       swell: dados.hourly.swell_wave_height[i] ? parseFloat(dados.hourly.swell_wave_height[i].toFixed(2)) : 0,
+      vento: dadosMeteo.hourly.windspeed_10m[i] ? parseFloat(dadosMeteo.hourly.windspeed_10m[i].toFixed(1)) : 0,
+      energia: energia,
+      mare: dados.hourly.ocean_current_velocity ? parseFloat((dados.hourly.ocean_current_velocity[i] || 0).toFixed(2)) : 0,
     }
-  }).filter(function(_, i) { return i % 3 === 0 }) : []
+  }).filter(function(_, i) { return i % 2 === 0 }) : []
 
   return (
     <div className='min-h-screen bg-white'>
@@ -92,22 +113,9 @@ export default function SilveiraSul() {
         <div className='flex border-b border-gray-200 mb-8'>
           {['resumo', 'graficos', 'mapa'].map(function(a) {
             return (
-              <button
-                key={a}
-                onClick={function() { setAba(a) }}
+              <button key={a} onClick={function() { setAba(a) }}
                 className={lexendNormal.className}
-                style={{
-                  padding: '10px 24px',
-                  fontSize: '14px',
-                  color: aba === a ? 'black' : '#9ca3af',
-                  borderBottom: aba === a ? '2px solid black' : '2px solid transparent',
-                  background: 'none',
-                  cursor: 'pointer',
-                  textTransform: 'capitalize',
-                  fontWeight: aba === a ? '700' : '400',
-                  marginBottom: '-1px',
-                }}
-              >
+                style={{ padding: '10px 24px', fontSize: '14px', color: aba === a ? 'black' : '#9ca3af', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', background: 'none', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
                 {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Gráficos' : 'Mapa'}
               </button>
             )
@@ -135,6 +143,7 @@ export default function SilveiraSul() {
                   periodo: dados.hourly.wave_period[idx] ? dados.hourly.wave_period[idx].toFixed(0) : '-',
                   direcao: dados.hourly.wave_direction[idx] ? getDirecao(dados.hourly.wave_direction[idx]) : '-',
                   swell: dados.hourly.swell_wave_height[idx] ? dados.hourly.swell_wave_height[idx].toFixed(1) : '-',
+                  vento: dadosMeteo && dadosMeteo.hourly.windspeed_10m[idx] ? dadosMeteo.hourly.windspeed_10m[idx].toFixed(0) + 'km/h' : '-',
                 }
               })
               return (
@@ -159,6 +168,7 @@ export default function SilveiraSul() {
                             <span className='text-gray-500 text-xs'>Direção: {h.direcao}</span>
                             <span className='text-gray-500 text-xs'>Período: {h.periodo}s</span>
                             <span className='text-gray-500 text-xs'>Swell: {h.swell}m</span>
+                            <span className='text-gray-500 text-xs'>Vento: {h.vento}</span>
                           </div>
                         </div>
                       )
@@ -172,47 +182,14 @@ export default function SilveiraSul() {
 
         {!loading && dados && aba === 'graficos' && (
           <div className='flex flex-col gap-10'>
-            <div>
-              <h2 className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em', marginBottom: '16px' }}>≋ Ondas</h2>
-              <ResponsiveContainer width='100%' height={300}>
-                <AreaChart data={dadosGrafico}>
-                  <defs>
-                    <linearGradient id='colorOndas' x1='0' y1='0' x2='0' y2='1'>
-                      <stop offset='5%' stopColor='#0d9488' stopOpacity={0.3}/>
-                      <stop offset='95%' stopColor='#0d9488' stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
-                  <XAxis dataKey='hora' tick={{ fontSize: 11, fill: '#9ca3af' }} interval={7} />
-                  <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} unit='m' />
-                  <Tooltip formatter={function(v) { return [v + 'm', 'Ondas'] }} />
-                  <Area type='monotone' dataKey='ondas' stroke='#0d9488' strokeWidth={2} fill='url(#colorOndas)' />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
-            <div>
-              <h2 className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em', marginBottom: '16px' }}>↑ Energia das Ondas (Swell)</h2>
-              <ResponsiveContainer width='100%' height={300}>
-                <AreaChart data={dadosGrafico}>
-                  <defs>
-                    <linearGradient id='colorSwell' x1='0' y1='0' x2='0' y2='1'>
-                      <stop offset='5%' stopColor='#3b82f6' stopOpacity={0.3}/>
-                      <stop offset='95%' stopColor='#3b82f6' stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray='3 3' stroke='#f0f0f0' />
-                  <XAxis dataKey='hora' tick={{ fontSize: 11, fill: '#9ca3af' }} interval={7} />
-                  <YAxis tick={{ fontSize: 11, fill: '#9ca3af' }} unit='m' />
-                  <Tooltip formatter={function(v) { return [v + 'm', 'Swell'] }} />
-                  <Area type='monotone' dataKey='swell' stroke='#3b82f6' strokeWidth={2} fill='url(#colorSwell)' />
-                </AreaChart>
-              </ResponsiveContainer>
-            </div>
+            <GraficoSecao titulo='≋ Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' />
+            <GraficoSecao titulo='⇒ Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' />
+            <GraficoSecao titulo='↑ Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' />
+            <GraficoSecao titulo='≋ Marés' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' />
           </div>
         )}
 
         {aba === 'mapa' && <MapaPrevisao lat={LAT} lon={LON} />}
-
       </div>
       <Footer />
     </div>
