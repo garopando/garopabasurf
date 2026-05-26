@@ -17,9 +17,9 @@ export default function WebStories() {
         <div className='flex gap-4 overflow-x-auto pb-3' style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {stories.map(function(story) {
             return (
-              <a href='#' key={story.id} className='relative flex-shrink-0 overflow-hidden rounded-2xl group cursor-pointer' style={{ width: '130px', height: '210px' }}>
-                <img src={story.img} alt={story.titulo} className='w-full h-full object-cover group-hover:scale-105 transition duration-500' />
-                <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent' />
+              <a href='#' key={story.id} className='relative shrink-0 overflow-hidden rounded-2xl group cursor-pointer' style={{ width: '130px', height: '210px' }}>
+                <img src={story.img} alt={story.titulo} loading='lazy' className='w-full h-full object-cover group-hover:scale-105 transition duration-500' style={{ flexShrink: 0 }} />
+                <div className='absolute inset-0 bg-linear-to-t from-black/80 via-black/10 to-transparent' />
                 <div className='absolute bottom-0 left-0 right-0 p-3'>
                   <p className='text-white text-xs font-bold leading-tight'>{story.titulo}</p>
                 </div>
