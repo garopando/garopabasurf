@@ -118,7 +118,7 @@ function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
           <div className='flex items-center gap-3'>
             <span className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
             <span className='text-gray-400 text-sm'>{data}</span>
-            {tempAgua && <span className='text-sm px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>🌊 {tempAgua}°C</span>}
+            {tempAgua && <span className='text-sm px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>Temperatura da Água: {tempAgua}°C</span>}
           </div>
           <div className='flex items-center gap-3 mt-1'>
             <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
