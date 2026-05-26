@@ -288,17 +288,6 @@ export default function SilveiraSul() {
 
         {aba === 'mapa' && (
           <div>
-            <div className='flex justify-center mt-4'>
-              <a
-                href={MAPS_URL}
-                target='_blank'
-                rel='noreferrer'
-                className={lexendNormal.className}
-                style={{ padding: '10px 20px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
-              >
-                <span className="material-icons" style={{ fontSize: "18px", verticalAlign: "middle", marginRight: "6px" }}>place</span>Como chegar
-              </a>
-            </div>
             <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
               <iframe
                 src={MAPA_EMBED}
@@ -309,9 +298,19 @@ export default function SilveiraSul() {
                 loading='lazy'
               />
             </div>
+            <div className='flex justify-center' style={{ marginTop: '24px' }}>
+              <a
+                href={MAPS_URL}
+                target='_blank'
+                rel='noreferrer'
+                style={{ padding: '12px 28px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
+              >
+                Como chegar
+              </a>
+            </div>
           </div>
         )}
-      </div>
+            </div>
       <Footer />
     </div>
   )
