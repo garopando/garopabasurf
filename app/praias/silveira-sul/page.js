@@ -285,15 +285,26 @@ export default function SilveiraSul() {
         )}
 
         {aba === 'mapa' && (
-          <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
-            <iframe
-              src='https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
-              width='100%'
-              height='100%'
-              style={{ border: 0 }}
-              allowFullScreen
-              loading='lazy'
-            />
+          <div>
+            <div className='flex justify-end mb-3'>
+              
+                href='https://www.google.com/maps/dir/?api=1&destination=-28.044987,-48.607301'
+                target='_blank'
+                className='px-5 py-3 bg-black text-white rounded-xl text-sm font-medium hover:bg-gray-800 transition'
+              >
+                Como chegar
+              </a>
+            </div>
+            <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
+              <iframe
+                src='https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
+                width='100%'
+                height='100%'
+                style={{ border: 0 }}
+                allowFullScreen
+                loading='lazy'
+              />
+            </div>
           </div>
         )}
       </div>
