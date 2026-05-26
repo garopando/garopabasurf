@@ -5,7 +5,6 @@ import Footer from '../../components/Footer'
 import { useEffect, useState } from 'react'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
-const lexendLight = Lexend({ subsets: ['latin'], weight: '400' })
 
 const LAT = -28.1850
 const LON = -48.6150
@@ -14,7 +13,7 @@ function getStatus(h) {
   if (h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
   if (h < 1.0) return { label: 'Regular', color: '#f59e0b', bg: '#fffbeb' }
   if (h < 1.8) return { label: 'Bom', color: '#22c55e', bg: '#f0fdf4' }
-  if (h < 2.5) return { label: 'Otimo', color: '#3b82f6', bg: '#eff6ff' }
+  if (h < 2.5) return { label: 'Ótimo', color: '#3b82f6', bg: '#eff6ff' }
   return { label: 'Excelente', color: '#8b5cf6', bg: '#f5f3ff' }
 }
 
@@ -24,11 +23,10 @@ function getDirecao(graus) {
 }
 
 function getDiaSemana(offset) {
-  const dias = ['Domingo','Segunda-feira','Terca-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sabado']
-  const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+  const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado']
   const d = new Date()
   d.setDate(d.getDate() + offset)
-  const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanha' : dias[d.getDay()]
+  const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : dias[d.getDay()]
   return { label, data: d.getDate() + '/' + (d.getMonth()+1) }
 }
 
@@ -37,7 +35,7 @@ export default function SilveiraSul() {
   const [loading, setLoading] = useState(true)
 
   useEffect(function() {
-    fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,wind_wave_height,swell_wave_height,swell_wave_direction,swell_wave_period&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7')
+    fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,swell_wave_direction,swell_wave_period&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7')
       .then(function(r) { return r.json() })
       .then(function(data) { setDados(data); setLoading(false) })
   }, [])
@@ -53,7 +51,7 @@ export default function SilveiraSul() {
         {loading && (
           <div className='flex items-center gap-3 text-gray-400 py-20 justify-center'>
             <div className='w-5 h-5 border-2 border-gray-300 border-t-black rounded-full animate-spin' />
-            Carregando previsao...
+            Carregando previsão...
           </div>
         )}
 
@@ -84,7 +82,7 @@ export default function SilveiraSul() {
                           {alturaMax.toFixed(1)}m
                         </span>
                         <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
-                        <span className='text-gray-400 text-sm'>{getDirecao(dados.daily.wave_direction_dominant[i])} · {dados.daily.wave_period_max[i].toFixed(0)}s</span>
+                        <span className='text-gray-400 text-sm'>Direção: {getDirecao(dados.daily.wave_direction_dominant[i])} · Período: {dados.daily.wave_period_max[i].toFixed(0)}s</span>
                       </div>
                     </div>
                   </div>
@@ -95,8 +93,8 @@ export default function SilveiraSul() {
                           <span className='text-gray-400 text-xs font-medium'>{h.hora}</span>
                           <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{h.altura}m</span>
                           <div className='flex flex-col gap-1 mt-1'>
-                            <span className='text-gray-500 text-xs'>Dir: {h.direcao}</span>
-                            <span className='text-gray-500 text-xs'>Per: {h.periodo}s</span>
+                            <span className='text-gray-500 text-xs'>Direção: {h.direcao}</span>
+                            <span className='text-gray-500 text-xs'>Período: {h.periodo}s</span>
                             <span className='text-gray-500 text-xs'>Swell: {h.swell}m</span>
                           </div>
                         </div>
