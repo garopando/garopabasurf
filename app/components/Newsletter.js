@@ -24,5 +24,6 @@ export default function Newsletter() {
         <button className='w-full bg-black text-white px-6 py-3 rounded-xl font-bold text-sm'>Inscrever-se</button>
       </div>
     </section>
+
   )
 }
