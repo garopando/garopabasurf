@@ -1,54 +1,63 @@
+'use client'
+import { useState } from 'react'
 import { Young_Serif } from 'next/font/google'
 import { Lexend } from 'next/font/google'
 
 const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
 const lexend = Lexend({ subsets: ['latin'], weight: '500' })
 
+const links = [
+  { href: '/', label: 'Principal' },
+  { href: '/garopaba', label: 'Garopaba' },
+  { href: '/praias', label: 'Praias' },
+  { href: '/noticias', label: 'Notícias' },
+  { href: '/fale-conosco', label: 'Fale conosco' },
+]
+
 export default function Navbar() {
+  const [aberto, setAberto] = useState(false)
+
   return (
     <div className='fixed top-0 left-0 w-full bg-black z-50'>
-      <nav className='max-w-[70%] mx-auto text-white px-6 py-4 flex items-center justify-between hidden md:flex'>
-        <div>
-          <a href='/' className={youngSerif.className} style={{ fontSize: '28px', color: 'white', letterSpacing: '-0.1em', lineHeight: '1' }}>
-            garopabasurf
-          </a>
-        </div>
-        <ul className='flex gap-2'>
-          <li><a href='/' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Principal</a></li>
-          <li><a href='/garopaba' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Garopaba</a></li>
-          <li><a href='/praias' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Praias</a></li>
-          <li><a href='/noticias' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Notícias</a></li>
-          <li><a href='/fale-conosco' className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px' }}>Fale conosco</a></li>
-        </ul>
-      </nav>
-      <NavbarMobile youngSerif={youngSerif} lexend={lexend} />
-    </div>
-  )
-}
-
-function NavbarMobile({ youngSerif, lexend }) {
-  return (
-    <div className='md:hidden'>
-      <input type='checkbox' id='menu-toggle' className='hidden' />
-      <div className='flex items-center justify-between px-4 py-4'>
-        <div style={{ width: '40px' }} />
-        <a href='/' className={youngSerif.className} style={{ fontSize: '26px', color: 'white', letterSpacing: '-0.1em', lineHeight: '1' }}>
+      <nav className='hidden md:flex max-w-[70%] mx-auto text-white px-6 py-4 items-center justify-between'>
+        <a href='/' className={youngSerif.className} style={{ fontSize: '28px', color: 'white', letterSpacing: '-0.1em', lineHeight: '1' }}>
           garopabasurf
         </a>
-        <label htmlFor='menu-toggle' style={{ cursor: 'pointer', color: 'white', fontSize: '24px', width: '40px', textAlign: 'right' }}>
-          ☰
-        </label>
-      </div>
-      <style>{
-        \`#menu-toggle:checked ~ div { display: flex; }
-        #menu-toggle ~ div { display: none; }\`
-      }</style>
-      <div className='flex-col px-4 pb-4 gap-1'>
-        <a href='/' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }}>Principal</a>
-        <a href='/garopaba' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }}>Garopaba</a>
-        <a href='/praias' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }}>Praias</a>
-        <a href='/noticias' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }}>Notícias</a>
-        <a href='/fale-conosco' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }}>Fale conosco</a>
+        <ul className='flex gap-2'>
+          {links.map(function(l) {
+            return (
+              <li key={l.href}>
+                <a href={l.href} className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px', color: 'white', textDecoration: 'none' }}>
+                  {l.label}
+                </a>
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
+
+      <div className='md:hidden'>
+        <div className='flex items-center justify-between px-4 py-4'>
+          <div style={{ width: '40px' }} />
+          <a href='/' className={youngSerif.className} style={{ fontSize: '26px', color: 'white', letterSpacing: '-0.1em', lineHeight: '1', textDecoration: 'none' }}>
+            garopabasurf
+          </a>
+          <button onClick={function() { setAberto(!aberto) }} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px', cursor: 'pointer', width: '40px', textAlign: 'right' }}>
+            {aberto ? '✕' : '☰'}
+          </button>
+        </div>
+        {aberto && (
+          <div className='flex flex-col px-4 pb-4 gap-1'>
+            {links.map(function(l) {
+              return (
+                <a key={l.href} href={l.href} className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }}
+                  onClick={function() { setAberto(false) }}>
+                  {l.label}
+                </a>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )
