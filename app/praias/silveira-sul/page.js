@@ -288,7 +288,7 @@ export default function SilveiraSul() {
 
         {aba === 'mapa' && (
           <div>
-            <div className='flex justify-end mb-3'>
+            <div className='flex justify-center mt-4'>
               <a
                 href={MAPS_URL}
                 target='_blank'
@@ -296,7 +296,7 @@ export default function SilveiraSul() {
                 className={lexendNormal.className}
                 style={{ padding: '10px 20px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
               >
-                Como chegar
+                📍 Como chegar
               </a>
             </div>
             <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
