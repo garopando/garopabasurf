@@ -10,7 +10,7 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 const LAT = -28.044987
 const LON = -48.607301
-const MAPS_URL = 'https://www.google.com/maps/dir/?api=1&destination=-28.044987,-48.607301'
+const MAPS_URL = 'https://www.google.com/maps/dir/?api=1' + '&' + 'destination=-28.044987,-48.607301'
 const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
 
 function getStatus(h) {
@@ -50,18 +50,18 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
     <div className='mb-10'>
       <p className={lexend.className} style={{ fontSize: '14px', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{titulo}</p>
       <div style={{ overflowX: 'auto' }}>
-        <div style={{ minWidth: '900px' }}>
+        <div style={{ minWidth: '600px' }}>
           <div className='flex border-b border-gray-100 mb-2'>
             {referencias.map(function(r, i) {
               return (
-                <div key={i} style={{ flex: 1, borderRight: '1px solid #f0f0f0', padding: '6px 8px' }}>
-                  <p style={{ fontSize: '10px', color: '#9ca3af', fontWeight: '600', textTransform: 'uppercase' }}>{r.label}</p>
-                  <p style={{ fontSize: '11px', color: '#374151', fontWeight: '600' }}>{r.min}→{r.max}{unidade}</p>
+                <div key={i} style={{ flex: 1, borderRight: '1px solid #f0f0f0', padding: '4px 6px' }}>
+                  <p style={{ fontSize: '9px', color: '#9ca3af', fontWeight: '600', textTransform: 'uppercase' }}>{r.label}</p>
+                  <p style={{ fontSize: '10px', color: '#374151', fontWeight: '600' }}>{r.min}→{r.max}{unidade}</p>
                 </div>
               )
             })}
           </div>
-          <ResponsiveContainer width='100%' height={160}>
+          <ResponsiveContainer width='100%' height={140}>
             <AreaChart data={dados} margin={{ top: 5, right: 0, left: 0, bottom: 0 }}>
               <defs>
                 <linearGradient id={'grad' + dataKey} x1='0' y1='0' x2='0' y2='1'>
@@ -72,8 +72,8 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
               {referencias.map(function(r, i) {
                 return i > 0 ? <ReferenceLine key={i} x={r.x} stroke='#e5e7eb' /> : null
               })}
-              <XAxis dataKey='hora' tick={{ fontSize: 9, fill: '#9ca3af' }} interval={5} />
-              <YAxis tick={{ fontSize: 9, fill: '#9ca3af' }} unit={unidade} width={38} />
+              <XAxis dataKey='hora' tick={{ fontSize: 8, fill: '#9ca3af' }} interval={5} />
+              <YAxis tick={{ fontSize: 8, fill: '#9ca3af' }} unit={unidade} width={35} />
               <Tooltip formatter={function(v) { return [v + unidade] }} />
               <Area type='monotone' dataKey={dataKey} stroke={cor} strokeWidth={1.5} fill={'url(#grad' + dataKey + ')'} dot={false} />
             </AreaChart>
@@ -115,65 +115,63 @@ function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
 
   return (
     <div className='rounded-2xl border border-gray-100 overflow-hidden'>
-      <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
-        <div>
-          <div className='flex items-center gap-3'>
-            <span className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
-            <span className='text-gray-400 text-sm'>{data}</span>
-            {tempAgua && <span className='text-sm px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>Temperatura da Água: {tempAgua}°C</span>}
-          </div>
-          <div className='flex items-center gap-3 mt-1'>
-            <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
-            <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
-            <span className='text-gray-400 text-sm'>Direção: {getDirecao(dados.daily.wave_direction_dominant[i])} · Período: {fmt(dados.daily.wave_period_max[i], 0)}s</span>
-          </div>
+      <div className='px-4 py-3 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
+        <div className='flex items-center gap-2 mb-1'>
+          <span className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
+          <span className='text-gray-400 text-xs'>{data}</span>
+          {tempAgua && <span className='text-xs px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>Água: {tempAgua}°C</span>}
+        </div>
+        <div className='flex items-center gap-2'>
+          <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
+          <span className='text-xs font-bold px-2 py-0.5 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
+          <span className='text-gray-400 text-xs'>{getDirecao(dados.daily.wave_direction_dominant[i])} · {fmt(dados.daily.wave_period_max[i], 0)}s</span>
         </div>
       </div>
 
       {!expandido && (
-        <div className='grid grid-cols-5 divide-x divide-gray-100'>
-          {horarios.map(function(h) {
-            return (
-              <div key={h.hora} className='p-4 flex flex-col gap-2'>
-                <span className='text-gray-400 text-xs font-medium'>{h.hora}</span>
-                <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{h.altura}m</span>
-                <div className='flex flex-col gap-1 mt-1'>
-                  <span className='text-gray-500 text-xs'>Direção: {h.direcao}</span>
-                  <span className='text-gray-500 text-xs'>Período: {h.periodo}s</span>
-                  <span className='text-gray-500 text-xs'>Swell: {h.swell}m</span>
-                  <span className='text-gray-500 text-xs'>Vento: {h.vento}</span>
+        <div style={{ overflowX: 'auto' }}>
+          <div style={{ display: 'flex', minWidth: '500px' }}>
+            {horarios.map(function(h) {
+              return (
+                <div key={h.hora} style={{ flex: 1, padding: '12px', borderRight: '1px solid #f3f4f6' }}>
+                  <p style={{ fontSize: '11px', color: '#9ca3af', fontWeight: '600', marginBottom: '4px' }}>{h.hora}</p>
+                  <p className={lexend.className} style={{ fontSize: '18px', color: 'black', letterSpacing: '-0.03em', marginBottom: '6px' }}>{h.altura}m</p>
+                  <p style={{ fontSize: '11px', color: '#6b7280' }}>Dir: {h.direcao}</p>
+                  <p style={{ fontSize: '11px', color: '#6b7280' }}>Per: {h.periodo}s</p>
+                  <p style={{ fontSize: '11px', color: '#6b7280' }}>Swell: {h.swell}m</p>
+                  <p style={{ fontSize: '11px', color: '#6b7280' }}>Vento: {h.vento}</p>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       )}
 
       {expandido && (
-        <div className='overflow-x-auto'>
-          <table className='w-full text-sm'>
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', fontSize: '12px', borderCollapse: 'collapse' }}>
             <thead>
-              <tr className='border-b border-gray-100'>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Hora</th>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Altura</th>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Direção</th>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Período</th>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Swell</th>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Vento</th>
-                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Dir. Vento</th>
+              <tr style={{ borderBottom: '1px solid #f3f4f6' }}>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Hora</th>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Altura</th>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Dir.</th>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Per.</th>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Swell</th>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Vento</th>
+                <th style={{ padding: '8px 12px', textAlign: 'left', color: '#9ca3af', fontWeight: '500' }}>Dir.V</th>
               </tr>
             </thead>
             <tbody>
               {horariosDetalhados.map(function(h) {
                 return (
-                  <tr key={h.hora} className='border-b border-gray-50 hover:bg-gray-50'>
-                    <td className='px-4 py-3 text-gray-400 text-xs font-medium'>{h.hora}</td>
-                    <td className='px-4 py-3'><span className={lexend.className} style={{ fontSize: '16px', color: 'black', letterSpacing: '-0.03em' }}>{h.altura}m</span></td>
-                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.direcao}</td>
-                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.periodo}s</td>
-                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.swell}m</td>
-                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.vento}</td>
-                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.dirVento}</td>
+                  <tr key={h.hora} style={{ borderBottom: '1px solid #f9fafb' }}>
+                    <td style={{ padding: '8px 12px', color: '#9ca3af', fontSize: '11px' }}>{h.hora}</td>
+                    <td style={{ padding: '8px 12px' }}><span className={lexend.className} style={{ fontSize: '14px', color: 'black' }}>{h.altura}m</span></td>
+                    <td style={{ padding: '8px 12px', color: '#4b5563', fontSize: '11px' }}>{h.direcao}</td>
+                    <td style={{ padding: '8px 12px', color: '#4b5563', fontSize: '11px' }}>{h.periodo}s</td>
+                    <td style={{ padding: '8px 12px', color: '#4b5563', fontSize: '11px' }}>{h.swell}m</td>
+                    <td style={{ padding: '8px 12px', color: '#4b5563', fontSize: '11px' }}>{h.vento}</td>
+                    <td style={{ padding: '8px 12px', color: '#4b5563', fontSize: '11px' }}>{h.dirVento}</td>
                   </tr>
                 )
               })}
@@ -185,7 +183,7 @@ function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
       <button
         onClick={function() { setExpandido(!expandido) }}
         className={lexendNormal.className}
-        style={{ width: '100%', padding: '12px', fontSize: '13px', color: '#6b7280', background: '#fafafa', border: 'none', borderTop: '1px solid #f3f4f6', cursor: 'pointer' }}>
+        style={{ width: '100%', padding: '10px', fontSize: '12px', color: '#6b7280', background: '#fafafa', border: 'none', borderTop: '1px solid #f3f4f6', cursor: 'pointer' }}>
         {expandido ? 'Resumir ↑' : 'Ver todos os detalhes ↓'}
       </button>
     </div>
@@ -240,17 +238,17 @@ export default function SilveiraSul() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div className='max-w-[70%] mx-auto pt-28 pb-16'>
-        <a href='/praias' className='text-gray-400 text-sm hover:text-black transition mb-6 block'>← Voltar para Praias</a>
-        <h1 className={lexend.className} style={{ fontSize: '40px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Silveira Sul</h1>
-        <p className='text-gray-500 text-sm mb-8'>Garopaba, Santa Catarina</p>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '100px 16px 60px' }}>
+        <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '16px' }}>← Voltar para Praias</a>
+        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Silveira Sul</h1>
+        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
 
-        <div className='flex border-b border-gray-200 mb-8'>
+        <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>
           {['resumo', 'graficos', 'mapa'].map(function(a) {
             return (
               <button key={a} onClick={function() { setAba(a) }}
                 className={lexendNormal.className}
-                style={{ padding: '10px 24px', fontSize: '14px', color: aba === a ? 'black' : '#9ca3af', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', background: 'none', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
+                style={{ padding: '10px 20px', fontSize: '13px', color: aba === a ? 'black' : '#9ca3af', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', background: 'none', border: 'none', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
                 {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Gráficos' : 'Mapa'}
               </button>
             )
@@ -258,14 +256,14 @@ export default function SilveiraSul() {
         </div>
 
         {loading && (
-          <div className='flex items-center gap-3 text-gray-400 py-20 justify-center'>
-            <div className='w-5 h-5 border-2 border-gray-300 border-t-black rounded-full animate-spin' />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#9ca3af', padding: '60px 0', justifyContent: 'center' }}>
+            <div style={{ width: '20px', height: '20px', border: '2px solid #e5e7eb', borderTop: '2px solid black', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
             Carregando previsão...
           </div>
         )}
 
         {!loading && dados && aba === 'resumo' && (
-          <div className='flex flex-col gap-4'>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {dados.daily.wave_height_max.map(function(alturaMax, i) {
               const tempAgua = dados.hourly.sea_surface_temperature && dados.hourly.sea_surface_temperature[i * 24 + 12]
                 ? fmt(dados.hourly.sea_surface_temperature[i * 24 + 12], 1)
@@ -288,7 +286,7 @@ export default function SilveiraSul() {
 
         {aba === 'mapa' && (
           <div>
-            <div className='rounded-2xl overflow-hidden' style={{ height: '500px' }}>
+            <div style={{ borderRadius: '16px', overflow: 'hidden', height: '400px' }}>
               <iframe
                 src={MAPA_EMBED}
                 width='100%'
@@ -298,19 +296,19 @@ export default function SilveiraSul() {
                 loading='lazy'
               />
             </div>
-            <div className='flex justify-center' style={{ marginTop: '24px' }}>
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
               <a
                 href={MAPS_URL}
                 target='_blank'
                 rel='noreferrer'
-                style={{ padding: '12px 28px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
+                style={{ display: 'inline-block', padding: '12px 28px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}
               >
                 Como chegar
               </a>
             </div>
           </div>
         )}
-            </div>
+      </div>
       <Footer />
     </div>
   )
