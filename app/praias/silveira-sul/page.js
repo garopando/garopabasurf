@@ -44,7 +44,6 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
   const referencias = diasInfo.map(function(d, i) {
     return { x: i * 12, label: d.abreviado, min: d.min, max: d.max }
   })
-
   return (
     <div className='mb-10'>
       <p className={lexend.className} style={{ fontSize: '14px', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{titulo}</p>
@@ -69,7 +68,7 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
                 </linearGradient>
               </defs>
               {referencias.map(function(r, i) {
-                return i > 0 ? <ReferenceLine key={i} x={r.x} stroke='#e5e7eb' strokeDasharray='0' /> : null
+                return i > 0 ? <ReferenceLine key={i} x={r.x} stroke='#e5e7eb' /> : null
               })}
               <XAxis dataKey='hora' tick={{ fontSize: 9, fill: '#9ca3af' }} interval={5} />
               <YAxis tick={{ fontSize: 9, fill: '#9ca3af' }} unit={unidade} width={38} />
@@ -83,6 +82,114 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
   )
 }
 
+function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
+  const [expandido, setExpandido] = useState(false)
+  const s = getStatus(alturaMax)
+  const { label, data } = getDiaSemana(i)
+  const horaBase = i * 24
+  const horarios = [6, 9, 12, 15, 18].map(function(h) {
+    const idx = horaBase + h
+    return {
+      hora: h + 'h',
+      altura: fmt(dados.hourly.wave_height[idx], 1),
+      periodo: fmt(dados.hourly.wave_period[idx], 0),
+      direcao: getDirecao(dados.hourly.wave_direction[idx]),
+      swell: fmt(dados.hourly.swell_wave_height[idx], 1),
+      vento: dadosMeteo && dadosMeteo.hourly.windspeed_10m[idx] ? fmt(dadosMeteo.hourly.windspeed_10m[idx], 0) + 'km/h' : '-',
+    }
+  })
+  const horariosDetalhados = [0, 3, 6, 9, 12, 15, 18, 21].map(function(h) {
+    const idx = horaBase + h
+    return {
+      hora: h + 'h',
+      altura: fmt(dados.hourly.wave_height[idx], 1),
+      periodo: fmt(dados.hourly.wave_period[idx], 0),
+      direcao: getDirecao(dados.hourly.wave_direction[idx]),
+      swell: fmt(dados.hourly.swell_wave_height[idx], 1),
+      vento: dadosMeteo && dadosMeteo.hourly.windspeed_10m[idx] ? fmt(dadosMeteo.hourly.windspeed_10m[idx], 0) + 'km/h' : '-',
+      dirVento: dadosMeteo && dadosMeteo.hourly.winddirection_10m[idx] ? getDirecao(dadosMeteo.hourly.winddirection_10m[idx]) : '-',
+    }
+  })
+
+  return (
+    <div className='rounded-2xl border border-gray-100 overflow-hidden'>
+      <div className='flex items-center justify-between px-6 py-4 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
+        <div>
+          <div className='flex items-center gap-3'>
+            <span className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
+            <span className='text-gray-400 text-sm'>{data}</span>
+            {tempAgua && <span className='text-sm px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>🌊 {tempAgua}°C</span>}
+          </div>
+          <div className='flex items-center gap-3 mt-1'>
+            <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
+            <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
+            <span className='text-gray-400 text-sm'>Direção: {getDirecao(dados.daily.wave_direction_dominant[i])} · Período: {fmt(dados.daily.wave_period_max[i], 0)}s</span>
+          </div>
+        </div>
+      </div>
+
+      {!expandido && (
+        <div className='grid grid-cols-5 divide-x divide-gray-100'>
+          {horarios.map(function(h) {
+            return (
+              <div key={h.hora} className='p-4 flex flex-col gap-2'>
+                <span className='text-gray-400 text-xs font-medium'>{h.hora}</span>
+                <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{h.altura}m</span>
+                <div className='flex flex-col gap-1 mt-1'>
+                  <span className='text-gray-500 text-xs'>Direção: {h.direcao}</span>
+                  <span className='text-gray-500 text-xs'>Período: {h.periodo}s</span>
+                  <span className='text-gray-500 text-xs'>Swell: {h.swell}m</span>
+                  <span className='text-gray-500 text-xs'>Vento: {h.vento}</span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+
+      {expandido && (
+        <div className='overflow-x-auto'>
+          <table className='w-full text-sm'>
+            <thead>
+              <tr className='border-b border-gray-100'>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Hora</th>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Altura</th>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Direção</th>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Período</th>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Swell</th>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Vento</th>
+                <th className='px-4 py-3 text-left text-gray-400 text-xs font-medium'>Dir. Vento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {horariosDetalhados.map(function(h) {
+                return (
+                  <tr key={h.hora} className='border-b border-gray-50 hover:bg-gray-50'>
+                    <td className='px-4 py-3 text-gray-400 text-xs font-medium'>{h.hora}</td>
+                    <td className='px-4 py-3'><span className={lexend.className} style={{ fontSize: '16px', color: 'black', letterSpacing: '-0.03em' }}>{h.altura}m</span></td>
+                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.direcao}</td>
+                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.periodo}s</td>
+                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.swell}m</td>
+                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.vento}</td>
+                    <td className='px-4 py-3 text-gray-600 text-sm'>{h.dirVento}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <button
+        onClick={function() { setExpandido(!expandido) }}
+        className={lexendNormal.className}
+        style={{ width: '100%', padding: '12px', fontSize: '13px', color: '#6b7280', background: '#fafafa', border: 'none', borderTop: '1px solid #f3f4f6', cursor: 'pointer' }}>
+        {expandido ? 'Resumir ↑' : 'Ver todos os detalhes ↓'}
+      </button>
+    </div>
+  )
+}
+
 export default function SilveiraSul() {
   const [dados, setDados] = useState(null)
   const [dadosMeteo, setDadosMeteo] = useState(null)
@@ -91,7 +198,7 @@ export default function SilveiraSul() {
 
   useEffect(function() {
     Promise.all([
-      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,ocean_current_velocity&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
+      fetch('https://marine-api.open-meteo.com/v1/marine?latitude=' + LAT + '&longitude=' + LON + '&hourly=wave_height,wave_direction,wave_period,swell_wave_height,ocean_current_velocity,sea_surface_temperature&daily=wave_height_max,wave_direction_dominant,wave_period_max&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
       fetch('https://api.open-meteo.com/v1/forecast?latitude=' + LAT + '&longitude=' + LON + '&hourly=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo&forecast_days=7').then(function(r) { return r.json() }),
     ]).then(function(results) {
       setDados(results[0])
@@ -158,52 +265,11 @@ export default function SilveiraSul() {
         {!loading && dados && aba === 'resumo' && (
           <div className='flex flex-col gap-4'>
             {dados.daily.wave_height_max.map(function(alturaMax, i) {
-              const s = getStatus(alturaMax)
-              const { label, data } = getDiaSemana(i)
-              const horaBase = i * 24
-              const horarios = [6, 9, 12, 15, 18].map(function(h) {
-                const idx = horaBase + h
-                return {
-                  hora: h + 'h',
-                  altura: fmt(dados.hourly.wave_height[idx], 1),
-                  periodo: fmt(dados.hourly.wave_period[idx], 0),
-                  direcao: getDirecao(dados.hourly.wave_direction[idx]),
-                  swell: fmt(dados.hourly.swell_wave_height[idx], 1),
-                  vento: dadosMeteo && dadosMeteo.hourly.windspeed_10m[idx] ? fmt(dadosMeteo.hourly.windspeed_10m[idx], 0) + 'km/h' : '-',
-                }
-              })
+              const tempAgua = dados.hourly.sea_surface_temperature && dados.hourly.sea_surface_temperature[i * 24 + 12]
+                ? fmt(dados.hourly.sea_surface_temperature[i * 24 + 12], 1)
+                : null
               return (
-                <div key={i} className='rounded-2xl border border-gray-100 overflow-hidden'>
-                  <div className='flex items-center gap-4 px-6 py-4 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
-                    <div>
-                      <div className='flex items-center gap-3'>
-                        <span className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
-                        <span className='text-gray-400 text-sm'>{data}</span>
-                      </div>
-                      <div className='flex items-center gap-3 mt-1'>
-                        <span className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
-                        <span className='text-sm font-bold px-3 py-1 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
-                        <span className='text-gray-400 text-sm'>Direção: {getDirecao(dados.daily.wave_direction_dominant[i])} · Período: {fmt(dados.daily.wave_period_max[i], 0)}s</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='grid grid-cols-5 divide-x divide-gray-100'>
-                    {horarios.map(function(h) {
-                      return (
-                        <div key={h.hora} className='p-4 flex flex-col gap-2'>
-                          <span className='text-gray-400 text-xs font-medium'>{h.hora}</span>
-                          <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{h.altura}m</span>
-                          <div className='flex flex-col gap-1 mt-1'>
-                            <span className='text-gray-500 text-xs'>Direção: {h.direcao}</span>
-                            <span className='text-gray-500 text-xs'>Período: {h.periodo}s</span>
-                            <span className='text-gray-500 text-xs'>Swell: {h.swell}m</span>
-                            <span className='text-gray-500 text-xs'>Vento: {h.vento}</span>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </div>
+                <CardDia key={i} i={i} alturaMax={alturaMax} dados={dados} dadosMeteo={dadosMeteo} tempAgua={tempAgua} />
               )
             })}
           </div>
