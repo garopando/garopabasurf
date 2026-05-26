@@ -33,7 +33,7 @@ export default function Praias() {
         </div>
       </div>
 
-      <div className='md:hidden px-4'>
+      <div className='md:hidden px-4 w-full'>
         <div className='flex items-center justify-between mb-4 px-4'>
           <h2 className={lexend.className} style={{ fontSize: '24px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Praias</h2>
           <a href='/praias' className='px-4 py-2 bg-black text-white rounded-[10px] text-xs font-medium'>Ver mais</a>
