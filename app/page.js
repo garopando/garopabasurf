@@ -1,6 +1,5 @@
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import Noticias from './components/Noticias'
 import Praias from './components/Praias'
 import Newsletter from './components/Newsletter'
 import Footer from './components/Footer'
@@ -15,7 +14,6 @@ export default function Home() {
         <Navbar />
       </div>
       <Hero />
-      <Noticias />
       <Praias />
       <Newsletter />
       <Footer />

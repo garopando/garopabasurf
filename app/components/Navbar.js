@@ -11,7 +11,6 @@ const links = [
   { href: '/', label: 'Principal' },
   { href: '/garopaba', label: 'Garopaba' },
   { href: '/praias', label: 'Praias' },
-  { href: '/noticias', label: 'Noticias' },
   { href: '/fale-conosco', label: 'Fale conosco' },
 ]
 
