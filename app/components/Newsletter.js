@@ -8,14 +8,24 @@ export default function Newsletter() {
   const [email, setEmail] = useState('')
   const [status, setStatus] = useState('')
 
-  function handleSubmit(e) {
-    e.preventDefault()
+  async function handleSubmit() {
     if (!email) return
     setStatus('enviando')
-    setTimeout(function() {
-      setStatus('sucesso')
-      setEmail('')
-    }, 1000)
+    try {
+      const res = await fetch('/api/newsletter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (res.ok) {
+        setStatus('sucesso')
+        setEmail('')
+      } else {
+        setStatus('erro')
+      }
+    } catch {
+      setStatus('erro')
+    }
   }
 
   return (
@@ -32,22 +42,25 @@ export default function Newsletter() {
               Obrigado! Você foi cadastrado com sucesso.
             </div>
           ) : (
-            <div className='flex gap-3'>
-              <input
-                type='email'
-                placeholder='seu@email.com'
-                value={email}
-                onChange={function(e) { setEmail(e.target.value) }}
-                className='flex-1 px-5 py-3 rounded-xl text-black bg-white text-sm outline-none border border-gray-300 focus:border-black transition'
-              />
-              <button
-                onClick={handleSubmit}
-                disabled={status === 'enviando'}
-                className='bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition text-sm whitespace-nowrap'
-              >
-                {status === 'enviando' ? '...' : 'Inscrever-se'}
-              </button>
-            </div>
+            <>
+              <div className='flex gap-3'>
+                <input
+                  type='email'
+                  placeholder='seu@email.com'
+                  value={email}
+                  onChange={function(e) { setEmail(e.target.value) }}
+                  className='flex-1 px-5 py-3 rounded-xl text-black bg-white text-sm outline-none border border-gray-300 focus:border-black transition'
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={status === 'enviando'}
+                  className='bg-black text-white px-6 py-3 rounded-xl font-bold hover:bg-gray-800 transition text-sm whitespace-nowrap'
+                >
+                  {status === 'enviando' ? '...' : 'Inscrever-se'}
+                </button>
+              </div>
+              {status === 'erro' && <p className='text-red-500 text-xs'>Erro ao cadastrar. Tente novamente.</p>}
+            </>
           )}
         </div>
       </div>
@@ -76,6 +89,7 @@ export default function Newsletter() {
             >
               {status === 'enviando' ? '...' : 'Inscrever-se'}
             </button>
+            {status === 'erro' && <p className='text-red-500 text-xs mt-2'>Erro ao cadastrar. Tente novamente.</p>}
           </>
         )}
       </div>
