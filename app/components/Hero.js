@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { Young_Serif } from 'next/font/google'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
 
@@ -19,6 +20,7 @@ const praias = [
 ]
 
 export default function Hero() {
+  const router = useRouter()
   const [busca, setBusca] = useState('')
   const [aberto, setAberto] = useState(false)
 
@@ -27,7 +29,7 @@ export default function Hero() {
   })
 
   function selecionar(slug) {
-    window.location.href = '/praias/' + slug
+    router.push('/praias/' + slug)
   }
 
   return (
