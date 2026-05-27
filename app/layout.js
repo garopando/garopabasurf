@@ -111,6 +111,13 @@ export default function RootLayout({ children }) {
     >
       <head>
         <link rel="canonical" href="https://garopabasurf.app" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-LH0EBFD9PT"></script>
+        <script dangerouslySetInnerHTML={{ __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-LH0EBFD9PT');
+        ` }} />
         <meta name="google-site-verification" content="jGiXrZwc3_8RcX1bxJOo_1OKDF6gIvIuCZmudV1hFCI" />
         <meta name="theme-color" content="#000000" />
         <meta name="application-name" content="GaropabaSurf" />
