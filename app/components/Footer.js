@@ -1,6 +1,8 @@
 import { Young_Serif } from 'next/font/google'
+import { Lexend } from 'next/font/google'
 
 const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
+const lexend = Lexend({ subsets: ['latin'], weight: '500' })
 
 export default function Footer() {
   return (
@@ -15,7 +17,7 @@ export default function Footer() {
         </div>
       </footer>
 
-      <nav className='md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50'>
+      <nav className='md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 z-50' style={{ position: 'fixed', bottom: 0, left: 0, right: 0 }}>
         <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200' />
         <div className='flex items-center justify-around py-2'>
           <a href='/' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', textDecoration: 'none', color: '#111', flex: 1 }}>
