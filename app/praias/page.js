@@ -7,13 +7,13 @@ const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 const praias = [
   { slug: 'silveira-sul', nome: 'Silveira Sul', descricao: 'Pico sul da Praia do Silveira, famoso por ondas tubulares e consistentes com swell de sul.', img: 'https://cdn.sanity.io/images/we0tdimr/production/724f27b9d80ec98374af7cc4c2e8afc3d3d541d4-1920x1252.jpg' },
   { slug: 'silveira-norte', nome: 'Silveira Norte', descricao: 'Pico norte do Silveira, ondas mais abertas e ideais para manobras.', img: 'https://www.waves.com.br/wp-content/uploads/2018/10/12-Praia-do-silveira-foto-AiltonSouzaPhotography.jpg' },
-  { slug: 'ferrugem-norte', nome: 'Ferrugem Norte', descricao: 'Pico norte da Ferrugem com ondas potentes e fundo de areia grossa.', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
-  { slug: 'ferrugem-sul', nome: 'Ferrugem Sul', descricao: 'Pico sul da Ferrugem, mais protegido do vento norte e com ondas regulares.', img: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80' },
-  { slug: 'barra', nome: 'Barra', descricao: 'Pico da barra do rio, ondas rápidas e ocas, spot favorito dos locais.', img: 'https://images.unsplash.com/photo-1455264745730-cb3b76250827?w=800&q=80' },
+  { slug: 'ferrugem-norte', nome: 'Ferrugem Norte', descricao: 'Pico norte da Ferrugem com ondas potentes e fundo de areia grossa.', img: 'https://radioestacaogaropaba.com/wp-content/uploads/2026/03/DJI_20260218084656_0125_D-1024x576.jpg' },
+  { slug: 'ferrugem-sul', nome: 'Ferrugem Sul', descricao: 'Pico sul da Ferrugem, mais protegido do vento norte e com ondas regulares.', img: 'https://www.waves.com.br/wp-content/uploads/2020/11/Bernardo-Villanueva-Praia-da-ferrugem-2-1024x683.jpg' },
+  { slug: 'barra', nome: 'Barra', descricao: 'Pico da barra do rio, ondas rápidas e ocas, spot favorito dos locais.', img: 'https://cdn-clubecandeias.s3.sa-east-1.amazonaws.com/uploads/featured_images/imagem_destaque_7083.jpeg' },
   { slug: 'siriu-sul', nome: 'Siriú Sul', descricao: 'Pico sul do Siriú, ondas poderosas e longas, ideal para dias de swell grande.', img: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=800&q=80' },
-  { slug: 'siriu-meio', nome: 'Siriú Meio de Praia', descricao: 'Pico central do Siriú, mais acessível e consistente durante o ano todo.', img: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80' },
-  { slug: 'gamboa', nome: 'Gamboa', descricao: 'Praia tranquila com ondas perfeitas para iniciantes e longboarders.', img: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=800&q=80' },
-  { slug: 'ouvidor', nome: 'Ouvidor', descricao: 'Spot escondido com ondas de qualidade e poucos surfistas na água.', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
+  { slug: 'siriu-meio', nome: 'Siriú Meio de Praia', descricao: 'Pico central do Siriú, mais acessível e consistente durante o ano todo.', img: 'https://static.ndmais.com.br/2023/08/praia-do-siriu-garopaba-5.jpeg' },
+  { slug: 'gamboa', nome: 'Gamboa', descricao: 'Praia tranquila com ondas perfeitas para iniciantes e longboarders.', img: 'https://static.ndmais.com.br/2020/12/Mirante-Praia-da-Gamboa.-Foto_-Prefeitura-Municipal-de-Garopaba_Divulgação-scaled.jpg' },
+  { slug: 'ouvidor', nome: 'Ouvidor', descricao: 'Spot escondido com ondas de qualidade e poucos surfistas na água.', img: 'https://www.garopabaimbituba.tur.br/wp-content/uploads/2021/05/ouvidor-4-e1620216908136.jpg' },
 ]
 
 export default function PraiasPage() {

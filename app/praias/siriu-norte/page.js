@@ -10,6 +10,7 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 const LAT = -27.974714
 const LON = -48.627251
+const FOTO = 'https://visitegaropaba.tur.br/wp-content/uploads/elementor/thumbs/Praia-do-Siriu-1-scaled-recwgsdkgt97zkisp5e40xksaj7khmdgc59mfwl13s.png'
 const MAPS_URL = 'https://www.google.com/maps/dir/?api=1' + '&' + 'destination=-27.974714,-48.627251'
 const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=' + (LON-0.02) + ',' + (LAT-0.005) + ',' + (LON+0.02) + ',' + (LAT+0.005) + '&layer=cyclemap&marker=' + LAT + ',' + LON
 
@@ -235,10 +236,14 @@ export default function PraiaPag() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '100px 16px 60px' }}>
-        <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '16px' }}>← Voltar para Praias</a>
+      <div style={{ width: '100%', height: '300px', position: 'relative', overflow: 'hidden' }}>
+        <img src={FOTO} alt='Siriú Norte' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      </div>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
+        <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
         <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Siriú Norte</h1>
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
+
         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>
           {['resumo', 'graficos', 'mapa'].map(function(a) {
             return (

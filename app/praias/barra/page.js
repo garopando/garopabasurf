@@ -10,6 +10,7 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 const LAT = -28.086159
 const LON = -48.630842
+const FOTO = 'https://cdn-clubecandeias.s3.sa-east-1.amazonaws.com/uploads/featured_images/imagem_destaque_7083.jpeg'
 const MAPS_URL = 'https://www.google.com/maps/dir/?api=1' + '&' + 'destination=-28.086159,-48.630842'
 const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=' + (LON-0.02) + ',' + (LAT-0.005) + ',' + (LON+0.02) + ',' + (LAT+0.005) + '&layer=cyclemap&marker=' + LAT + ',' + LON
 
@@ -235,7 +236,13 @@ export default function PraiaPag() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '100px 16px 60px' }}>
+      <div style={{ width: '100%', height: '300px', position: 'relative', overflow: 'hidden' }}>
+        <img src={FOTO} alt='Praia da Barra' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      </div>
+      <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
+        <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
+        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Praia da Barra</h1>
+        <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '16px' }}>← Voltar para Praias</a>
         <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Barra</h1>
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
