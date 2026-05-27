@@ -10,7 +10,7 @@ export async function POST(request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'api-key': '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',
+        'api-key': process.env.BREVO_API_KEY,
       },
       body: JSON.stringify({
         email: email,
