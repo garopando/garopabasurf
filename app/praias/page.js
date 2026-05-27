@@ -6,7 +6,7 @@ const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 
 const praias = [
   { slug: 'silveira-sul', nome: 'Silveira Sul', descricao: 'Pico sul da Praia do Silveira, famoso por ondas tubulares e consistentes com swell de sul.', img: 'https://cdn.sanity.io/images/we0tdimr/production/724f27b9d80ec98374af7cc4c2e8afc3d3d541d4-1920x1252.jpg' },
-  { slug: 'silveira-norte', nome: 'Silveira Norte', descricao: 'Pico norte do Silveira, ondas mais abertas e ideais para manobras.', img: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=800&q=80' },
+  { slug: 'silveira-norte', nome: 'Silveira Norte', descricao: 'Pico norte do Silveira, ondas mais abertas e ideais para manobras.', img: 'https://www.waves.com.br/wp-content/uploads/2018/10/12-Praia-do-silveira-foto-AiltonSouzaPhotography.jpg' },
   { slug: 'ferrugem-norte', nome: 'Ferrugem Norte', descricao: 'Pico norte da Ferrugem com ondas potentes e fundo de areia grossa.', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80' },
   { slug: 'ferrugem-sul', nome: 'Ferrugem Sul', descricao: 'Pico sul da Ferrugem, mais protegido do vento norte e com ondas regulares.', img: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800&q=80' },
   { slug: 'barra', nome: 'Barra', descricao: 'Pico da barra do rio, ondas rápidas e ocas, spot favorito dos locais.', img: 'https://images.unsplash.com/photo-1455264745730-cb3b76250827?w=800&q=80' },
