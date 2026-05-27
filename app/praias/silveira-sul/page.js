@@ -11,6 +11,7 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 const LAT = -28.044987
 const LON = -48.607301
 const MAPS_URL = 'https://www.google.com/maps/dir/?api=1' + '&' + 'destination=-28.044987,-48.607301'
+const FOTO = 'https://cdn.sanity.io/images/we0tdimr/production/724f27b9d80ec98374af7cc4c2e8afc3d3d541d4-1920x1252.jpg'
 const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
 
 function getStatus(h) {
@@ -239,6 +240,7 @@ export default function SilveiraSul() {
     <div className='min-h-screen bg-white'>
       <Navbar />
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '100px 16px 60px' }}>
+        <div style={{ width: '100%', height: '300px', overflow: 'hidden', borderRadius: '16px', marginBottom: '24px' }}><img src={FOTO} alt='Silveira Sul' style={{ width: '100%', height: '100%', objectFit: 'cover' }} /></div>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '16px' }}>← Voltar para Praias</a>
         <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Silveira Sul</h1>
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
