@@ -111,6 +111,7 @@ export default function RootLayout({ children }) {
     >
       <head>
         <link rel="canonical" href="https://garopabasurf.app" />
+        <meta name="google-site-verification" content="jGiXrZwc3_8RcX1bxJOo_1OKDF6gIvIuCZmudV1hFCI" />
         <meta name="theme-color" content="#000000" />
         <meta name="application-name" content="GaropabaSurf" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
