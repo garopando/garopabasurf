@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GaropabaSurf - Previsao de Ondas em Garopaba e Regiao",
+  title: "GaropabaSurf - Previsão de ondas em Garopaba",
   description: "A melhor previsao de ondas de Garopaba, Silveira, Ferrugem, Siriu, Gamboa e regiao. Altura, periodo, direcao, vento e mares em tempo real para surfistas de Santa Catarina.",
   keywords: [
     "previsao de ondas Garopaba",
