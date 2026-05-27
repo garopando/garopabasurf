@@ -12,22 +12,22 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "GaropabaSurf - Previsão de Ondas em Garopaba e Região",
-  description: "A melhor previsão de ondas de Garopaba, Silveira, Ferrugem, Siriú, Gamboa e região. Altura, período, direção, vento e marés em tempo real para surfistas de Santa Catarina.",
+  title: "GaropabaSurf - Previsao de Ondas em Garopaba e Regiao",
+  description: "A melhor previsao de ondas de Garopaba, Silveira, Ferrugem, Siriu, Gamboa e regiao. Altura, periodo, direcao, vento e mares em tempo real para surfistas de Santa Catarina.",
   keywords: [
-    "previsão de ondas Garopaba",
+    "previsao de ondas Garopaba",
     "surf Garopaba",
     "ondas Garopaba hoje",
     "Praia do Silveira",
     "Praia da Ferrugem",
-    "Praia do Siriú",
+    "Praia do Siriu",
     "Gamboa surf",
     "surf Santa Catarina",
-    "previsão surf SC",
+    "previsao surf SC",
     "ondas Silveira Sul",
     "ondas Ferrugem Norte",
     "surf Garopaba hoje",
-    "previsão ondas Santa Catarina",
+    "previsao ondas Santa Catarina",
     "praias Garopaba",
     "esportes Garopaba",
     "surf Brasil",
@@ -40,9 +40,21 @@ export const metadata = {
     "ondas perfeitas SC",
     "altura das ondas Garopaba",
     "vento Garopaba",
-    "marés Garopaba",
+    "mares Garopaba",
+    "previsao tempo Garopaba",
+    "turismo Garopaba",
+    "viagem Garopaba",
+    "o que fazer em Garopaba",
+    "Garopaba surf trip",
+    "swell Garopaba",
+    "ondas perfeitas Garopaba",
+    "surfistas Garopaba",
+    "esportes aquaticos Garopaba",
+    "beach life Garopaba",
+    "verao Garopaba",
+    "temporada surf SC",
   ],
-  authors: [{ name: "GaropabaSurf", url: "https://garopabasurf.vercel.app" }],
+  authors: [{ name: "GaropabaSurf", url: "https://garopabasurf.app" }],
   creator: "GaropabaSurf",
   publisher: "GaropabaSurf",
   robots: {
@@ -58,10 +70,10 @@ export const metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://garopabasurf.vercel.app",
+    url: "https://garopabasurf.app",
     siteName: "GaropabaSurf",
-    title: "GaropabaSurf - Previsão de Ondas em Garopaba e Região",
-    description: "A melhor previsão de ondas de Garopaba, Silveira, Ferrugem, Siriú, Gamboa e região. Dados em tempo real para surfistas de Santa Catarina.",
+    title: "GaropabaSurf - Previsao de Ondas em Garopaba e Regiao",
+    description: "A melhor previsao de ondas de Garopaba, Silveira, Ferrugem, Siriu, Gamboa e regiao. Dados em tempo real para surfistas de Santa Catarina.",
     images: [
       {
         url: "https://www.waves.com.br/wp-content/uploads/2018/10/13-Praia-do-Silveira-foto-Ailton-Souza-photography.jpg",
@@ -73,25 +85,16 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "GaropabaSurf - Previsão de Ondas em Garopaba",
-    description: "A melhor previsão de ondas de Garopaba e região. Silveira, Ferrugem, Siriú, Gamboa e mais.",
+    title: "GaropabaSurf - Previsao de Ondas em Garopaba",
+    description: "A melhor previsao de ondas de Garopaba e regiao. Silveira, Ferrugem, Siriu, Gamboa e mais.",
     images: ["https://www.waves.com.br/wp-content/uploads/2018/10/13-Praia-do-Silveira-foto-Ailton-Souza-photography.jpg"],
     creator: "@garopabasurf",
   },
   alternates: {
-    canonical: "https://garopabasurf.vercel.app",
+    canonical: "https://garopabasurf.app",
   },
   category: "sports",
-  classification: "Surf, Esportes, Previsão do Tempo",
   referrer: "origin-when-cross-origin",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 1,
-  },
-  verification: {
-    google: "",
-  },
   other: {
     "geo.region": "BR-SC",
     "geo.placename": "Garopaba, Santa Catarina, Brasil",
@@ -107,7 +110,7 @@ export default function RootLayout({ children }) {
       className={geistSans.variable + " " + geistMono.variable + " h-full antialiased"}
     >
       <head>
-        <link rel="canonical" href="https://garopabasurf.vercel.app" />
+        <link rel="canonical" href="https://garopabasurf.app" />
         <meta name="theme-color" content="#000000" />
         <meta name="application-name" content="GaropabaSurf" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -122,13 +125,13 @@ export default function RootLayout({ children }) {
               "@context": "https://schema.org",
               "@type": "WebSite",
               "name": "GaropabaSurf",
-              "url": "https://garopabasurf.vercel.app",
-              "description": "Previsão de ondas em Garopaba e região - Silveira, Ferrugem, Siriú, Gamboa",
+              "url": "https://garopabasurf.app",
+              "description": "Previsao de ondas em Garopaba e regiao - Silveira, Ferrugem, Siriu, Gamboa",
               "inLanguage": "pt-BR",
               "publisher": {
                 "@type": "Organization",
                 "name": "GaropabaSurf",
-                "url": "https://garopabasurf.vercel.app",
+                "url": "https://garopabasurf.app",
                 "sameAs": [
                   "https://instagram.com/garopabasurf"
                 ]
@@ -150,7 +153,7 @@ export default function RootLayout({ children }) {
               },
               "potentialAction": {
                 "@type": "SearchAction",
-                "target": "https://garopabasurf.vercel.app/praias?q={search_term_string}",
+                "target": "https://garopabasurf.app/praias?q={search_term_string}",
                 "query-input": "required name=search_term_string"
               }
             })
