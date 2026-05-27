@@ -27,7 +27,7 @@ export default function Navbar() {
           {links.map(function(l) {
             return (
               <li key={l.href}>
-                <a href={l.href} className={lexend.className + ' px-4 py-2 rounded-[10px] hover:bg-white hover:text-black transition block'} style={{ fontSize: '14px', color: 'white', textDecoration: 'none' }}>
+                <a href={l.href} className={lexend.className + ' px-4 py-2 rounded-[10px] transition block'} style={{ fontSize: '14px', color: 'white', textDecoration: 'none' }} onMouseEnter={function(e){ e.target.style.background='white'; e.target.style.color='black' }} onMouseLeave={function(e){ e.target.style.background='transparent'; e.target.style.color='white' }}>
                   {l.label}
                 </a>
               </li>
