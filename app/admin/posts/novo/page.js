@@ -123,7 +123,7 @@ export default function NovoPost() {
         <div>
           <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Resumo</label>
           <textarea placeholder='Breve descrição do post...' value={resumo} onChange={function(e) { setResumo(e.target.value) }}
-            style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', resize: 'vertical', minHeight: '80px', boxSizing: 'border-box', marginBottom: '24px' }} />
+            style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', resize: 'vertical', minHeight: '80px', boxSizing: 'border-box', marginBottom: '24px', background: 'white', color: '#111' }} />
         </div>
 
         <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
