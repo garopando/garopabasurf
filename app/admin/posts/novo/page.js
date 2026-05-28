@@ -109,16 +109,9 @@ export default function NovoPost() {
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           <div>
-            <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Categoria</label>
-            <select value={categoria} onChange={function(e) { setCategoria(e.target.value) }}
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', background: 'white' }}>
-              <option value=''>Selecione...</option>
-              <option value='noticias'>Notícias</option>
-              <option value='previsao'>Previsão</option>
-              <option value='surf'>Surf</option>
-              <option value='garopaba'>Garopaba</option>
-              <option value='praias'>Praias</option>
-            </select>
+            <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Tags (ex: #surf #garopaba)</label>
+            <input type='text' placeholder='#surf #garopaba #ondas' value={categoria} onChange={function(e) { setCategoria(e.target.value) }}
+              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
           </div>
           <div>
             <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>URL da Thumbnail</label>
