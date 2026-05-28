@@ -72,6 +72,14 @@ export default function NovoPost() {
     if (url) editor.chain().focus().setImage({ src: url }).run()
   }
 
+  function addInstagram() {
+    const url = prompt('Cole o link do post do Instagram:')
+    if (url) {
+      const embedHtml = '<blockquote class="instagram-media" data-instgrm-permalink="' + url + '" data-instgrm-version="14" style="width:100%;max-width:540px;margin:16px auto;"><a href="' + url + '">Ver post no Instagram</a></blockquote><script async src="//www.instagram.com/embed.js"></script>'
+      editor.chain().focus().insertContent(embedHtml).run()
+    }
+  }
+
   function addLink() {
     const url = prompt('URL do link:')
     if (url) editor.chain().focus().setLink({ href: url }).run()
@@ -148,6 +156,7 @@ export default function NovoPost() {
               { label: 'Código', action: function() { editor.chain().focus().toggleCode().run() }, active: editor && editor.isActive('code') },
               { label: 'Imagem', action: addImage, active: false },
               { label: 'Link', action: addLink, active: editor && editor.isActive('link') },
+              { label: '📷 Instagram', action: addInstagram, active: false },
               { label: '↩ Desfazer', action: function() { editor.chain().focus().undo().run() }, active: false },
               { label: '↪ Refazer', action: function() { editor.chain().focus().redo().run() }, active: false },
             ].map(function(btn, i) {
