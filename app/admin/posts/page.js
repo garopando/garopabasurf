@@ -95,6 +95,10 @@ export default function AdminPosts() {
                     style={{ background: post.publicado ? '#fef3c7' : '#f0fdf4', color: post.publicado ? '#92400e' : '#166534', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>
                     {post.publicado ? 'Despublicar' : 'Publicar'}
                   </button>
+                  <button onClick={function() { window.open('/noticias/' + post.slug, '_blank') }}
+                    style={{ background: '#eff6ff', color: '#3b82f6', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>
+                    Ver
+                  </button>
                   <button onClick={function() { router.push('/admin/posts/' + post.id) }}
                     style={{ background: '#f3f4f6', color: 'black', border: 'none', borderRadius: '8px', padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}>
                     Editar
