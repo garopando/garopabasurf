@@ -22,6 +22,7 @@ export default function NovoPost() {
   const [thumbnail, setThumbnail] = useState('')
   const [categoria, setCategoria] = useState('')
   const [publicado, setPublicado] = useState(false)
+  const [dataPost, setDataPost] = useState(new Date().toISOString().slice(0, 16))
   const [salvando, setSalvando] = useState(false)
   const [mensagem, setMensagem] = useState('')
   const router = useRouter()
@@ -56,6 +57,7 @@ export default function NovoPost() {
       categoria,
       slug: slugify(titulo),
       publicado,
+      criado_em: new Date(dataPost).toISOString(),
     })
     setSalvando(false)
     if (error) {
@@ -107,7 +109,7 @@ export default function NovoPost() {
           style={{ width: '100%', fontSize: '32px', letterSpacing: '-0.06em', border: 'none', background: 'transparent', outline: 'none', marginBottom: '24px', color: 'black', boxSizing: 'border-box' }}
         />
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '24px' }}>
           <div>
             <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Tags (ex: #surf #garopaba)</label>
             <input type='text' placeholder='#surf #garopaba #ondas' value={categoria} onChange={function(e) { setCategoria(e.target.value) }}
@@ -116,6 +118,11 @@ export default function NovoPost() {
           <div>
             <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>URL da Thumbnail</label>
             <input type='text' placeholder='https://...' value={thumbnail} onChange={function(e) { setThumbnail(e.target.value) }}
+              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box', background: 'white', color: '#111' }} />
+          </div>
+          <div>
+            <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Data da Notícia</label>
+            <input type='datetime-local' value={dataPost} onChange={function(e) { setDataPost(e.target.value) }}
               style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box', background: 'white', color: '#111' }} />
           </div>
         </div>
