@@ -111,12 +111,12 @@ export default function NovoPost() {
           <div>
             <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>Tags (ex: #surf #garopaba)</label>
             <input type='text' placeholder='#surf #garopaba #ondas' value={categoria} onChange={function(e) { setCategoria(e.target.value) }}
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box', background: 'white', color: '#111' }} />
           </div>
           <div>
             <label style={{ fontSize: '12px', color: '#9ca3af', display: 'block', marginBottom: '6px' }}>URL da Thumbnail</label>
             <input type='text' placeholder='https://...' value={thumbnail} onChange={function(e) { setThumbnail(e.target.value) }}
-              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box' }} />
+              style={{ width: '100%', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', outline: 'none', boxSizing: 'border-box', background: 'white', color: '#111' }} />
           </div>
         </div>
 
