@@ -11,6 +11,17 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 export default function PostPage() {
   const { slug } = useParams()
+
+  useEffect(function() {
+    if (window.instgrm) {
+      window.instgrm.Embeds.process()
+    } else {
+      const script = document.createElement('script')
+      script.src = '//www.instagram.com/embed.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
+  }, [post])
   const [post, setPost] = useState(null)
   const [recomendados, setRecomendados] = useState([])
   const [loading, setLoading] = useState(true)
