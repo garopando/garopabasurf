@@ -138,7 +138,7 @@ export default function PostPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
               {recomendados.map(function(rec) {
                 return (
-                  <a key={rec.id} href={'/noticias/' + rec.slug} style={{ textDecoration: 'none' }}>
+                  <Link key={rec.id} href={'/noticias/' + rec.slug} style={{ textDecoration: 'none' }}>
                     {rec.thumbnail && (
                       <div style={{ width: '100%', height: '140px', borderRadius: '12px', overflow: 'hidden', marginBottom: '10px' }}>
                         <img src={rec.thumbnail} alt={rec.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
