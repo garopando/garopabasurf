@@ -1,6 +1,8 @@
+'use client'
 import { Lexend } from 'next/font/google'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import NextImage from 'next/image'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 
@@ -30,7 +32,7 @@ export default function PraiasPage() {
             return (
               <a key={praia.slug} href={'/praias/' + praia.slug} className='group cursor-pointer' style={{ textDecoration: 'none' }}>
                 <div className='relative overflow-hidden rounded-xl' style={{ height: '200px' }}>
-                  <img src={praia.img} alt={praia.nome} className='w-full h-full object-cover group-hover:scale-105 transition duration-500' />
+                  <NextImage src={praia.img} alt={praia.nome} fill style={{ objectFit: 'cover' }} className='group-hover:scale-105 transition duration-500' />
                   <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition' />
                   <div className='absolute bottom-4 left-4'>
                     <h3 className={lexend.className} style={{ fontSize: '20px', fontWeight: '700', color: 'white', letterSpacing: '-0.02em' }}>{praia.nome}</h3>
@@ -52,8 +54,8 @@ export default function PraiasPage() {
           {praias.map(function(praia) {
             return (
               <a key={praia.slug} href={'/praias/' + praia.slug} className='group' style={{ textDecoration: 'none', display: 'flex', gap: '12px', alignItems: 'center' }}>
-                <div className='relative overflow-hidden rounded-xl flex-shrink-0' style={{ width: '90px', height: '90px' }}>
-                  <img src={praia.img} alt={praia.nome} className='w-full h-full object-cover' />
+                <div className='relative overflow-hidden rounded-xl flex-shrink-0' style={{ width: '90px', height: '90px', position: 'relative' }}>
+                  <NextImage src={praia.img} alt={praia.nome} fill style={{ objectFit: 'cover' }} />
                   <div className='absolute inset-0 bg-black/20' />
                 </div>
                 <div>
