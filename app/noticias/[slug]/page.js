@@ -1,3 +1,4 @@
+import Link from 'next/link'
 'use client'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
@@ -93,7 +94,7 @@ export default function PostPage() {
     <div className='min-h-screen bg-white'>
       <Navbar />
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '100px 16px 60px' }}>
-        <a href='/noticias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '24px' }}>← Voltar para Notícias</a>
+        <Link href='/noticias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '24px' }}>← Voltar para Notícias</Link>
         {post.categoria && (
           <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>{post.categoria}</p>
         )}
@@ -145,7 +146,7 @@ export default function PostPage() {
                     )}
                     <h3 className={lexend.className} style={{ fontSize: '15px', color: 'black', letterSpacing: '-0.03em', lineHeight: '1.4' }}>{rec.titulo}</h3>
                     <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>{new Date(rec.criado_em).toLocaleDateString('pt-BR')}</p>
-                  </a>
+                  </Link>
                 )
               })}
             </div>
