@@ -2,8 +2,9 @@
 import { Lexend } from 'next/font/google'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
+import MapaSatelite from '../../components/MapaSatelite'
 import { useEffect, useState } from 'react'
-import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
@@ -12,13 +13,12 @@ const LAT = -27.974714
 const LON = -48.627251
 const FOTO = 'https://visitegaropaba.tur.br/wp-content/uploads/elementor/thumbs/Praia-do-Siriu-1-scaled-recwgsdkgt97zkisp5e40xksaj7khmdgc59mfwl13s.png'
 const MAPS_URL = 'https://www.google.com/maps/dir/?api=1' + '&' + 'destination=-27.974714,-48.627251'
-const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=' + (LON-0.02) + ',' + (LAT-0.005) + ',' + (LON+0.02) + ',' + (LAT+0.005) + '&layer=cyclemap&marker=' + LAT + ',' + LON
 
 function getStatus(h) {
   if (!h || h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
   if (h < 1.0) return { label: 'Regular', color: '#f59e0b', bg: '#fffbeb' }
   if (h < 1.8) return { label: 'Bom', color: '#22c55e', bg: '#f0fdf4' }
-  if (h < 2.5) return { label: 'Ótimo', color: '#3b82f6', bg: '#eff6ff' }
+  if (h < 2.5) return { label: 'Otimo', color: '#3b82f6', bg: '#eff6ff' }
   return { label: 'Excelente', color: '#8b5cf6', bg: '#f5f3ff' }
 }
 
@@ -34,12 +34,12 @@ function fmt(val, dec) {
 }
 
 function getDiaSemana(offset) {
-  const dias = ['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado']
-  const abrev = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']
+  const dias = ['Domingo','Segunda-feira','Terca-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sabado']
+  const abrev = ['Dom','Seg','Ter','Qua','Qui','Sex','Sab']
   const d = new Date()
   d.setDate(d.getDate() + offset)
-  const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : dias[d.getDay()]
-  const abreviado = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanhã' : abrev[d.getDay()] + ' ' + d.getDate()
+  const label = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanha' : dias[d.getDay()]
+  const abreviado = offset === 0 ? 'Hoje' : offset === 1 ? 'Amanha' : abrev[d.getDay()] + ' ' + d.getDate()
   return { label, abreviado, data: d.getDate() + '/' + (d.getMonth()+1) }
 }
 
@@ -57,7 +57,7 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
               return (
                 <div key={i} style={{ flex: 1, borderRight: '1px solid #f0f0f0', padding: '4px 6px' }}>
                   <p style={{ fontSize: '9px', color: '#9ca3af', fontWeight: '600', textTransform: 'uppercase' }}>{r.label}</p>
-                  <p style={{ fontSize: '10px', color: '#374151', fontWeight: '600' }}>{r.min}→{r.max}{unidade}</p>
+                  <p style={{ fontSize: '10px', color: '#374151', fontWeight: '600' }}>{r.min}->{r.max}{unidade}</p>
                 </div>
               )
             })}
@@ -113,19 +113,18 @@ function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
       dirVento: dadosMeteo && dadosMeteo.hourly.winddirection_10m[idx] ? getDirecao(dadosMeteo.hourly.winddirection_10m[idx]) : '-',
     }
   })
-
   return (
     <div className='rounded-2xl border border-gray-100 overflow-hidden'>
       <div className='px-4 py-3 border-b border-gray-100' style={{ backgroundColor: s.bg }}>
         <div className='flex items-center gap-2 mb-1'>
           <span className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', letterSpacing: '-0.04em', color: 'black' }}>{label}</span>
           <span className='text-gray-400 text-xs'>{data}</span>
-          {tempAgua && <span className='text-xs px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>Temperatura da Água: {tempAgua}°C</span>}
+          {tempAgua && <span className='text-xs px-2 py-0.5 rounded-full bg-white text-blue-500 font-medium'>Agua: {tempAgua}C</span>}
         </div>
         <div className='flex items-center gap-2'>
           <span className={lexend.className} style={{ fontSize: '20px', color: 'black', letterSpacing: '-0.04em' }}>{fmt(alturaMax, 1)}m</span>
           <span className='text-xs font-bold px-2 py-0.5 rounded-full' style={{ color: s.color, backgroundColor: 'white' }}>{s.label}</span>
-          <span className='text-gray-400 text-xs'>{getDirecao(dados.daily.wave_direction_dominant[i])} · {fmt(dados.daily.wave_period_max[i], 0)}s</span>
+          <span className='text-gray-400 text-xs'>{getDirecao(dados.daily.wave_direction_dominant[i])} . {fmt(dados.daily.wave_period_max[i], 0)}s</span>
         </div>
       </div>
       {!expandido && (
@@ -178,11 +177,9 @@ function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
           </table>
         </div>
       )}
-      <button
-        onClick={function() { setExpandido(!expandido) }}
-        className={lexendNormal.className}
+      <button onClick={function() { setExpandido(!expandido) }} className={lexendNormal.className}
         style={{ width: '100%', padding: '10px', fontSize: '12px', color: '#6b7280', background: '#fafafa', border: 'none', borderTop: '1px solid #f3f4f6', cursor: 'pointer' }}>
-        {expandido ? 'Resumir ↑' : 'Ver todos os detalhes ↓'}
+        {expandido ? 'Resumir' : 'Ver todos os detalhes'}
       </button>
     </div>
   )
@@ -236,21 +233,19 @@ export default function PraiaPag() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ width: '100%', height: '300px', position: 'relative', overflow: 'hidden' }}>
-        <img src={FOTO} alt='Siriú Norte' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div style={{ width: '100%', height: '450px', overflow: 'hidden' }}>
+        <MapaSatelite lat={LAT} lon={LON} nome='Siriu Norte' />
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
-        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Siriú Norte</h1>
+        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Siriu Norte</h1>
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
-
         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>
-          {['resumo', 'graficos', 'mapa'].map(function(a) {
+          {['resumo', 'graficos'].map(function(a) {
             return (
-              <button key={a} onClick={function() { setAba(a) }}
-                className={lexendNormal.className}
+              <button key={a} onClick={function() { setAba(a) }} className={lexendNormal.className}
                 style={{ padding: '10px 20px', fontSize: '13px', color: aba === a ? 'black' : '#9ca3af', background: 'none', border: 'none', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
-                {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Gráficos' : 'Mapa'}
+                {a === 'resumo' ? 'Resumo' : 'Graficos'}
               </button>
             )
           })}
@@ -258,7 +253,7 @@ export default function PraiaPag() {
         {loading && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#9ca3af', padding: '60px 0', justifyContent: 'center' }}>
             <div style={{ width: '20px', height: '20px', border: '2px solid #e5e7eb', borderTop: '2px solid black', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-            Carregando previsão...
+            Carregando previsao...
           </div>
         )}
         {!loading && dados && aba === 'resumo' && (
@@ -275,22 +270,15 @@ export default function PraiaPag() {
             <GraficoComDias titulo='Ondas' dados={dadosGrafico} dataKey='ondas' cor='#0d9488' unidade='m' diasInfo={diasInfo} />
             <GraficoComDias titulo='Vento' dados={dadosGrafico} dataKey='vento' cor='#06b6d4' unidade='km/h' diasInfo={diasInfoVento} />
             <GraficoComDias titulo='Energia das Ondas' dados={dadosGrafico} dataKey='energia' cor='#f59e0b' unidade='J' diasInfo={diasInfo} />
-            <GraficoComDias titulo='Marés' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' diasInfo={diasInfo} />
+            <GraficoComDias titulo='Mares' dados={dadosGrafico} dataKey='mare' cor='#0d9488' unidade='m/s' diasInfo={diasInfo} />
           </div>
         )}
-        {aba === 'mapa' && (
-          <div>
-            <div style={{ borderRadius: '16px', overflow: 'hidden', height: '400px' }}>
-              <iframe src={MAPA_EMBED} width='100%' height='100%' style={{ border: 0 }} allowFullScreen loading='lazy' />
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <a href={MAPS_URL} target='_blank' rel='noreferrer'
-                style={{ display: 'inline-block', padding: '12px 28px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}>
-                Como chegar
-              </a>
-            </div>
-          </div>
-        )}
+        <div style={{ textAlign: 'center', marginTop: '32px' }}>
+          <a href={MAPS_URL} target='_blank' rel='noreferrer'
+            style={{ display: 'inline-block', padding: '12px 28px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}>
+            Como chegar
+          </a>
+        </div>
       </div>
       <Footer />
     </div>
