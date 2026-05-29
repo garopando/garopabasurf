@@ -249,12 +249,12 @@ export default function SilveiraSul() {
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
 
         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>
-          {['resumo', 'graficos', 'mapa'].map(function(a) {
+          {['resumo', 'graficos'].map(function(a) {
             return (
               <button key={a} onClick={function() { setAba(a) }}
                 className={lexendNormal.className}
                 style={{ padding: '10px 20px', fontSize: '13px', color: aba === a ? 'black' : '#9ca3af', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', background: 'none', border: 'none', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
-                {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Gráficos' : 'Mapa'}
+                {a === 'resumo' ? 'Resumo' : 'Gráficos'}
               </button>
             )
           })}
