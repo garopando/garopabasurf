@@ -57,7 +57,7 @@ function GraficoComDias({ titulo, dados, dataKey, cor, unidade, diasInfo }) {
               return (
                 <div key={i} style={{ flex: 1, borderRight: '1px solid #f0f0f0', padding: '4px 6px' }}>
                   <p style={{ fontSize: '9px', color: '#9ca3af', fontWeight: '600', textTransform: 'uppercase' }}>{r.label}</p>
-                  <p style={{ fontSize: '10px', color: '#374151', fontWeight: '600' }}>{r.min}->{r.max}{unidade}</p>
+                  <p style={{ fontSize: '10px', color: '#374151', fontWeight: '600' }}>{r.min}{'→'}{r.max}{unidade}</p>
                 </div>
               )
             })}
