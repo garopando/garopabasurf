@@ -12,7 +12,7 @@ const LAT = -28.044987
 const LON = -48.607301
 const MAPS_URL = 'https://www.google.com/maps/dir/?api=1' + '&' + 'destination=-28.044987,-48.607301'
 const FOTO = 'https://cdn.sanity.io/images/we0tdimr/production/724f27b9d80ec98374af7cc4c2e8afc3d3d541d4-1920x1252.jpg'
-const MAPA_EMBED = 'https://www.openstreetmap.org/export/embed.html?bbox=-48.6173,-28.0499,-48.5973,-28.0399&layer=cyclemap&marker=-28.044987,-48.607301'
+const MAPA_EMBED = 'https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d1500!2d-48.607301!3d-28.044987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMjjCsDAyJzQxLjkiUyA0OMKwMzYnMjYuMyJX!5e1!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr'
 
 function getStatus(h) {
   if (!h || h < 0.5) return { label: 'Fraco', color: '#9ca3af', bg: '#f3f4f6' }
