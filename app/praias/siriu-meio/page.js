@@ -234,11 +234,11 @@ export default function PraiaPag() {
     <div className='min-h-screen bg-white'>
       <Navbar />
       <div style={{ width: '100%', height: '450px', overflow: 'hidden', marginTop: '57px' }}>
-        <MapaSatelite lat={LAT} lon={LON} nome='Siriu Meio' />
+        <MapaSatelite lat={LAT} lon={LON} nome='Siriú - Meio de Praia' />
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
-        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Siriu Meio</h1>
+        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>Siriú - Meio de Praia</h1>
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>
           {['resumo', 'graficos'].map(function(a) {
