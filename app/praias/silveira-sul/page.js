@@ -3,6 +3,7 @@ import { Lexend } from 'next/font/google'
 import Navbar from '../../components/Navbar'
 import Footer from '../../components/Footer'
 import { useEffect, useState } from 'react'
+import MapaSatelite from '../../components/MapaSatelite'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine } from 'recharts'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
