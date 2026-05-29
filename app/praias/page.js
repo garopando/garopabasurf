@@ -31,7 +31,7 @@ export default function PraiasPage() {
       <div className='hidden md:block max-w-[70%] mx-auto pt-28 pb-16'>
         <h1 className={lexend.className} style={{ fontSize: '40px', fontWeight: '700', letterSpacing: '-0.06em', marginBottom: '8px', color: 'black', WebkitTextStroke: '0.5px black' }}>Praias</h1>
         <p className='text-gray-500 text-base mb-10'>Escolha uma praia para ver a previsão de ondas.</p>
-        <div className='grid grid-cols-3 gap-6'>
+        <div className='grid grid-cols-2 gap-6'>
           {praias.map(function(praia) {
             return (
               <a key={praia.slug} href={'/praias/' + praia.slug} className='group cursor-pointer' style={{ textDecoration: 'none' }}>
