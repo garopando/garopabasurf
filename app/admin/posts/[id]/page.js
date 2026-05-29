@@ -97,10 +97,9 @@ export default function EditarPost() {
 
   function addInstagram() {
     const url = prompt('Cole o link do post do Instagram:')
-    if (url) {
-      const embedHtml = '<blockquote class="instagram-media" data-instgrm-permalink="' + url + '" data-instgrm-version="14" style="width:100%;max-width:540px;margin:16px auto;"><a href="' + url + '">Ver post no Instagram</a></blockquote><script async src="//www.instagram.com/embed.js"></script>'
-      editor.chain().focus().insertContent(embedHtml).run()
-    }
+    if (!url) return
+    const limpo = url.split('?')[0].replace(/\/$/, '') + '/'
+    editor.chain().focus().insertContent('<p>' + limpo + '</p>').run()
   }
 
   if (carregando) return <div style={{ padding: '100px', textAlign: 'center', color: '#9ca3af' }}>Carregando...</div>
