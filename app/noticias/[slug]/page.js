@@ -1,6 +1,6 @@
+'use client'
 import Link from 'next/link'
 import NextImage from 'next/image'
-'use client'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
