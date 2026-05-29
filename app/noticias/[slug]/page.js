@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
 import Navbar from '../../components/Navbar'
@@ -7,13 +7,13 @@ import Footer from '../../components/Footer'
 import { Lexend } from 'next/font/google'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
-const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 export default function PostPage() {
   const { slug } = useParams()
   const [post, setPost] = useState(null)
   const [recomendados, setRecomendados] = useState([])
   const [loading, setLoading] = useState(true)
+  const contentRef = useRef(null)
 
   useEffect(function() {
     if (!slug) return
@@ -42,18 +42,36 @@ export default function PostPage() {
   }, [slug])
 
   useEffect(function() {
-    if (!post) return
-    setTimeout(function() {
+    if (!post || !contentRef.current) return
+    const loadInstagram = function() {
       if (window.instgrm) {
         window.instgrm.Embeds.process()
       } else {
-        const script = document.createElement('script')
-        script.src = 'https://www.instagram.com/embed.js'
-        script.async = true
-        document.body.appendChild(script)
+        const existing = document.getElementById('instagram-embed-script')
+        if (!existing) {
+          const script = document.createElement('script')
+          script.id = 'instagram-embed-script'
+          script.src = 'https://www.instagram.com/embed.js'
+          script.async = true
+          script.onload = function() {
+            if (window.instgrm) window.instgrm.Embeds.process()
+          }
+          document.body.appendChild(script)
+        }
       }
-    }, 500)
+    }
+    setTimeout(loadInstagram, 800)
   }, [post])
+
+  function processContent(html) {
+    if (!html) return ''
+    return html.replace(
+      /https:\/\/www\.instagram\.com\/p\/([A-Za-z0-9_-]+)\/?/g,
+      function(url) {
+        return '<blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="' + url + '" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15);margin:1px;max-width:540px;min-width:326px;padding:0;width:99.375%;width:-webkit-calc(100% - 2px);width:calc(100% - 2px);"><a href="' + url + '">Ver post no Instagram</a></blockquote>'
+      }
+    )
+  }
 
   if (loading) return (
     <div className='min-h-screen bg-white'>
@@ -88,7 +106,7 @@ export default function PostPage() {
             <img src={post.thumbnail} alt={post.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         )}
-        <div className='post-content' dangerouslySetInnerHTML={{ __html: post.conteudo }} />
+        <div ref={contentRef} className='post-content' dangerouslySetInnerHTML={{ __html: processContent(post.conteudo) }} />
         {recomendados.length > 0 && (
           <div style={{ marginTop: '60px', paddingTop: '40px', borderTop: '1px solid #f3f4f6' }}>
             <h2 className={lexend.className} style={{ fontSize: '24px', color: 'black', letterSpacing: '-0.06em', marginBottom: '24px' }}>Leia também</h2>
@@ -119,6 +137,7 @@ export default function PostPage() {
         .post-content ul, .post-content ol { padding-left: 28px; margin: 16px 0; }
         .post-content li { margin-bottom: 8px; }
         .post-content blockquote { border-left: 4px solid #e5e7eb; padding-left: 20px; color: #6b7280; margin: 24px 0; font-style: italic; }
+        .post-content .instagram-media { border-left: none !important; padding-left: 0 !important; color: inherit !important; font-style: normal !important; }
         .post-content code { background: #f3f4f6; padding: 2px 8px; border-radius: 4px; font-size: 14px; }
         .post-content img { max-width: 100%; border-radius: 12px; margin: 24px 0; }
         .post-content a { color: #3b82f6; text-decoration: underline; }
