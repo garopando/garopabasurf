@@ -106,6 +106,30 @@ export default function PostPage() {
             <img src={post.thumbnail} alt={post.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         )}
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', paddingBottom: '32px', borderBottom: '1px solid #f3f4f6' }}>
+          <span style={{ fontSize: '13px', color: '#9ca3af' }}>Compartilhar:</span>
+          <a href={'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent('https://garopabasurf.app/noticias/' + post.slug)}
+            target='_blank' rel='noreferrer'
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '20px', background: '#1877f2', color: 'white', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+            Facebook
+          </a>
+          <a href={'https://wa.me/?text=' + encodeURIComponent(post.titulo + ' ' + 'https://garopabasurf.app/noticias/' + post.slug)}
+            target='_blank' rel='noreferrer'
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '20px', background: '#25d366', color: 'white', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+            WhatsApp
+          </a>
+          <a href={'https://twitter.com/intent/tweet?text=' + encodeURIComponent(post.titulo) + '&url=' + encodeURIComponent('https://garopabasurf.app/noticias/' + post.slug)}
+            target='_blank' rel='noreferrer'
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '20px', background: 'black', color: 'white', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+            X
+          </a>
+          <button
+            onClick={function() { navigator.clipboard.writeText('https://garopabasurf.app/noticias/' + post.slug); alert('Link copiado!') }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 14px', borderRadius: '20px', background: '#f3f4f6', color: 'black', border: 'none', fontSize: '13px', fontWeight: '600', cursor: 'pointer' }}>
+            Copiar link
+          </button>
+        </div>
         <div ref={contentRef} className='post-content' dangerouslySetInnerHTML={{ __html: processContent(post.conteudo) }} />
         {recomendados.length > 0 && (
           <div style={{ marginTop: '60px', paddingTop: '40px', borderTop: '1px solid #f3f4f6' }}>
