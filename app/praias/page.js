@@ -42,7 +42,7 @@ export default function PraiasPage() {
                     <h3 className={lexend.className} style={{ fontSize: '20px', fontWeight: '700', color: 'white', letterSpacing: '-0.02em' }}>{praia.nome}</h3>
                   </div>
                 </div>
-                <p className='text-gray-500 text-sm mt-3 leading-relaxed'>{praia.descricao}</p>
+
               </a>
             )
           })}
@@ -64,7 +64,7 @@ export default function PraiasPage() {
                 </div>
                 <div>
                   <h3 className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', color: 'black', letterSpacing: '-0.03em', marginBottom: '4px' }}>{praia.nome}</h3>
-                  <p style={{ fontSize: '12px', color: '#6b7280', lineHeight: '1.4' }}>{praia.descricao}</p>
+
                 </div>
               </a>
             )
