@@ -233,7 +233,7 @@ export default function PraiaPag() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ width: '100%', height: '450px', overflow: 'hidden' }}>
+      <div style={{ width: '100%', height: '450px', overflow: 'hidden', marginTop: '57px' }}>
         <MapaSatelite lat={LAT} lon={LON} nome='Praia Central' />
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
