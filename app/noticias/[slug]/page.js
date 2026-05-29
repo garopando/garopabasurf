@@ -11,20 +11,6 @@ const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
 
 export default function PostPage() {
   const { slug } = useParams()
-
-  useEffect(function() {
-    if (!post) return
-    setTimeout(function() {
-      if (window.instgrm) {
-        window.instgrm.Embeds.process()
-      } else {
-        const script = document.createElement('script')
-        script.src = '//www.instagram.com/embed.js'
-        script.async = true
-        document.body.appendChild(script)
-      }
-    }, 500)
-  }, [post])
   const [post, setPost] = useState(null)
   const [recomendados, setRecomendados] = useState([])
   const [loading, setLoading] = useState(true)
@@ -55,6 +41,20 @@ export default function PostPage() {
       })
   }, [slug])
 
+  useEffect(function() {
+    if (!post) return
+    setTimeout(function() {
+      if (window.instgrm) {
+        window.instgrm.Embeds.process()
+      } else {
+        const script = document.createElement('script')
+        script.src = 'https://www.instagram.com/embed.js'
+        script.async = true
+        document.body.appendChild(script)
+      }
+    }, 500)
+  }, [post])
+
   if (loading) return (
     <div className='min-h-screen bg-white'>
       <Navbar />
@@ -76,28 +76,19 @@ export default function PostPage() {
       <Navbar />
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '100px 16px 60px' }}>
         <a href='/noticias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '24px' }}>← Voltar para Notícias</a>
-
         {post.categoria && (
           <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>{post.categoria}</p>
         )}
-
         <h1 className={lexend.className} style={{ fontSize: '36px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', lineHeight: '1.2', marginBottom: '16px' }}>{post.titulo}</h1>
-
         <p style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '32px' }}>
           {new Date(post.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
         </p>
-
         {post.thumbnail && (
           <div style={{ width: '100%', height: '400px', borderRadius: '16px', overflow: 'hidden', marginBottom: '40px' }}>
             <img src={post.thumbnail} alt={post.titulo} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           </div>
         )}
-
-        <div
-          className='post-content'
-          dangerouslySetInnerHTML={{ __html: post.conteudo }}
-        />
-
+        <div className='post-content' dangerouslySetInnerHTML={{ __html: post.conteudo }} />
         {recomendados.length > 0 && (
           <div style={{ marginTop: '60px', paddingTop: '40px', borderTop: '1px solid #f3f4f6' }}>
             <h2 className={lexend.className} style={{ fontSize: '24px', color: 'black', letterSpacing: '-0.06em', marginBottom: '24px' }}>Leia também</h2>
@@ -119,7 +110,6 @@ export default function PostPage() {
           </div>
         )}
       </div>
-
       <style>{`
         .post-content { font-size: 17px; line-height: 1.8; color: #111; }
         .post-content h1 { font-size: 32px; font-weight: 700; margin: 32px 0 16px; }
@@ -135,7 +125,6 @@ export default function PostPage() {
         .post-content strong { font-weight: 700; }
         .post-content em { font-style: italic; }
       `}</style>
-
       <Footer />
     </div>
   )
