@@ -239,8 +239,15 @@ export default function SilveiraSul() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ width: '100%', height: '300px', position: 'relative', overflow: 'hidden' }}>
-        <img src={FOTO} alt='Silveira Sul' style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div style={{ width: '100%', height: '450px', overflow: 'hidden' }}>
+        <iframe
+          src={MAPA_EMBED}
+          width='100%'
+          height='100%'
+          style={{ border: 0 }}
+          allowFullScreen
+          loading='lazy'
+        />
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
