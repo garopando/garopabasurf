@@ -1,4 +1,3 @@
-\
 'use client'
 import { Lexend } from 'next/font/google'
 import { useEffect, useState, useRef } from 'react'
