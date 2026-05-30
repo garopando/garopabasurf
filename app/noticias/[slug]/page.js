@@ -93,7 +93,10 @@ export default function PostPage() {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ maxWidth: '760px', margin: '0 auto', padding: '100px 16px 60px' }}>
+      {post.thumbnail && (
+        <img src={post.thumbnail} alt={post.titulo} style={{ width: '100%', height: '400px', objectFit: 'cover', display: 'block', marginTop: '70px' }} />
+      )}
+      <div style={{ maxWidth: '760px', margin: '0 auto', padding: '40px 16px 60px' }}>
         <Link href='/noticias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '24px' }}>← Voltar para Notícias</Link>
         {post.categoria && (
           <p style={{ fontSize: '12px', color: '#9ca3af', marginBottom: '8px' }}>{post.categoria}</p>
@@ -102,9 +105,6 @@ export default function PostPage() {
         <p style={{ fontSize: '13px', color: '#9ca3af', marginBottom: '32px' }}>
           {new Date(post.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
         </p>
-        {post.thumbnail && (
-          <img src={post.thumbnail} alt={post.titulo} style={{ position: 'relative', left: '50%', right: '50%', width: '100vw', marginLeft: '-50vw', marginRight: '-50vw', height: '400px', objectFit: 'cover', marginBottom: '40px', display: 'block' }} />
-        )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', paddingBottom: '32px', borderBottom: '1px solid #f3f4f6' }}>
           <span style={{ fontSize: '13px', color: '#9ca3af' }}>Compartilhar:</span>
