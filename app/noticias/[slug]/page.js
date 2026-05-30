@@ -1,6 +1,5 @@
 'use client'
 import Link from 'next/link'
-import NextImage from 'next/image'
 import { useEffect, useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
@@ -104,9 +103,7 @@ export default function PostPage() {
           {new Date(post.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
         </p>
         {post.thumbnail && (
-          <div style={{ position: 'relative', width: '100vw', height: '400px', overflow: 'hidden', marginBottom: '40px', marginLeft: 'calc(-50vw + 50%)' }}>
-            <NextImage src={post.thumbnail} alt={post.titulo} fill style={{ objectFit: 'cover' }} />
-          </div>
+          <img src={post.thumbnail} alt={post.titulo} style={{ width: '100vw', height: '400px', objectFit: 'cover', marginBottom: '40px', marginLeft: 'calc(-50vw + 50%)', display: 'block' }} />
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', paddingBottom: '32px', borderBottom: '1px solid #f3f4f6' }}>
@@ -141,9 +138,7 @@ export default function PostPage() {
                 return (
                   <Link key={rec.id} href={'/noticias/' + rec.slug} style={{ textDecoration: 'none' }}>
                     {rec.thumbnail && (
-                      <div style={{ position: 'relative', width: '100%', height: '140px', borderRadius: '12px', overflow: 'hidden', marginBottom: '10px' }}>
-                        <NextImage src={rec.thumbnail} alt={rec.titulo} fill style={{ objectFit: 'cover' }} />
-                      </div>
+                      <img src={rec.thumbnail} alt={rec.titulo} style={{ width: '100%', height: '140px', objectFit: 'cover', borderRadius: '12px', marginBottom: '10px', display: 'block' }} />
                     )}
                     <h3 className={lexend.className} style={{ fontSize: '15px', color: 'black', letterSpacing: '-0.03em', lineHeight: '1.4' }}>{rec.titulo}</h3>
                     <p style={{ fontSize: '12px', color: '#9ca3af', marginTop: '4px' }}>{new Date(rec.criado_em).toLocaleDateString('pt-BR')}</p>
