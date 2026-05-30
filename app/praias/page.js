@@ -29,9 +29,8 @@ export default function PraiasPage() {
       <Navbar />
 
       <div className='hidden md:block max-w-[70%] mx-auto pt-28 pb-16'>
-        <p style={{ fontSize: '12px', color: '#9ca3af', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: '600', marginBottom: '12px' }}>Garopaba · Santa Catarina</p>
-        <h1 className={lexend.className} style={{ fontSize: '48px', fontWeight: '700', letterSpacing: '-0.06em', marginBottom: '12px', color: 'black', WebkitTextStroke: '0.5px black', lineHeight: '1' }}>Escolha sua praia.</h1>
-        <p style={{ fontSize: '16px', color: '#6b7280', marginBottom: '40px', maxWidth: '500px' }}>Previsao de ondas em tempo real para os melhores picos de Garopaba e regiao.</p>
+        <h1 className={lexend.className} style={{ fontSize: '40px', fontWeight: '700', letterSpacing: '-0.06em', marginBottom: '8px', color: 'black', WebkitTextStroke: '0.5px black' }}>Praias</h1>
+        <p className='text-gray-500 text-base mb-10'>Escolha uma praia para ver a previsão de ondas.</p>
         <div className='grid grid-cols-2 gap-6'>
           {praias.map(function(praia) {
             return (
@@ -52,9 +51,8 @@ export default function PraiasPage() {
 
       <div className='md:hidden pt-20 pb-24'>
         <div className='px-4 mb-6'>
-          <p style={{ fontSize: '11px', color: '#9ca3af', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: '600', marginBottom: '8px' }}>Garopaba · Santa Catarina</p>
-          <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', lineHeight: '1', marginBottom: '8px' }}>Escolha sua praia.</h1>
-          <p style={{ fontSize: '13px', color: '#6b7280', marginBottom: '0' }}>Previsao em tempo real para os melhores picos.</p>
+          <h1 className={lexend.className} style={{ fontSize: '28px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black' }}>Praias</h1>
+          <p className='text-gray-500 text-sm mt-1'>Escolha uma praia para ver a previsão de ondas.</p>
         </div>
         <div className='flex flex-col gap-4 px-4'>
           {praias.map(function(praia) {
