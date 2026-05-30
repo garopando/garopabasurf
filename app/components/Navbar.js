@@ -17,6 +17,7 @@ export default function Navbar() {
   const [aberto, setAberto] = useState(false)
   const { user, perfil, abrirModal, sair } = useAuth()
   const [menuPerfil, setMenuPerfil] = useState(false)
+  const ehAdmin = user && user.email === 'ailtonsza@gmail.com'
   return (
     <div className='fixed top-0 left-0 w-full bg-black' style={{ zIndex: 9999 }}>
       <nav className='hidden md:flex max-w-[70%] mx-auto text-white px-6 py-4 items-center justify-between'>
@@ -44,6 +45,9 @@ export default function Navbar() {
                 </button>
                 {menuPerfil && (
                   <div style={{ position: 'absolute', right: 0, top: '46px', background: '#fff', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.18)', minWidth: '160px', overflow: 'hidden', zIndex: 10000 }}>
+                    {ehAdmin && (
+                      <a href='/admin' className={lexend.className} style={{ display: 'block', padding: '12px 16px', fontSize: '14px', color: '#111', textDecoration: 'none', borderBottom: '1px solid #f3f4f6' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Admin</a>
+                    )}
                     <button onClick={function() { sair(); setMenuPerfil(false) }} className={lexend.className} style={{ width: '100%', textAlign: 'left', padding: '12px 16px', background: 'none', border: 'none', fontSize: '14px', color: '#111', cursor: 'pointer' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Sair</button>
                   </div>
                 )}
@@ -76,6 +80,7 @@ export default function Navbar() {
             {user ? (
               <>
                 <div className={lexend.className} style={{ padding: '10px 16px', color: 'white', fontSize: '15px' }}>Ola, {perfil && perfil.nome ? perfil.nome.split(' ')[0] : 'surfista'}</div>
+                {ehAdmin && <a href='/admin' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px' }} onClick={function() { setAberto(false) }}>Admin</a>}
                 <button onClick={function() { sair(); setAberto(false) }} className={lexend.className} style={{ textAlign: 'left', padding: '10px 16px', color: '#9ca3af', background: 'none', border: 'none', fontSize: '15px', cursor: 'pointer' }}>Sair</button>
               </>
             ) : (
