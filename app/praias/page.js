@@ -23,6 +23,18 @@ function getMapUrl(lat, lon, w, h) {
   return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=' + (lon-0.008) + ',' + (lat-0.004) + ',' + (lon+0.008) + ',' + (lat+0.004) + '&bboxSR=4326&imageSR=4326&size=' + w + ',' + h + '&f=image'
 }
 
+function setaSvg(graus, cor, t) {
+  return '<svg width="' + t + '" height="' + t + '" viewBox="0 0 24 24" style="transform:rotate(' + (graus + 180) + 'deg);"><path d="M12 2 L18 20 L12 16 L6 20 Z" fill="' + cor + '"/></svg>'
+}
+
+function setasOverlay(ventoDir, swellDir) {
+  let h = '<div style="display:flex;gap:8px;align-items:center;">'
+  if (ventoDir != null) h += '<div class="seta-overlay" title="Vento">' + setaSvg(ventoDir, '#f97316', 26) + '</div>'
+  if (swellDir != null) h += '<div class="seta-overlay" style="animation-delay:0.4s" title="Swell">' + setaSvg(swellDir, '#06b6d4', 26) + '</div>'
+  h += '</div>'
+  return h
+}
+
 function setaVento(graus, tamanho) {
   if (graus == null) return ''
   const t = tamanho || 14
@@ -75,7 +87,7 @@ export default function PraiasPage() {
   useEffect(function() {
     const hoje = new Date().toISOString().slice(0, 10)
     praias.forEach(function(p) {
-      const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&hourly=wave_height&start_date=' + hoje + '&end_date=' + hoje + '&timezone=America/Sao_Paulo'
+      const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&hourly=wave_height&current=wave_direction&start_date=' + hoje + '&end_date=' + hoje + '&timezone=America/Sao_Paulo'
       const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo'
       Promise.all([fetch(marineUrl).then(function(r){return r.json()}), fetch(meteoUrl).then(function(r){return r.json()})])
         .then(function(res) {
@@ -86,9 +98,10 @@ export default function PraiasPage() {
           }
           const vento = res[1] && res[1].current ? res[1].current.windspeed_10m : null
           const dir = res[1] && res[1].current ? res[1].current.winddirection_10m : null
+          const swellDir = res[0] && res[0].current ? res[0].current.wave_direction : null
           setDados(function(prev) {
             const novo = Object.assign({}, prev)
-            novo[p.slug] = { min: min, max: max, altura: max, vento: vento, dir: dir }
+            novo[p.slug] = { min: min, max: max, altura: max, vento: vento, dir: dir, swellDir: swellDir }
             dadosRef.current = novo
             return novo
           })
@@ -102,6 +115,12 @@ export default function PraiasPage() {
     link.rel = 'stylesheet'
     link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
     document.head.appendChild(link)
+    if (!document.getElementById('seta-anim-css')) {
+      const st = document.createElement('style')
+      st.id = 'seta-anim-css'
+      st.textContent = '@keyframes setaPulse { 0%,100% { transform: translateY(0); opacity: 0.85 } 50% { transform: translateY(-4px); opacity: 1 } } .seta-overlay { animation: setaPulse 1.4s ease-in-out infinite; }'
+      document.head.appendChild(st)
+    }
     function montar(alvo, sufixo) {
       if (!alvo || alvo._leaflet_id) return
       const L = window.L
@@ -147,6 +166,19 @@ export default function PraiasPage() {
           marker.on('click', function() { window.location.href = '/praias/' + p.slug })
         }
         markersRef.current[p.slug] = marker
+        const overlayIcon = L.divIcon({ className: '', html: '<div id="setas-' + p.slug + '-' + sufixo + '" style="display:none;"></div>', iconSize: [60, 30], iconAnchor: [30, 55] })
+        const overlayMarker = L.marker([p.lat, p.lon], { icon: overlayIcon, interactive: false }).addTo(map)
+        function mostrarSetas() {
+          const d = dadosRef.current[p.slug]
+          const el = document.getElementById('setas-' + p.slug + '-' + sufixo)
+          if (el && d) { el.innerHTML = setasOverlay(d.dir, d.swellDir); el.style.display = 'block' }
+        }
+        function esconderSetas() {
+          const el = document.getElementById('setas-' + p.slug + '-' + sufixo)
+          if (el) el.style.display = 'none'
+        }
+        marker.on('popupopen', mostrarSetas)
+        marker.on('popupclose', esconderSetas)
       })
       setTimeout(function() { map.invalidateSize() }, 200)
       praias.forEach(function(p) { atualizarPin(p.slug, sufixo, dadosRef.current[p.slug]) })
