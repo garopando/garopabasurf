@@ -34,12 +34,11 @@ export default function Navbar() {
               </li>
             )
           })}
-          <li style={{ marginLeft: '8px' }}>
+          <li style={{ marginLeft: '8px', display: 'flex', alignItems: 'center' }}>
             {user ? (
-              <div style={{ position: 'relative' }}>
-                <button onClick={function() { setMenuPerfil(!menuPerfil) }} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'none', border: 'none', cursor: 'pointer' }}>
-                  <span className={lexend.className} style={{ fontSize: '14px', color: 'white' }}>{perfil && perfil.nome ? perfil.nome.split(' ')[0] : 'Perfil'}</span>
-                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#374151', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', overflow: 'hidden' }}>
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <button onClick={function() { setMenuPerfil(!menuPerfil) }} style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                  <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#374151', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', overflow: 'hidden' }}>
                     {perfil && perfil.avatar_url ? <img src={perfil.avatar_url} alt='' style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfil && perfil.nome ? perfil.nome[0].toUpperCase() : 'U')}
                   </div>
                 </button>
