@@ -244,8 +244,24 @@ export default function PraiaForecast({ nome, lat, lon, foto }) {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ width: '100%', height: '450px', overflow: 'hidden', marginTop: '57px' }}>
+      <div style={{ position: 'relative', width: '100%', height: '450px', overflow: 'hidden', marginTop: '57px' }}>
         <MapaSatelite lat={lat} lon={lon} nome={nome} />
+        <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '12px 16px', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', zIndex: 1000 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
+            <span style={{ display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: ventoDirAtual != null ? setaSvg(ventoDirAtual, '#f97316', 22) : '' }} />
+            <div>
+              <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vento</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#111' }}>{ventoDirAtual != null ? getDirecao(ventoDirAtual) : '-'}</div>
+            </div>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <span style={{ display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: swellDirAtual != null ? setaSvg(swellDirAtual, '#06b6d4', 22) : '' }} />
+            <div>
+              <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Swell</div>
+              <div style={{ fontSize: '13px', fontWeight: '700', color: '#111' }}>{swellDirAtual != null ? getDirecao(swellDirAtual) : '-'}</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
@@ -253,12 +269,12 @@ export default function PraiaForecast({ nome, lat, lon, foto }) {
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
 
         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>
-          {['resumo', 'graficos', 'mapa'].map(function(a) {
+          {['resumo', 'graficos'].map(function(a) {
             return (
               <button key={a} onClick={function() { setAba(a) }}
                 className={lexendNormal.className}
                 style={{ padding: '10px 20px', fontSize: '13px', color: aba === a ? 'black' : '#9ca3af', background: 'none', border: 'none', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
-                {a === 'resumo' ? 'Resumo' : a === 'graficos' ? 'Graficos' : 'Mapa'}
+                {a === 'resumo' ? 'Resumo' : 'Graficos'}
               </button>
             )
           })}
@@ -293,35 +309,6 @@ export default function PraiaForecast({ nome, lat, lon, foto }) {
           </div>
         )}
 
-        {aba === 'mapa' && (
-          <div>
-            <div style={{ position: 'relative', borderRadius: '16px', overflow: 'hidden', height: '400px' }}>
-              <MapaSatelite lat={lat} lon={lon} nome={nome} />
-              <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '12px 16px', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', zIndex: 1000 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                  <span className='seta-spin' style={{ display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: ventoDirAtual != null ? setaSvg(ventoDirAtual, '#f97316', 22) : '' }} />
-                  <div>
-                    <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vento</div>
-                    <div style={{ fontSize: '13px', fontWeight: '700', color: '#111' }}>{ventoDirAtual != null ? getDirecao(ventoDirAtual) : '-'}</div>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span className='seta-spin' style={{ display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: swellDirAtual != null ? setaSvg(swellDirAtual, '#06b6d4', 22) : '' }} />
-                  <div>
-                    <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Swell</div>
-                    <div style={{ fontSize: '13px', fontWeight: '700', color: '#111' }}>{swellDirAtual != null ? getDirecao(swellDirAtual) : '-'}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div style={{ textAlign: 'center', marginTop: '20px' }}>
-              <a href={MAPS_URL} target='_blank' rel='noreferrer'
-                style={{ display: 'inline-block', padding: '12px 28px', background: 'black', color: 'white', borderRadius: '10px', fontSize: '14px', textDecoration: 'none' }}>
-                Como chegar
-              </a>
-            </div>
-          </div>
-        )}
       </div>
       <Footer />
     </div>
