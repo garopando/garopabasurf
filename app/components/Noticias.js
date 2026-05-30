@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { Lexend } from 'next/font/google'
 
-const lexend = Lexend({ subsets: ['latin'], weight: '500' })
+const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 
 function CardNoticia({ post, altura }) {
   const img = post.thumbnail || 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=800&q=80'
@@ -12,7 +12,7 @@ function CardNoticia({ post, altura }) {
       style={{ backgroundImage: 'url(' + img + ')', backgroundSize: 'cover', backgroundPosition: 'center', minHeight: altura, textDecoration: 'none' }}>
       <div className='absolute inset-0 bg-black/50 group-hover:bg-black/60 transition' />
       <div className='relative z-10 p-4'>
-        <h3 className={lexend.className} style={{ fontSize: '22px', color: 'white', fontWeight: '500', letterSpacing: '-0.03em', lineHeight: '1.2' }}>{post.titulo}</h3>
+        <h3 className={lexend.className} style={{ fontSize: '22px', color: 'white', fontWeight: '700', letterSpacing: '-0.06em', lineHeight: '1.15' }}>{post.titulo}</h3>
       </div>
     </a>
   )
@@ -31,9 +31,6 @@ export default function Noticias() {
 
   if (loading || posts.length === 0) return null
 
-  const grandes = posts.slice(0, 2)
-  const pequenas = posts.slice(2, 5)
-
   return (
     <section className='w-full py-10'>
       <div className='max-w-[70%] mx-auto hidden md:block'>
@@ -41,16 +38,9 @@ export default function Noticias() {
           <h2 className={lexend.className} style={{ fontSize: '28px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Noticias</h2>
           <a href='/noticias' className='px-5 py-2 bg-black text-white border border-black rounded-[10px] text-sm font-medium hover:bg-white hover:text-black transition'>Ver mais</a>
         </div>
-        {grandes.length > 0 && (
-          <div className='grid grid-cols-2 gap-3 mb-3'>
-            {grandes.map(function(p) { return <CardNoticia key={p.id} post={p} altura='280px' /> })}
-          </div>
-        )}
-        {pequenas.length > 0 && (
-          <div className='grid grid-cols-3 gap-3'>
-            {pequenas.map(function(p) { return <CardNoticia key={p.id} post={p} altura='180px' /> })}
-          </div>
-        )}
+        <div className='grid grid-cols-3 gap-3'>
+          {posts.map(function(p) { return <CardNoticia key={p.id} post={p} altura='260px' /> })}
+        </div>
       </div>
       <div className='md:hidden px-4 w-full'>
         <div className='flex items-center justify-between mb-4 px-4'>
