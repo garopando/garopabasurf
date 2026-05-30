@@ -1,10 +1,13 @@
+'use client'
 import { Young_Serif } from 'next/font/google'
 import { Lexend } from 'next/font/google'
+import { useAuth } from './AuthContext'
 
 const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
 const lexend = Lexend({ subsets: ['latin'], weight: '500' })
 
 export default function Footer() {
+  const { user, abrirModal } = useAuth()
   return (
     <>
       <footer className='w-full bg-black text-white py-10 hidden md:block'>
@@ -32,10 +35,10 @@ export default function Footer() {
             <span className='material-symbols-outlined' style={{ fontSize: '24px' }}>favorite</span>
             <span style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>Favoritos</span>
           </a>
-          <a href='#' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', textDecoration: 'none', color: '#9ca3af', flex: 1 }}>
+          <button onClick={function() { if (!user) abrirModal() }} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', background: 'none', border: 'none', color: user ? '#111' : '#9ca3af', flex: 1, cursor: 'pointer' }}>
             <span className='material-symbols-outlined' style={{ fontSize: '24px' }}>person</span>
-            <span style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>Perfil</span>
-          </a>
+            <span style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>{user ? 'Conta' : 'Perfil'}</span>
+          </button>
         </div>
       </nav>
 

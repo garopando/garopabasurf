@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { Young_Serif } from 'next/font/google'
 import { Lexend } from 'next/font/google'
 import Link from 'next/link'
+import { useAuth } from './AuthContext'
 
 const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
 const lexend = Lexend({ subsets: ['latin'], weight: '500' })
@@ -14,6 +15,7 @@ const links = [
 
 export default function Navbar() {
   const [aberto, setAberto] = useState(false)
+  const { user, perfil, abrirModal, sair } = useAuth()
   return (
     <div className='fixed top-0 left-0 w-full bg-black' style={{ zIndex: 9999 }}>
       <nav className='hidden md:flex max-w-[70%] mx-auto text-white px-6 py-4 items-center justify-between'>
@@ -30,6 +32,19 @@ export default function Navbar() {
               </li>
             )
           })}
+          <li style={{ marginLeft: '8px' }}>
+            {user ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className={lexend.className} style={{ fontSize: '14px', color: 'white' }}>{perfil && perfil.nome ? perfil.nome.split(' ')[0] : 'Perfil'}</span>
+                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#374151', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', overflow: 'hidden' }}>
+                  {perfil && perfil.avatar_url ? <img src={perfil.avatar_url} alt='' style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfil && perfil.nome ? perfil.nome[0].toUpperCase() : 'U')}
+                </div>
+                <button onClick={sair} className={lexend.className} style={{ fontSize: '13px', color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button>
+              </div>
+            ) : (
+              <button onClick={abrirModal} className={lexend.className} style={{ fontSize: '14px', color: 'black', background: 'white', border: 'none', borderRadius: '10px', padding: '8px 18px', cursor: 'pointer', fontWeight: '700' }}>Entrar</button>
+            )}
+          </li>
         </ul>
       </nav>
       <div className='md:hidden'>
@@ -51,6 +66,14 @@ export default function Navbar() {
                 </a>
               )
             })}
+            {user ? (
+              <>
+                <div className={lexend.className} style={{ padding: '10px 16px', color: 'white', fontSize: '15px' }}>Ola, {perfil && perfil.nome ? perfil.nome.split(' ')[0] : 'surfista'}</div>
+                <button onClick={function() { sair(); setAberto(false) }} className={lexend.className} style={{ textAlign: 'left', padding: '10px 16px', color: '#9ca3af', background: 'none', border: 'none', fontSize: '15px', cursor: 'pointer' }}>Sair</button>
+              </>
+            ) : (
+              <button onClick={function() { abrirModal(); setAberto(false) }} className={lexend.className} style={{ textAlign: 'center', padding: '12px', margin: '4px 0', color: 'black', background: 'white', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: '700', cursor: 'pointer' }}>Entrar</button>
+            )}
           </div>
         )}
       </div>
