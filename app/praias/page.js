@@ -190,19 +190,35 @@ export default function PraiasPage() {
       <div className='md:hidden' style={{ paddingTop: '64px', paddingBottom: '80px' }}>
         <div ref={mapRefMobile} style={{ width: '100%', height: '300px' }} />
         <div style={{ padding: '16px' }}>
-          <h1 className={lexend.className} style={{ fontSize: '26px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', marginBottom: '16px' }}>Praias</h1>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <h1 className={lexend.className} style={{ fontSize: '26px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', marginBottom: '6px' }}>Surf Spots Garopaba</h1>
+          <p style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.5', marginBottom: '18px' }}>Explore os picos no mapa. Movimente a tela para ver as condicoes e as ondas de cada praia da Capital Catarinense do Surf.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {praias.map(function(praia) {
               const d = dados[praia.slug] || {}
               const q = classificar(d.altura, d.vento)
               return (
-                <a key={praia.slug} href={'/praias/' + praia.slug} style={{ textDecoration: 'none', display: 'flex', gap: '12px', alignItems: 'center', padding: '8px', borderRadius: '12px', border: '1px solid #f3f4f6' }}>
-                  <img src={getMapUrl(praia.lat, praia.lon, 160, 160)} alt={praia.nome} style={{ width: '70px', height: '70px', objectFit: 'cover', borderRadius: '10px', flexShrink: 0 }} />
-                  <div style={{ flex: 1 }}>
-                    <h3 className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '4px' }}>{praia.nome}</h3>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '10px', fontWeight: '700', color: q.cor }}>{q.label}</span>
-                      <span style={{ fontSize: '13px', fontWeight: '700', color: 'black' }}>{(d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--'}</span>
+                <a key={praia.slug} href={'/praias/' + praia.slug} style={{ textDecoration: 'none', borderRadius: '14px', border: '1px solid #eceef1', overflow: 'hidden', background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+                  <img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '140px', objectFit: 'cover', display: 'block' }} />
+                  <div style={{ padding: '14px' }}>
+                    <h3 className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{praia.nome}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '800', color: q.cor, letterSpacing: '0.03em' }}>{q.label}</span>
+                      <div style={{ display: 'flex', gap: '3px', flex: 1 }}>
+                        {[0,1,2,3,4].map(function(i) {
+                          const ativo = q.label === 'BOM' ? 5 : q.label === 'REGULAR' ? 3 : q.label === 'FRACO' ? 1 : 0
+                          return <span key={i} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i < ativo ? q.cor : '#e5e7eb' }} />
+                        })}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '20px' }}>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Surf</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{(d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--'}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h' : '--'}</div>
+                      </div>
                     </div>
                   </div>
                 </a>
