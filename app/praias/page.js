@@ -57,27 +57,34 @@ export default function PraiasPage() {
   }, [])
 
   useEffect(function() {
-    if (mapInstance.current) return
     const link = document.createElement('link')
     link.rel = 'stylesheet'
     link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
     document.head.appendChild(link)
-    const script = document.createElement('script')
-    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-    script.onload = function() {
-      const alvo = mapRefDesktop.current || mapRefMobile.current
-      if (!alvo || mapInstance.current) return
+    function montar(alvo) {
+      if (!alvo || alvo._leaflet_id) return
       const L = window.L
       const map = L.map(alvo).setView([-28.03, -48.62], 12)
-      mapInstance.current = map
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '' }).addTo(map)
       praias.forEach(function(p) {
         const marker = L.circleMarker([p.lat, p.lon], { radius: 9, fillColor: '#111', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(map)
         marker.bindPopup('<b>' + p.nome + '</b><br><a href="/praias/' + p.slug + '">Ver previsao</a>')
         marker.on('click', function() { window.location.href = '/praias/' + p.slug })
       })
+      setTimeout(function() { map.invalidateSize() }, 200)
     }
-    document.body.appendChild(script)
+    function init() {
+      montar(mapRefDesktop.current)
+      montar(mapRefMobile.current)
+    }
+    if (window.L) {
+      init()
+    } else {
+      const script = document.createElement('script')
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+      script.onload = init
+      document.body.appendChild(script)
+    }
   }, [])
 
   return (
