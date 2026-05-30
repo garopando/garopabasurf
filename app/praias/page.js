@@ -23,6 +23,12 @@ function getMapUrl(lat, lon, w, h) {
   return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=' + (lon-0.008) + ',' + (lat-0.004) + ',' + (lon+0.008) + ',' + (lat+0.004) + '&bboxSR=4326&imageSR=4326&size=' + w + ',' + h + '&f=image'
 }
 
+function direcaoVento(graus) {
+  if (graus == null) return ''
+  const dirs = ['N','NE','L','SE','S','SO','O','NO']
+  return dirs[Math.round(graus / 45) % 8]
+}
+
 function corOnda(alturaM, ventoKmh) {
   if (alturaM == null) return '#9ca3af'
   if (alturaM >= 0.8 && alturaM <= 2.5 && ventoKmh < 15) return '#22c55e'
@@ -49,7 +55,7 @@ export default function PraiasPage() {
     const hoje = new Date().toISOString().slice(0, 10)
     praias.forEach(function(p) {
       const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&hourly=wave_height&start_date=' + hoje + '&end_date=' + hoje + '&timezone=America/Sao_Paulo'
-      const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=windspeed_10m&timezone=America/Sao_Paulo'
+      const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo'
       Promise.all([fetch(marineUrl).then(function(r){return r.json()}), fetch(meteoUrl).then(function(r){return r.json()})])
         .then(function(res) {
           let min = null, max = null
@@ -58,9 +64,10 @@ export default function PraiasPage() {
             if (vals.length) { min = Math.min.apply(null, vals); max = Math.max.apply(null, vals) }
           }
           const vento = res[1] && res[1].current ? res[1].current.windspeed_10m : null
+          const dir = res[1] && res[1].current ? res[1].current.winddirection_10m : null
           setDados(function(prev) {
             const novo = Object.assign({}, prev)
-            novo[p.slug] = { min: min, max: max, altura: max, vento: vento }
+            novo[p.slug] = { min: min, max: max, altura: max, vento: vento, dir: dir }
             dadosRef.current = novo
             return novo
           })
@@ -175,7 +182,7 @@ export default function PraiasPage() {
                       </div>
                       <div>
                         <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
-                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h' : '--'}</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}</div>
                       </div>
                     </div>
                   </div>
@@ -217,7 +224,7 @@ export default function PraiasPage() {
                       </div>
                       <div>
                         <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
-                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h' : '--'}</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}</div>
                       </div>
                     </div>
                   </div>
