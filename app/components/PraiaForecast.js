@@ -244,24 +244,8 @@ export default function PraiaForecast({ nome, lat, lon, foto }) {
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
-      <div style={{ position: 'relative', width: '100%', height: '450px', overflow: 'hidden', marginTop: '57px' }}>
-        <MapaSatelite lat={lat} lon={lon} nome={nome} />
-        <div style={{ position: 'absolute', top: '16px', left: '16px', background: 'rgba(255,255,255,0.95)', borderRadius: '12px', padding: '12px 16px', boxShadow: '0 2px 10px rgba(0,0,0,0.15)', zIndex: 1000 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <span style={{ display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: ventoDirAtual != null ? setaSvg(ventoDirAtual, '#f97316', 22) : '' }} />
-            <div>
-              <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Vento</div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#111' }}>{ventoDirAtual != null ? getDirecao(ventoDirAtual) : '-'}</div>
-            </div>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ display: 'inline-block' }} dangerouslySetInnerHTML={{ __html: swellDirAtual != null ? setaSvg(swellDirAtual, '#06b6d4', 22) : '' }} />
-            <div>
-              <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Swell</div>
-              <div style={{ fontSize: '13px', fontWeight: '700', color: '#111' }}>{swellDirAtual != null ? getDirecao(swellDirAtual) : '-'}</div>
-            </div>
-          </div>
-        </div>
+      <div style={{ width: '100%', height: '450px', overflow: 'hidden', marginTop: '57px' }}>
+        <MapaSatelite lat={lat} lon={lon} nome={nome} ventoDir={ventoDirAtual} swellDir={swellDirAtual} />
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>

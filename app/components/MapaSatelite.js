@@ -1,7 +1,17 @@
 'use client'
 import { useEffect, useRef } from 'react'
 
-export default function MapaSatelite({ lat, lon, nome }) {
+function dirTexto(graus) {
+  if (graus == null) return '-'
+  const dirs = ['N','NNE','NE','ENE','L','ESE','SE','SSE','S','SSO','SO','OSO','O','ONO','NO','NNO']
+  return dirs[Math.round(graus / 22.5) % 16]
+}
+function setaHtml(graus, cor) {
+  if (graus == null) return ''
+  return '<svg width="18" height="18" viewBox="0 0 24 24" style="transform:rotate(' + (graus + 180) + 'deg);"><path d="M12 2 L18 20 L12 16 L6 20 Z" fill="' + cor + '"/></svg>'
+}
+
+export default function MapaSatelite({ lat, lon, nome, ventoDir, swellDir }) {
   const mapRef = useRef(null)
   const containerRef = useRef(null)
 
@@ -45,8 +55,15 @@ export default function MapaSatelite({ lat, lon, nome }) {
         className: '',
       })
 
+      const popupHtml = '<div style="min-width:160px;">'
+        + '<div style="font-weight:800;font-size:15px;color:#111;margin-bottom:2px;">' + nome + '</div>'
+        + '<div style="font-size:11px;color:#9ca3af;margin-bottom:10px;">Garopaba, SC</div>'
+        + '<div style="display:flex;gap:16px;">'
+        + '<div style="display:flex;align-items:center;gap:6px;"><span>' + setaHtml(ventoDir, '#f97316') + '</span><div><div style="font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:13px;font-weight:700;color:#111;">' + dirTexto(ventoDir) + '</div></div></div>'
+        + '<div style="display:flex;align-items:center;gap:6px;"><span>' + setaHtml(swellDir, '#06b6d4') + '</span><div><div style="font-size:9px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Swell</div><div style="font-size:13px;font-weight:700;color:#111;">' + dirTexto(swellDir) + '</div></div></div>'
+        + '</div></div>'
       L.marker([lat, lon], { icon }).addTo(map)
-        .bindPopup('<b>' + nome + '</b><br>Garopaba, SC')
+        .bindPopup(popupHtml)
         .openPopup()
     })
 
@@ -56,7 +73,7 @@ export default function MapaSatelite({ lat, lon, nome }) {
         mapRef.current = null
       }
     }
-  }, [lat, lon, nome])
+  }, [lat, lon, nome, ventoDir, swellDir])
 
   return (
     <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
