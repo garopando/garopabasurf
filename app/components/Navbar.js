@@ -45,6 +45,7 @@ export default function Navbar() {
                 </button>
                 {menuPerfil && (
                   <div style={{ position: 'absolute', right: 0, top: '46px', background: '#fff', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.18)', minWidth: '160px', overflow: 'hidden', zIndex: 10000 }}>
+                    <a href='/favoritos' className={lexend.className} style={{ display: 'block', padding: '12px 16px', fontSize: '14px', color: '#111', textDecoration: 'none', borderBottom: '1px solid #f3f4f6' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Favoritos</a>
                     {ehAdmin && (
                       <a href='/admin' className={lexend.className} style={{ display: 'block', padding: '12px 16px', fontSize: '14px', color: '#111', textDecoration: 'none', borderBottom: '1px solid #f3f4f6' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Admin</a>
                     )}
