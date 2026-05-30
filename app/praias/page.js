@@ -43,6 +43,7 @@ export default function PraiasPage() {
   const mapRefMobile = useRef(null)
   const mapInstance = useRef(null)
   const markersRef = useRef({})
+  const dadosRef = useRef({})
 
   useEffect(function() {
     const hoje = new Date().toISOString().slice(0, 10)
@@ -60,6 +61,7 @@ export default function PraiasPage() {
           setDados(function(prev) {
             const novo = Object.assign({}, prev)
             novo[p.slug] = { min: min, max: max, altura: max, vento: vento }
+            dadosRef.current = novo
             return novo
           })
         })
@@ -86,8 +88,21 @@ export default function PraiasPage() {
         })
         const marker = L.marker([p.lat, p.lon], { icon: icon }).addTo(map)
         marker.bindPopup('<div style="font-weight:700;font-size:15px;margin-bottom:4px;">' + p.nome + '</div><div id="pop-' + p.slug + '" style="font-size:13px;color:#666;">Carregando...</div>', { closeButton: false })
-        marker.on('mouseover', function() { marker.openPopup() })
-        marker.on('add', function() {})
+        marker.on('mouseover', function() {
+          const d = dadosRef.current[p.slug]
+          let corpo = 'Carregando...'
+          if (d) {
+            const q = classificar(d.altura, d.vento)
+            corpo = '<div style="font-weight:800;font-size:13px;color:' + q.cor + ';letter-spacing:0.05em;margin-bottom:8px;">' + q.label + '</div>'
+              + '<div style="display:flex;gap:18px;">'
+              + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Surf</div><div style="font-size:15px;font-weight:700;color:#111;">' + ((d.min!=null&&d.max!=null)?d.min.toFixed(1)+'-'+d.max.toFixed(1)+'m':'--') + '</div></div>'
+              + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:15px;font-weight:700;color:#111;">' + (d.vento!=null?Math.round(d.vento)+' km/h':'--') + '</div></div>'
+              + '</div>'
+          }
+          const html = '<div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo
+          marker.setPopupContent(html)
+          marker.openPopup()
+        })
         marker.on('mouseout', function() { marker.closePopup() })
         marker.on('click', function() { window.location.href = '/praias/' + p.slug })
         markersRef.current[p.slug] = marker
