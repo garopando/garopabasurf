@@ -11,6 +11,7 @@ const lexend = Lexend({ subsets: ['latin'], weight: '500' })
 const links = [
   { href: '/', label: 'Principal' },
   { href: '/praias', label: 'Praias' },
+  { href: '/noticias', label: 'Noticias' },
 ]
 
 export default function Navbar() {
