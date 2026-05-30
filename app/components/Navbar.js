@@ -15,7 +15,7 @@ const links = [
 export default function Navbar() {
   const [aberto, setAberto] = useState(false)
   return (
-    <div className='fixed top-0 left-0 w-full bg-black z-50'>
+    <div className='fixed top-0 left-0 w-full bg-black' style={{ zIndex: 9999 }}>
       <nav className='hidden md:flex max-w-[70%] mx-auto text-white px-6 py-4 items-center justify-between'>
         <Link href='/' className={youngSerif.className} style={{ fontSize: '28px', color: 'white', letterSpacing: '-0.1em', lineHeight: '1', textDecoration: 'none' }}>
           garopabasurf
