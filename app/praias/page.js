@@ -23,6 +23,13 @@ function getMapUrl(lat, lon, w, h) {
   return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=' + (lon-0.008) + ',' + (lat-0.004) + ',' + (lon+0.008) + ',' + (lat+0.004) + '&bboxSR=4326&imageSR=4326&size=' + w + ',' + h + '&f=image'
 }
 
+function corOnda(alturaM, ventoKmh) {
+  if (alturaM == null) return '#9ca3af'
+  if (alturaM >= 0.8 && alturaM <= 2.5 && ventoKmh < 15) return '#22c55e'
+  if (alturaM >= 0.5 && ventoKmh < 25) return '#eab308'
+  return '#ef4444'
+}
+
 function classificar(alturaM, ventoKmh) {
   if (alturaM == null) return { label: '--', cor: '#9ca3af' }
   if (alturaM >= 0.8 && alturaM <= 2.5 && ventoKmh < 15) return { label: 'BOM', cor: '#22c55e' }
@@ -35,25 +42,24 @@ export default function PraiasPage() {
   const mapRefDesktop = useRef(null)
   const mapRefMobile = useRef(null)
   const mapInstance = useRef(null)
+  const markersRef = useRef({})
 
   useEffect(function() {
-    const lats = praias.map(function(p) { return p.lat }).join(',')
-    const lons = praias.map(function(p) { return p.lon }).join(',')
-    const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + lats + '&longitude=' + lons + '&current=wave_height&timezone=America/Sao_Paulo'
-    const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + lats + '&longitude=' + lons + '&current=windspeed_10m&timezone=America/Sao_Paulo'
-    Promise.all([fetch(marineUrl).then(function(r){return r.json()}), fetch(meteoUrl).then(function(r){return r.json()})])
-      .then(function(res) {
-        const marine = Array.isArray(res[0]) ? res[0] : [res[0]]
-        const meteo = Array.isArray(res[1]) ? res[1] : [res[1]]
-        const novo = {}
-        praias.forEach(function(p, i) {
-          const altura = marine[i] && marine[i].current ? marine[i].current.wave_height : null
-          const vento = meteo[i] && meteo[i].current ? meteo[i].current.windspeed_10m : null
-          novo[p.slug] = { altura: altura, vento: vento }
+    praias.forEach(function(p) {
+      const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&current=wave_height&timezone=America/Sao_Paulo'
+      const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=windspeed_10m&timezone=America/Sao_Paulo'
+      Promise.all([fetch(marineUrl).then(function(r){return r.json()}), fetch(meteoUrl).then(function(r){return r.json()})])
+        .then(function(res) {
+          const altura = res[0] && res[0].current ? res[0].current.wave_height : null
+          const vento = res[1] && res[1].current ? res[1].current.windspeed_10m : null
+          setDados(function(prev) {
+            const novo = Object.assign({}, prev)
+            novo[p.slug] = { altura: altura, vento: vento }
+            return novo
+          })
         })
-        setDados(novo)
-      })
-      .catch(function() {})
+        .catch(function() {})
+    })
   }, [])
 
   useEffect(function() {
@@ -67,7 +73,13 @@ export default function PraiasPage() {
       const map = L.map(alvo).setView([-28.03, -48.62], 12)
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '' }).addTo(map)
       praias.forEach(function(p) {
-        const marker = L.circleMarker([p.lat, p.lon], { radius: 9, fillColor: '#111', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(map)
+        const icon = L.divIcon({
+          className: '',
+          html: '<div id="pin-' + p.slug + '" style="background:#9ca3af;color:#fff;font-weight:700;font-size:13px;padding:5px 12px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,0.3);white-space:nowrap;border:2px solid #fff;">--</div>',
+          iconSize: [60, 28],
+          iconAnchor: [30, 14]
+        })
+        const marker = L.marker([p.lat, p.lon], { icon: icon }).addTo(map)
         marker.bindPopup('<b>' + p.nome + '</b><br><a href="/praias/' + p.slug + '">Ver previsao</a>')
         marker.on('click', function() { window.location.href = '/praias/' + p.slug })
       })
@@ -86,6 +98,18 @@ export default function PraiasPage() {
       document.body.appendChild(script)
     }
   }, [])
+
+  useEffect(function() {
+    // atualiza pilulas
+    praias.forEach(function(p) {
+      const d = dados[p.slug]
+      if (!d) return
+      const el = document.getElementById('pin-' + p.slug)
+      if (!el) return
+      el.style.background = corOnda(d.altura, d.vento)
+      el.textContent = d.altura != null ? d.altura.toFixed(1) + 'm' : '--'
+    })
+  }, [dados])
 
   return (
     <div className='min-h-screen bg-white'>
