@@ -104,7 +104,7 @@ export default function Praias() {
         {praias.map(function(p) {
           const vals = dados[p.slug] || []
           return (
-            <a key={p.slug} href={'/praias/' + p.slug} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '160px repeat(5, 1fr)', alignItems: 'center', padding: '14px 0', borderTop: '1px solid #f3f4f6', position: 'relative' }}>
+            <a key={p.slug} href={'/praias/' + p.slug} onMouseEnter={function(e){ e.currentTarget.style.background='#f7f9fb' }} onMouseLeave={function(e){ e.currentTarget.style.background='transparent' }} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '160px repeat(5, 1fr)', alignItems: 'center', padding: '14px 0', borderTop: '1px solid #f3f4f6', position: 'relative', borderRadius: '8px', transition: 'background 0.15s' }}>
               <div style={{ position: 'absolute', left: '160px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={vals} /></div>
               <div className={lexend.className} style={{ fontSize: '16px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em', position: 'relative', zIndex: 1 }}>{p.nome}</div>
               {[0,1,2,3,4].map(function(i) {
@@ -130,11 +130,13 @@ export default function Praias() {
   return (
     <section className='w-full py-12 bg-white'>
       <div className='max-w-[70%] mx-auto hidden md:block'>
-        <div className='flex items-center justify-between mb-8'>
+        <div className='mb-8'>
           <h2 className={lexend.className} style={{ fontSize: '28px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Surf Spots Garopaba</h2>
-          <a href='/praias' className='px-5 py-2 bg-black text-white border border-black rounded-[10px] text-sm font-medium hover:bg-white hover:text-black transition'>Ver todas</a>
         </div>
         <Tabela />
+        <div className='flex justify-center mt-8'>
+          <a href='/praias' className='px-6 py-2.5 bg-black text-white border border-black rounded-[10px] text-sm font-medium hover:bg-white hover:text-black transition'>Ver todas as praias</a>
+        </div>
       </div>
       <div className='md:hidden px-4'>
         <div className='flex items-center justify-between mb-4'>
