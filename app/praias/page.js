@@ -62,9 +62,9 @@ export default function PraiasPage() {
   const markersRef = useRef({})
   const dadosRef = useRef({})
 
-  function atualizarPin(slug, d) {
+  function atualizarPin(slug, sufixo, d) {
     if (!d) return
-    const el = document.getElementById('pin-' + slug)
+    const el = document.getElementById('pin-' + slug + '-' + sufixo)
     if (el) {
       el.style.background = corOnda(d.altura, d.vento)
       el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
@@ -101,7 +101,7 @@ export default function PraiasPage() {
     link.rel = 'stylesheet'
     link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
     document.head.appendChild(link)
-    function montar(alvo) {
+    function montar(alvo, sufixo) {
       if (!alvo || alvo._leaflet_id) return
       const L = window.L
       const map = L.map(alvo).setView([-28.03, -48.62], 12)
@@ -109,7 +109,7 @@ export default function PraiasPage() {
       praias.forEach(function(p) {
         const icon = L.divIcon({
           className: '',
-          html: '<div id="pin-' + p.slug + '" style="display:inline-block;background:#9ca3af;color:#fff;font-weight:800;font-size:15px;letter-spacing:-0.02em;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,0.25);white-space:nowrap;border:2.5px solid #fff;font-family:system-ui,sans-serif;">--</div>',
+          html: '<div id="pin-' + p.slug + '-' + sufixo + '" style="display:inline-block;background:#9ca3af;color:#fff;font-weight:800;font-size:15px;letter-spacing:-0.02em;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,0.25);white-space:nowrap;border:2.5px solid #fff;font-family:system-ui,sans-serif;">--</div>',
           iconSize: [90, 36],
           iconAnchor: [45, 18]
         })
@@ -135,11 +135,11 @@ export default function PraiasPage() {
         markersRef.current[p.slug] = marker
       })
       setTimeout(function() { map.invalidateSize() }, 200)
-      praias.forEach(function(p) { atualizarPin(p.slug, dadosRef.current[p.slug]) })
+      praias.forEach(function(p) { atualizarPin(p.slug, sufixo, dadosRef.current[p.slug]) })
     }
     function init() {
-      montar(mapRefDesktop.current)
-      montar(mapRefMobile.current)
+      montar(mapRefDesktop.current, 'd')
+      montar(mapRefMobile.current, 'm')
     }
     if (window.L) {
       init()
@@ -156,10 +156,13 @@ export default function PraiasPage() {
     praias.forEach(function(p) {
       const d = dados[p.slug]
       if (!d) return
-      const el = document.getElementById('pin-' + p.slug)
-      if (!el) return
-      el.style.background = corOnda(d.altura, d.vento)
-      el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
+      ;['d','m'].forEach(function(suf) {
+        const el = document.getElementById('pin-' + p.slug + '-' + suf)
+        if (el) {
+          el.style.background = corOnda(d.altura, d.vento)
+          el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
+        }
+      })
       const m = markersRef.current[p.slug]
       if (m) {
         const q = classificar(d.altura, d.vento)
