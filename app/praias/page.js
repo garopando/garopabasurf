@@ -39,7 +39,7 @@ export default function PraiasPage() {
                   <img src={getMapUrl(praia.lat, praia.lon, 15, 400, 200)} alt={praia.nome} className='w-full h-full object-cover group-hover:scale-105 transition duration-500' style={{ position: 'absolute', inset: 0 }} />
                   <div className='absolute inset-0 bg-black/30 group-hover:bg-black/50 transition' />
                   <div className='absolute bottom-4 left-4'>
-                    <h3 className={lexend.className} style={{ fontSize: '20px', fontWeight: '700', color: 'white', letterSpacing: '-0.02em' }}>{praia.nome}</h3>
+                    <h3 className={lexend.className} style={{ fontSize: '22px', fontWeight: '700', color: 'white', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px white' }}>{praia.nome}</h3>
                   </div>
                 </div>
 
@@ -63,7 +63,7 @@ export default function PraiasPage() {
                   <div className='absolute inset-0 bg-black/20' />
                 </div>
                 <div>
-                  <h3 className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', color: 'black', letterSpacing: '-0.03em', marginBottom: '4px' }}>{praia.nome}</h3>
+                  <h3 className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>{praia.nome}</h3>
 
                 </div>
               </a>
