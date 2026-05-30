@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [perfil, setPerfil] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [modalAberto, setModalAberto] = useState(false)
 
   useEffect(function() {
     supabase.auth.getSession().then(function({ data }) {
@@ -51,7 +52,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, perfil, loading, cadastrar, entrar, sair }}>
+    <AuthContext.Provider value={{ user, perfil, loading, cadastrar, entrar, sair, modalAberto, abrirModal: function() { setModalAberto(true) }, fecharModal: function() { setModalAberto(false) } }}>
       {children}
     </AuthContext.Provider>
   )
