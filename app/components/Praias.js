@@ -139,9 +139,8 @@ export default function Praias() {
         </div>
       </div>
       <div className='md:hidden px-4'>
-        <div className='flex items-center justify-between mb-4'>
+        <div className='mb-4'>
           <h2 className={lexend.className} style={{ fontSize: '22px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Surf Spots Garopaba</h2>
-          <a href='/praias' className='px-4 py-2 bg-black text-white rounded-[10px] text-xs font-medium' style={{ textDecoration: 'none' }}>Ver todas</a>
         </div>
         <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
           <div style={{ minWidth: '520px' }}>
@@ -159,12 +158,13 @@ export default function Praias() {
             {praias.map(function(p) {
               const vals = dados[p.slug] || []
               return (
-                <a key={p.slug} href={'/praias/' + p.slug} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '110px repeat(5, 1fr)', alignItems: 'center', padding: '12px 0', borderTop: '1px solid #f3f4f6' }}>
-                  <div className={lexend.className} style={{ fontSize: '14px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em' }}>{p.nome}</div>
+                <a key={p.slug} href={'/praias/' + p.slug} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '110px repeat(5, 1fr)', alignItems: 'center', padding: '12px 0', borderTop: '1px solid #f3f4f6', position: 'relative', borderRadius: '8px' }}>
+                  <div style={{ position: 'absolute', left: '110px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={vals} /></div>
+                  <div className={lexend.className} style={{ fontSize: '14px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em', position: 'relative', zIndex: 1 }}>{p.nome}</div>
                   {[0,1,2,3,4].map(function(i) {
                     const v = vals[i]
                     return (
-                      <div key={i} style={{ textAlign: 'center' }}>
+                      <div key={i} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
                         <div style={{ fontSize: '13px', fontWeight: '700', color: '#111', marginBottom: '5px' }}>{v != null ? v.toFixed(1) + 'm' : '--'}</div>
                         <div style={{ display: 'flex', gap: '2px', justifyContent: 'center' }}>
                           {[0,1,2].map(function(j) {
@@ -178,6 +178,9 @@ export default function Praias() {
               )
             })}
           </div>
+        </div>
+        <div className='flex justify-center mt-6'>
+          <a href='/praias' className='px-6 py-2.5 bg-black text-white rounded-[10px] text-sm font-medium' style={{ textDecoration: 'none' }}>Ver todas as praias</a>
         </div>
       </div>
     </section>
