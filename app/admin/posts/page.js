@@ -3,22 +3,26 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../../lib/supabase'
 import { Lexend } from 'next/font/google'
+import { useAuth } from '../../components/AuthContext'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
+const ADMIN_ID = 'b20f6b3d-9e42-4445-a4a5-6509aee5bcb5'
 
 export default function AdminPosts() {
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const { user, loading: authLoading, sair: sairAuth } = useAuth()
 
   useEffect(function() {
-    if (localStorage.getItem('admin_auth') !== 'true') {
-      router.push('/admin')
+    if (authLoading) return
+    if (!user || user.id !== ADMIN_ID) {
+      router.replace('/admin')
       return
     }
     carregarPosts()
-  }, [])
+  }, [user, authLoading])
 
   async function carregarPosts() {
     const { data } = await supabase.from('posts').select('*').order('criado_em', { ascending: false })
@@ -37,9 +41,9 @@ export default function AdminPosts() {
     carregarPosts()
   }
 
-  function sair() {
-    localStorage.removeItem('admin_auth')
-    router.push('/admin')
+  async function sair() {
+    await sairAuth()
+    router.push('/')
   }
 
   return (

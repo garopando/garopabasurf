@@ -8,9 +8,11 @@ import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
 import { supabase } from '../../../../lib/supabase'
 import { Lexend } from 'next/font/google'
+import { useAuth } from '../../../components/AuthContext'
 
 const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 const lexendNormal = Lexend({ subsets: ['latin'], weight: '400' })
+const ADMIN_ID = 'b20f6b3d-9e42-4445-a4a5-6509aee5bcb5'
 
 function slugify(text) {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -26,12 +28,12 @@ export default function NovoPost() {
   const [salvando, setSalvando] = useState(false)
   const [mensagem, setMensagem] = useState('')
   const router = useRouter()
+  const { user, loading: authLoading } = useAuth()
 
   useEffect(function() {
-    if (localStorage.getItem('admin_auth') !== 'true') {
-      router.push('/admin')
-    }
-  }, [])
+    if (authLoading) return
+    if (!user || user.id !== ADMIN_ID) router.replace('/admin')
+  }, [user, authLoading])
 
   const editor = useEditor({
     extensions: [
