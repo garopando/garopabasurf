@@ -134,9 +134,7 @@ export default function Praias() {
           <h2 className={lexend.className} style={{ fontSize: '28px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Surf Spots Garopaba</h2>
         </div>
         <Tabela />
-        <div className='flex justify-center mt-8'>
-          <a href='/praias' className='px-6 py-2.5 bg-black text-white border border-black rounded-[10px] text-sm font-medium hover:bg-white hover:text-black transition'>Ver todas as praias</a>
-        </div>
+        <a href='/praias' className='block text-center mt-8 px-6 py-3 bg-black text-white border border-black rounded-[10px] text-sm font-medium hover:bg-white hover:text-black transition' style={{ textDecoration: 'none' }}>Ver todas as praias</a>
       </div>
       <div className='md:hidden px-4'>
         <div className='mb-4'>
@@ -179,9 +177,7 @@ export default function Praias() {
             })}
           </div>
         </div>
-        <div className='flex justify-center mt-6'>
-          <a href='/praias' className='px-6 py-2.5 bg-black text-white rounded-[10px] text-sm font-medium' style={{ textDecoration: 'none' }}>Ver todas as praias</a>
-        </div>
+        <a href='/praias' className='block text-center mt-6 px-6 py-3 bg-black text-white rounded-[10px] text-sm font-medium' style={{ textDecoration: 'none' }}>Ver todas as praias</a>
       </div>
     </section>
   )
