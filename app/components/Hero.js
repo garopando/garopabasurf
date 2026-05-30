@@ -1,10 +1,11 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Young_Serif } from 'next/font/google'
+import { Young_Serif, Lexend } from 'next/font/google'
 import Image from 'next/image'
 
 const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
+const lexend = Lexend({ subsets: ['latin'], weight: '700' })
 
 export default function Hero() {
   const [busca, setBusca] = useState('')
@@ -48,7 +49,7 @@ export default function Hero() {
           </button>
         </div>
         <p style={{ textAlign: 'center', lineHeight: '1.1', marginTop: '30px' }}>
-          <span className={youngSerif.className} style={{ fontSize: '30px', color: 'white', display: 'block', fontWeight: '600', fontStyle: 'italic', letterSpacing: '-0.04em' }}>
+          <span className={lexend.className} style={{ fontSize: '30px', color: 'white', display: 'block', fontWeight: '700', letterSpacing: '-0.06em' }}>
             O seu confere antes de cair.
           </span>
         </p>
