@@ -32,7 +32,8 @@ function classificar(alturaM, ventoKmh) {
 
 export default function PraiasPage() {
   const [dados, setDados] = useState({})
-  const mapRef = useRef(null)
+  const mapRefDesktop = useRef(null)
+  const mapRefMobile = useRef(null)
   const mapInstance = useRef(null)
 
   useEffect(function() {
@@ -64,9 +65,10 @@ export default function PraiasPage() {
     const script = document.createElement('script')
     script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
     script.onload = function() {
-      if (!mapRef.current || mapInstance.current) return
+      const alvo = mapRefDesktop.current || mapRefMobile.current
+      if (!alvo || mapInstance.current) return
       const L = window.L
-      const map = L.map(mapRef.current).setView([-28.03, -48.62], 12)
+      const map = L.map(alvo).setView([-28.03, -48.62], 12)
       mapInstance.current = map
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '' }).addTo(map)
       praias.forEach(function(p) {
@@ -104,11 +106,11 @@ export default function PraiasPage() {
             })}
           </div>
         </div>
-        <div ref={mapRef} style={{ width: '55%', height: '100%' }} />
+        <div ref={mapRefDesktop} style={{ width: '55%', height: '100%' }} />
       </div>
 
       <div className='md:hidden' style={{ paddingTop: '64px', paddingBottom: '80px' }}>
-        <div ref={mapRef} style={{ width: '100%', height: '300px' }} />
+        <div ref={mapRefMobile} style={{ width: '100%', height: '300px' }} />
         <div style={{ padding: '16px' }}>
           <h1 className={lexend.className} style={{ fontSize: '26px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', marginBottom: '16px' }}>Praias</h1>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
