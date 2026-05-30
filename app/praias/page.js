@@ -70,7 +70,7 @@ export default function PraiasPage() {
       const L = window.L
       const map = L.map(alvo).setView([-28.03, -48.62], 12)
       mapInstance.current = map
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '' }).addTo(map)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '' }).addTo(map)
       praias.forEach(function(p) {
         const marker = L.circleMarker([p.lat, p.lon], { radius: 9, fillColor: '#111', color: '#fff', weight: 2, fillOpacity: 1 }).addTo(map)
         marker.bindPopup('<b>' + p.nome + '</b><br><a href="/praias/' + p.slug + '">Ver previsao</a>')
