@@ -62,6 +62,15 @@ export default function PraiasPage() {
   const markersRef = useRef({})
   const dadosRef = useRef({})
 
+  function atualizarPin(slug, d) {
+    if (!d) return
+    const el = document.getElementById('pin-' + slug)
+    if (el) {
+      el.style.background = corOnda(d.altura, d.vento)
+      el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
+    }
+  }
+
   useEffect(function() {
     const hoje = new Date().toISOString().slice(0, 10)
     praias.forEach(function(p) {
@@ -126,6 +135,7 @@ export default function PraiasPage() {
         markersRef.current[p.slug] = marker
       })
       setTimeout(function() { map.invalidateSize() }, 200)
+      praias.forEach(function(p) { atualizarPin(p.slug, dadosRef.current[p.slug]) })
     }
     function init() {
       montar(mapRefDesktop.current)
