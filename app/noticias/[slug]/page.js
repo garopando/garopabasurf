@@ -104,7 +104,7 @@ export default function PostPage() {
           {new Date(post.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
         </p>
         {post.thumbnail && (
-          <div style={{ position: 'relative', width: '100%', height: '400px', borderRadius: '16px', overflow: 'hidden', marginBottom: '40px' }}>
+          <div style={{ position: 'relative', width: '100vw', height: '400px', overflow: 'hidden', marginBottom: '40px', marginLeft: 'calc(-50vw + 50%)' }}>
             <NextImage src={post.thumbnail} alt={post.titulo} fill style={{ objectFit: 'cover' }} />
           </div>
         )}
