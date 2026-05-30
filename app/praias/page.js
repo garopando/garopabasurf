@@ -61,6 +61,7 @@ export default function PraiasPage() {
   const mapInstance = useRef(null)
   const markersRef = useRef({})
   const dadosRef = useRef({})
+  const abertoRef = useRef(null)
 
   function atualizarPin(slug, sufixo, d) {
     if (!d) return
@@ -115,7 +116,7 @@ export default function PraiasPage() {
         })
         const marker = L.marker([p.lat, p.lon], { icon: icon }).addTo(map)
         marker.bindPopup('<div style="font-weight:700;font-size:15px;margin-bottom:4px;">' + p.nome + '</div><div id="pop-' + p.slug + '" style="font-size:13px;color:#666;">Carregando...</div>', { closeButton: false })
-        marker.on('mouseover', function() {
+        function montarPopup() {
           const d = dadosRef.current[p.slug]
           let corpo = 'Carregando...'
           if (d) {
@@ -128,10 +129,23 @@ export default function PraiasPage() {
           }
           const html = '<div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo
           marker.setPopupContent(html)
-          marker.openPopup()
-        })
-        marker.on('mouseout', function() { marker.closePopup() })
-        marker.on('click', function() { window.location.href = '/praias/' + p.slug })
+        }
+        if (sufixo === 'm') {
+          marker.on('click', function() {
+            if (abertoRef.current === p.slug) {
+              window.location.href = '/praias/' + p.slug
+            } else {
+              montarPopup()
+              marker.openPopup()
+              abertoRef.current = p.slug
+            }
+          })
+          marker.on('popupclose', function() { if (abertoRef.current === p.slug) abertoRef.current = null })
+        } else {
+          marker.on('mouseover', function() { montarPopup(); marker.openPopup() })
+          marker.on('mouseout', function() { marker.closePopup() })
+          marker.on('click', function() { window.location.href = '/praias/' + p.slug })
+        }
         markersRef.current[p.slug] = marker
       })
       setTimeout(function() { map.invalidateSize() }, 200)
