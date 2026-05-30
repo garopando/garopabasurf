@@ -16,6 +16,7 @@ const links = [
 export default function Navbar() {
   const [aberto, setAberto] = useState(false)
   const { user, perfil, abrirModal, sair } = useAuth()
+  const [menuPerfil, setMenuPerfil] = useState(false)
   return (
     <div className='fixed top-0 left-0 w-full bg-black' style={{ zIndex: 9999 }}>
       <nav className='hidden md:flex max-w-[70%] mx-auto text-white px-6 py-4 items-center justify-between'>
@@ -34,12 +35,18 @@ export default function Navbar() {
           })}
           <li style={{ marginLeft: '8px' }}>
             {user ? (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span className={lexend.className} style={{ fontSize: '14px', color: 'white' }}>{perfil && perfil.nome ? perfil.nome.split(' ')[0] : 'Perfil'}</span>
-                <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#374151', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', overflow: 'hidden' }}>
-                  {perfil && perfil.avatar_url ? <img src={perfil.avatar_url} alt='' style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfil && perfil.nome ? perfil.nome[0].toUpperCase() : 'U')}
-                </div>
-                <button onClick={sair} className={lexend.className} style={{ fontSize: '13px', color: '#9ca3af', background: 'none', border: 'none', cursor: 'pointer' }}>Sair</button>
+              <div style={{ position: 'relative' }}>
+                <button onClick={function() { setMenuPerfil(!menuPerfil) }} style={{ display: 'flex', alignItems: 'center', gap: '10px', background: 'none', border: 'none', cursor: 'pointer' }}>
+                  <span className={lexend.className} style={{ fontSize: '14px', color: 'white' }}>{perfil && perfil.nome ? perfil.nome.split(' ')[0] : 'Perfil'}</span>
+                  <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: '#374151', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', overflow: 'hidden' }}>
+                    {perfil && perfil.avatar_url ? <img src={perfil.avatar_url} alt='' style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfil && perfil.nome ? perfil.nome[0].toUpperCase() : 'U')}
+                  </div>
+                </button>
+                {menuPerfil && (
+                  <div style={{ position: 'absolute', right: 0, top: '46px', background: '#fff', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.18)', minWidth: '160px', overflow: 'hidden', zIndex: 10000 }}>
+                    <button onClick={function() { sair(); setMenuPerfil(false) }} className={lexend.className} style={{ width: '100%', textAlign: 'left', padding: '12px 16px', background: 'none', border: 'none', fontSize: '14px', color: '#111', cursor: 'pointer' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Sair</button>
+                  </div>
+                )}
               </div>
             ) : (
               <button onClick={abrirModal} className={lexend.className} style={{ fontSize: '14px', color: 'black', background: 'white', border: 'none', borderRadius: '10px', padding: '8px 18px', cursor: 'pointer', fontWeight: '700' }}>Entrar</button>

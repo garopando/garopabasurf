@@ -56,13 +56,13 @@ export default function AuthModal() {
 
         {modo === 'cadastrar' && (
           <input value={nome} onChange={function(e) { setNome(e.target.value) }} placeholder='Nome'
-            style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box' }} />
+            style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box', color: '#111', background: '#fff' }} />
         )}
         <input value={email} onChange={function(e) { setEmail(e.target.value) }} type='email' placeholder='Email'
-          style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box' }} />
+          style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box', color: '#111', background: '#fff' }} />
         <input value={senha} onChange={function(e) { setSenha(e.target.value) }} type='password' placeholder='Senha'
           onKeyDown={function(e) { if (e.key === 'Enter') submeter() }}
-          style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box' }} />
+          style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e5e7eb', fontSize: '14px', marginBottom: '12px', outline: 'none', boxSizing: 'border-box', color: '#111', background: '#fff' }} />
 
         {erro && <p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '12px' }}>{erro}</p>}
 
