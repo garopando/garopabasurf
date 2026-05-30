@@ -80,13 +80,14 @@ export default function PraiasPage() {
       praias.forEach(function(p) {
         const icon = L.divIcon({
           className: '',
-          html: '<div id="pin-' + p.slug + '" style="background:#9ca3af;color:#fff;font-weight:700;font-size:13px;padding:5px 12px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,0.3);white-space:nowrap;border:2px solid #fff;">--</div>',
-          iconSize: [60, 28],
-          iconAnchor: [30, 14]
+          html: '<div id="pin-' + p.slug + '" style="display:inline-block;background:#9ca3af;color:#fff;font-weight:800;font-size:15px;letter-spacing:-0.02em;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,0.25);white-space:nowrap;border:2.5px solid #fff;font-family:system-ui,sans-serif;">--</div>',
+          iconSize: [90, 36],
+          iconAnchor: [45, 18]
         })
         const marker = L.marker([p.lat, p.lon], { icon: icon }).addTo(map)
         marker.bindPopup('<div style="font-weight:700;font-size:15px;margin-bottom:4px;">' + p.nome + '</div><div id="pop-' + p.slug + '" style="font-size:13px;color:#666;">Carregando...</div>', { closeButton: false })
         marker.on('mouseover', function() { marker.openPopup() })
+        marker.on('add', function() {})
         marker.on('mouseout', function() { marker.closePopup() })
         marker.on('click', function() { window.location.href = '/praias/' + p.slug })
         markersRef.current[p.slug] = marker
