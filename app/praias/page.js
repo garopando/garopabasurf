@@ -23,6 +23,12 @@ function getMapUrl(lat, lon, w, h) {
   return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=' + (lon-0.008) + ',' + (lat-0.004) + ',' + (lon+0.008) + ',' + (lat+0.004) + '&bboxSR=4326&imageSR=4326&size=' + w + ',' + h + '&f=image'
 }
 
+function setaVento(graus, tamanho) {
+  if (graus == null) return ''
+  const t = tamanho || 14
+  return '<svg width="' + t + '" height="' + t + '" viewBox="0 0 24 24" style="transform:rotate(' + (graus + 180) + 'deg);display:inline-block;vertical-align:middle;"><path d="M12 2 L18 20 L12 16 L6 20 Z" fill="#111"/></svg>'
+}
+
 function direcaoVento(graus) {
   if (graus == null) return ''
   const dirs = ['N','NE','L','SE','S','SO','O','NO']
@@ -41,6 +47,11 @@ function classificar(alturaM, ventoKmh) {
   if (alturaM >= 0.8 && alturaM <= 2.5 && ventoKmh < 15) return { label: 'BOM', cor: '#22c55e' }
   if (alturaM >= 0.5 && ventoKmh < 25) return { label: 'REGULAR', cor: '#eab308' }
   return { label: 'FRACO', cor: '#ef4444' }
+}
+
+function SetaVentoEl({ graus }) {
+  if (graus == null) return null
+  return <span style={{ display: 'inline-block', verticalAlign: 'middle' }} dangerouslySetInnerHTML={{ __html: setaVento(graus, 14) }} />
 }
 
 export default function PraiasPage() {
@@ -103,7 +114,7 @@ export default function PraiasPage() {
             corpo = '<div style="font-weight:800;font-size:13px;color:' + q.cor + ';letter-spacing:0.05em;margin-bottom:8px;">' + q.label + '</div>'
               + '<div style="display:flex;gap:18px;">'
               + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Surf</div><div style="font-size:15px;font-weight:700;color:#111;">' + ((d.min!=null&&d.max!=null)?d.min.toFixed(1)+'-'+d.max.toFixed(1)+'m':'--') + '</div></div>'
-              + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:15px;font-weight:700;color:#111;">' + (d.vento!=null?Math.round(d.vento)+' km/h':'--') + '</div></div>'
+              + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:15px;font-weight:700;color:#111;display:flex;align-items:center;gap:5px;">' + (d.vento!=null?Math.round(d.vento)+' km/h '+direcaoVento(d.dir)+' '+setaVento(d.dir,14):'--') + '</div></div>'
               + '</div>'
           }
           const html = '<div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo
@@ -182,7 +193,7 @@ export default function PraiasPage() {
                       </div>
                       <div>
                         <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
-                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black', display: 'flex', alignItems: 'center', gap: '5px' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}{d.vento != null && <SetaVentoEl graus={d.dir} />}</div>
                       </div>
                     </div>
                   </div>
@@ -224,7 +235,7 @@ export default function PraiasPage() {
                       </div>
                       <div>
                         <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
-                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black', display: 'flex', alignItems: 'center', gap: '5px' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}{d.vento != null && <SetaVentoEl graus={d.dir} />}</div>
                       </div>
                     </div>
                   </div>
