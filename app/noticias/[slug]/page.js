@@ -103,7 +103,7 @@ export default function PostPage() {
           {new Date(post.criado_em).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
         </p>
         {post.thumbnail && (
-          <img src={post.thumbnail} alt={post.titulo} style={{ width: '100vw', height: '400px', objectFit: 'cover', marginBottom: '40px', marginLeft: 'calc(-50vw + 50%)', display: 'block' }} />
+          <img src={post.thumbnail} alt={post.titulo} style={{ position: 'relative', left: '50%', right: '50%', width: '100vw', marginLeft: '-50vw', marginRight: '-50vw', height: '400px', objectFit: 'cover', marginBottom: '40px', display: 'block' }} />
         )}
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '32px', paddingBottom: '32px', borderBottom: '1px solid #f3f4f6' }}>
