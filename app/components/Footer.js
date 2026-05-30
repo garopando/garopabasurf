@@ -21,7 +21,7 @@ export default function Footer() {
         <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200' />
         <div className='flex items-center justify-around py-2'>
           <a href='/' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', textDecoration: 'none', color: '#111', flex: 1 }}>
-            <span className='material-symbols-outlined' style={{ fontSize: '24px' }}>waves</span>
+            <span className='material-symbols-outlined' style={{ fontSize: '24px' }}>home</span>
             <span style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>Principal</span>
           </a>
           <a href='/praias' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', textDecoration: 'none', color: '#9ca3af', flex: 1 }}>
