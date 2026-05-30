@@ -80,8 +80,11 @@ export default function PraiasPage() {
           iconAnchor: [30, 14]
         })
         const marker = L.marker([p.lat, p.lon], { icon: icon }).addTo(map)
-        marker.bindPopup('<b>' + p.nome + '</b><br><a href="/praias/' + p.slug + '">Ver previsao</a>')
+        marker.bindPopup('<div style="font-weight:700;font-size:15px;margin-bottom:4px;">' + p.nome + '</div><div id="pop-' + p.slug + '" style="font-size:13px;color:#666;">Carregando...</div>', { closeButton: false })
+        marker.on('mouseover', function() { marker.openPopup() })
+        marker.on('mouseout', function() { marker.closePopup() })
         marker.on('click', function() { window.location.href = '/praias/' + p.slug })
+        markersRef.current[p.slug] = marker
       })
       setTimeout(function() { map.invalidateSize() }, 200)
     }
@@ -108,6 +111,14 @@ export default function PraiasPage() {
       if (!el) return
       el.style.background = corOnda(d.altura, d.vento)
       el.textContent = d.altura != null ? d.altura.toFixed(1) + 'm' : '--'
+      const m = markersRef.current[p.slug]
+      if (m) {
+        const q = classificar(d.altura, d.vento)
+        const html = '<div style="font-weight:700;font-size:15px;margin-bottom:6px;">' + p.nome + '</div>'
+          + '<div style="font-weight:700;font-size:12px;color:' + q.cor + ';margin-bottom:6px;">' + q.label + '</div>'
+          + '<div style="font-size:13px;color:#111;"><b>' + (d.altura != null ? d.altura.toFixed(1) + 'm' : '--') + '</b> &nbsp; ' + (d.vento != null ? Math.round(d.vento) + ' km/h' : '') + '</div>'
+        m.setPopupContent(html)
+      }
     })
   }, [dados])
 
