@@ -3,6 +3,7 @@ import { Lexend } from 'next/font/google'
 import Navbar from './Navbar'
 import Footer from './Footer'
 import { useEffect, useState } from 'react'
+import { useAuth } from './AuthContext'
 import MapaSatelite from './MapaSatelite'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
 
@@ -190,7 +191,8 @@ function CardDia({ i, alturaMax, dados, dadosMeteo, tempAgua }) {
   )
 }
 
-export default function PraiaForecast({ nome, lat, lon, foto }) {
+export default function PraiaForecast({ nome, slug, lat, lon, foto }) {
+  const { alternarFavorito, ehFavorito } = useAuth()
   const [dados, setDados] = useState(null)
   const [dadosMeteo, setDadosMeteo] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -249,7 +251,12 @@ export default function PraiaForecast({ nome, lat, lon, foto }) {
       </div>
       <div style={{ maxWidth: '900px', margin: '0 auto', padding: '24px 16px 60px' }}>
         <a href='/praias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '12px' }}>← Voltar para Praias</a>
-        <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black', marginBottom: '4px' }}>{nome}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+          <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', WebkitTextStroke: '0.5px black' }}>{nome}</h1>
+          <button onClick={function() { alternarFavorito(slug) }} style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#f3f4f6', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }} aria-label='Favoritar'>
+            <svg width='20' height='20' viewBox='0 0 24 24' fill={ehFavorito(slug) ? '#ef4444' : 'none'} stroke={ehFavorito(slug) ? '#ef4444' : '#6b7280'} strokeWidth='2'><path d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/></svg>
+          </button>
+        </div>
         <p style={{ color: '#9ca3af', fontSize: '13px', marginBottom: '24px' }}>Garopaba, Santa Catarina</p>
 
         <div style={{ display: 'flex', borderBottom: '1px solid #e5e7eb', marginBottom: '24px' }}>

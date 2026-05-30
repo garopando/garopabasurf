@@ -31,7 +31,7 @@ export default function Footer() {
             <span className='material-symbols-outlined' style={{ fontSize: '24px' }}>beach_access</span>
             <span style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>Praias</span>
           </a>
-          <a href='#' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', textDecoration: 'none', color: '#9ca3af', flex: 1 }}>
+          <a href='/favoritos' style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px', textDecoration: 'none', color: '#9ca3af', flex: 1 }}>
             <span className='material-symbols-outlined' style={{ fontSize: '24px' }}>favorite</span>
             <span style={{ fontSize: '10px', fontFamily: 'sans-serif' }}>Favoritos</span>
           </a>

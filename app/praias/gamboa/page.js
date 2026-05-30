@@ -2,5 +2,5 @@
 import PraiaForecast from '../../components/PraiaForecast'
 
 export default function Gamboa() {
-  return <PraiaForecast nome='Gamboa' lat={-27.959332} lon={-48.624417} />
+  return <PraiaForecast slug='gamboa' nome='Gamboa' lat={-27.959332} lon={-48.624417} />
 }
