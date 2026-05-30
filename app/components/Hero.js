@@ -48,11 +48,8 @@ export default function Hero() {
           </button>
         </div>
         <p style={{ textAlign: 'center', lineHeight: '1.1', marginTop: '30px' }}>
-          <span className={youngSerif.className} style={{ fontSize: '18px', color: 'white', display: 'block', fontWeight: '800', letterSpacing: '-0.04em' }}>
-            As melhores ondas de Garopaba,
-          </span>
-          <span className={youngSerif.className} style={{ fontSize: '36px', color: 'white', display: 'block', fontWeight: '600', fontStyle: 'italic', letterSpacing: '-0.04em' }}>
-            em um só lugar.
+          <span className={youngSerif.className} style={{ fontSize: '30px', color: 'white', display: 'block', fontWeight: '600', fontStyle: 'italic', letterSpacing: '-0.04em' }}>
+            O seu confere antes de cair.
           </span>
         </p>
       </div>
