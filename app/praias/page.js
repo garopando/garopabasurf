@@ -45,16 +45,21 @@ export default function PraiasPage() {
   const markersRef = useRef({})
 
   useEffect(function() {
+    const hoje = new Date().toISOString().slice(0, 10)
     praias.forEach(function(p) {
-      const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&current=wave_height&timezone=America/Sao_Paulo'
+      const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&hourly=wave_height&start_date=' + hoje + '&end_date=' + hoje + '&timezone=America/Sao_Paulo'
       const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=windspeed_10m&timezone=America/Sao_Paulo'
       Promise.all([fetch(marineUrl).then(function(r){return r.json()}), fetch(meteoUrl).then(function(r){return r.json()})])
         .then(function(res) {
-          const altura = res[0] && res[0].current ? res[0].current.wave_height : null
+          let min = null, max = null
+          if (res[0] && res[0].hourly && res[0].hourly.wave_height) {
+            const vals = res[0].hourly.wave_height.filter(function(v){ return v != null })
+            if (vals.length) { min = Math.min.apply(null, vals); max = Math.max.apply(null, vals) }
+          }
           const vento = res[1] && res[1].current ? res[1].current.windspeed_10m : null
           setDados(function(prev) {
             const novo = Object.assign({}, prev)
-            novo[p.slug] = { altura: altura, vento: vento }
+            novo[p.slug] = { min: min, max: max, altura: max, vento: vento }
             return novo
           })
         })
@@ -110,13 +115,13 @@ export default function PraiasPage() {
       const el = document.getElementById('pin-' + p.slug)
       if (!el) return
       el.style.background = corOnda(d.altura, d.vento)
-      el.textContent = d.altura != null ? d.altura.toFixed(1) + 'm' : '--'
+      el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
       const m = markersRef.current[p.slug]
       if (m) {
         const q = classificar(d.altura, d.vento)
         const html = '<div style="font-weight:700;font-size:15px;margin-bottom:6px;">' + p.nome + '</div>'
           + '<div style="font-weight:700;font-size:12px;color:' + q.cor + ';margin-bottom:6px;">' + q.label + '</div>'
-          + '<div style="font-size:13px;color:#111;"><b>' + (d.altura != null ? d.altura.toFixed(1) + 'm' : '--') + '</b> &nbsp; ' + (d.vento != null ? Math.round(d.vento) + ' km/h' : '') + '</div>'
+          + '<div style="font-size:13px;color:#111;"><b>' + ((d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--') + '</b> &nbsp; ' + (d.vento != null ? Math.round(d.vento) + ' km/h' : '') + '</div>'
         m.setPopupContent(html)
       }
     })
@@ -139,7 +144,7 @@ export default function PraiasPage() {
                     <h3 className={lexend.className} style={{ fontSize: '17px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '6px' }}>{praia.nome}</h3>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                       <span style={{ fontSize: '11px', fontWeight: '700', color: q.cor }}>{q.label}</span>
-                      <span style={{ fontSize: '14px', fontWeight: '700', color: 'black' }}>{d.altura != null ? d.altura.toFixed(1) + 'm' : '--'}</span>
+                      <span style={{ fontSize: '14px', fontWeight: '700', color: 'black' }}>{(d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--'}</span>
                       <span style={{ fontSize: '12px', color: '#9ca3af' }}>{d.vento != null ? Math.round(d.vento) + ' km/h' : ''}</span>
                     </div>
                   </div>
@@ -166,7 +171,7 @@ export default function PraiasPage() {
                     <h3 className={lexend.className} style={{ fontSize: '16px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '4px' }}>{praia.nome}</h3>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <span style={{ fontSize: '10px', fontWeight: '700', color: q.cor }}>{q.label}</span>
-                      <span style={{ fontSize: '13px', fontWeight: '700', color: 'black' }}>{d.altura != null ? d.altura.toFixed(1) + 'm' : '--'}</span>
+                      <span style={{ fontSize: '13px', fontWeight: '700', color: 'black' }}>{(d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--'}</span>
                     </div>
                   </div>
                 </a>
