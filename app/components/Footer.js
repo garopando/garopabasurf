@@ -13,7 +13,7 @@ export default function Footer() {
       <footer className='w-full bg-black text-white py-10 hidden md:block'>
         <div className='max-w-[70%] mx-auto'>
           <h3 className={youngSerif.className} style={{ fontSize: '28px', letterSpacing: '-0.08em', color: 'white', WebkitTextStroke: '0.5px white' }}>garopabasurf</h3>
-          <p className='text-gray-400 text-sm leading-relaxed mt-2'>O melhor portal de previsão de ondas de Garopaba e região.</p>
+          <p className='text-gray-400 text-sm leading-relaxed mt-2'>Previsão, reports e picos de surf em Garopaba.</p>
         </div>
         <div className='max-w-[70%] mx-auto mt-10 pt-6 border-t border-gray-800 text-center text-gray-500 text-sm'>
           2025 GaropabaSurf. Todos os direitos reservados.
