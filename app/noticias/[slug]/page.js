@@ -94,7 +94,7 @@ export default function PostPage() {
     <div className='min-h-screen bg-white'>
       <Navbar />
       {post.thumbnail && (
-        <img src={post.thumbnail} alt={post.titulo} style={{ width: '100%', height: '450px', objectFit: 'cover', display: 'block' }} />
+        <img src={post.thumbnail} alt={post.titulo} style={{ width: '100%', height: '450px', minHeight: '450px', maxHeight: '450px', objectFit: 'cover', display: 'block' }} />
       )}
       <div style={{ maxWidth: '760px', margin: '0 auto', padding: '40px 16px 60px' }}>
         <Link href='/noticias' style={{ color: '#9ca3af', fontSize: '13px', textDecoration: 'none', display: 'block', marginBottom: '24px' }}>← Voltar para Notícias</Link>
