@@ -21,6 +21,46 @@ function corOnda(alturaM) {
 
 const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 
+function curvaPath(vals, largura, altura) {
+  const n = vals.length
+  if (n === 0) return ''
+  const maxV = Math.max.apply(null, vals.filter(function(v){return v!=null})) || 1
+  const minV = 0
+  const pts = vals.map(function(v, i) {
+    const x = (i / (n - 1)) * largura
+    const vv = v != null ? v : minV
+    // normaliza: ondas maiores = mais alto (y menor); deixa margem de 30% no topo
+    const y = altura - ((vv - minV) / (maxV - minV || 1)) * (altura * 0.6) - (altura * 0.15)
+    return [x, y]
+  })
+  // curva suave com Catmull-Rom -> Bezier
+  let d = 'M ' + pts[0][0] + ' ' + pts[0][1]
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = pts[i === 0 ? 0 : i - 1]
+    const p1 = pts[i]
+    const p2 = pts[i + 1]
+    const p3 = pts[i + 2 < n ? i + 2 : n - 1]
+    const cp1x = p1[0] + (p2[0] - p0[0]) / 6
+    const cp1y = p1[1] + (p2[1] - p0[1]) / 6
+    const cp2x = p2[0] - (p3[0] - p1[0]) / 6
+    const cp2y = p2[1] - (p3[1] - p1[1]) / 6
+    d += ' C ' + cp1x + ' ' + cp1y + ', ' + cp2x + ' ' + cp2y + ', ' + p2[0] + ' ' + p2[1]
+  }
+  // fecha a area ate a base
+  d += ' L ' + largura + ' ' + altura + ' L 0 ' + altura + ' Z'
+  return d
+}
+
+function GraficoFundo({ vals }) {
+  if (!vals || vals.length === 0) return null
+  const largura = 1000, altura = 100
+  return (
+    <svg viewBox={'0 0 ' + largura + ' ' + altura} preserveAspectRatio='none' style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0 }}>
+      <path d={curvaPath(vals, largura, altura)} fill='#dbe4ec' opacity='0.6' />
+    </svg>
+  )
+}
+
 export default function Praias() {
   const [dados, setDados] = useState({})
   const [dias, setDias] = useState([])
@@ -64,12 +104,13 @@ export default function Praias() {
         {praias.map(function(p) {
           const vals = dados[p.slug] || []
           return (
-            <a key={p.slug} href={'/praias/' + p.slug} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '160px repeat(5, 1fr)', alignItems: 'center', padding: '14px 0', borderTop: '1px solid #f3f4f6' }}>
-              <div className={lexend.className} style={{ fontSize: '16px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em' }}>{p.nome}</div>
+            <a key={p.slug} href={'/praias/' + p.slug} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '160px repeat(5, 1fr)', alignItems: 'center', padding: '14px 0', borderTop: '1px solid #f3f4f6', position: 'relative' }}>
+              <div style={{ position: 'absolute', left: '160px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={vals} /></div>
+              <div className={lexend.className} style={{ fontSize: '16px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em', position: 'relative', zIndex: 1 }}>{p.nome}</div>
               {[0,1,2,3,4].map(function(i) {
                 const v = vals[i]
                 return (
-                  <div key={i} style={{ textAlign: 'center' }}>
+                  <div key={i} style={{ textAlign: 'center', position: 'relative', zIndex: 1 }}>
                     <div style={{ fontSize: '14px', fontWeight: '700', color: '#111', marginBottom: '6px' }}>{v != null ? v.toFixed(1) + 'm' : '--'}</div>
                     <div style={{ display: 'flex', gap: '2px', justifyContent: 'center' }}>
                       {[0,1,2].map(function(j) {
