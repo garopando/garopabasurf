@@ -1,6 +1,7 @@
 'use client'
 import { Lexend } from 'next/font/google'
 import { useEffect, useState, useRef } from 'react'
+import { useAuth } from '../components/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 
@@ -68,6 +69,7 @@ function SetaVentoEl({ graus }) {
 
 export default function PraiasPage() {
   const [dados, setDados] = useState({})
+  const { alternarFavorito, ehFavorito } = useAuth()
   const mapRefDesktop = useRef(null)
   const mapRefMobile = useRef(null)
   const mapInstance = useRef(null)
@@ -220,6 +222,20 @@ export default function PraiasPage() {
     })
   }, [dados])
 
+  function Coracao({ slug }) {
+    const fav = ehFavorito(slug)
+    return (
+      <button
+        onClick={function(e) { e.preventDefault(); e.stopPropagation(); alternarFavorito(slug) }}
+        style={{ position: 'absolute', top: '10px', right: '10px', width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.2)', zIndex: 2 }}
+        aria-label='Favoritar'>
+        <svg width='18' height='18' viewBox='0 0 24 24' fill={fav ? '#ef4444' : 'none'} stroke={fav ? '#ef4444' : '#6b7280'} strokeWidth='2'>
+          <path d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/>
+        </svg>
+      </button>
+    )
+  }
+
   return (
     <div className='min-h-screen bg-white'>
       <Navbar />
@@ -233,7 +249,7 @@ export default function PraiasPage() {
               const q = classificar(d.altura, d.vento)
               return (
                 <a key={praia.slug} href={'/praias/' + praia.slug} style={{ textDecoration: 'none', borderRadius: '14px', border: '1px solid #eceef1', overflow: 'hidden', background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', transition: 'box-shadow 0.2s' }}>
-                  <img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '130px', objectFit: 'cover', display: 'block' }} />
+                  <div style={{ position: 'relative' }}><img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '130px', objectFit: 'cover', display: 'block' }} /><Coracao slug={praia.slug} /></div>
                   <div style={{ padding: '14px' }}>
                     <h3 className={lexend.className} style={{ fontSize: '17px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{praia.nome}</h3>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
@@ -275,7 +291,7 @@ export default function PraiasPage() {
               const q = classificar(d.altura, d.vento)
               return (
                 <a key={praia.slug} href={'/praias/' + praia.slug} style={{ textDecoration: 'none', borderRadius: '14px', border: '1px solid #eceef1', overflow: 'hidden', background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-                  <img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '140px', objectFit: 'cover', display: 'block' }} />
+                  <div style={{ position: 'relative' }}><img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '140px', objectFit: 'cover', display: 'block' }} /><Coracao slug={praia.slug} /></div>
                   <div style={{ padding: '14px' }}>
                     <h3 className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{praia.nome}</h3>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
