@@ -265,7 +265,7 @@ export default function PraiaForecast({ nome, slug, lat, lon, foto }) {
               <button key={a} onClick={function() { setAba(a) }}
                 className={lexendNormal.className}
                 style={{ padding: '10px 20px', fontSize: '13px', color: aba === a ? 'black' : '#9ca3af', background: 'none', border: 'none', borderBottom: aba === a ? '2px solid black' : '2px solid transparent', cursor: 'pointer', fontWeight: aba === a ? '700' : '400', marginBottom: '-1px' }}>
-                {a === 'resumo' ? 'Resumo' : 'Graficos'}
+                {a === 'resumo' ? 'Resumo' : 'Gráficos'}
               </button>
             )
           })}
@@ -274,7 +274,7 @@ export default function PraiaForecast({ nome, slug, lat, lon, foto }) {
         {loading && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#9ca3af', padding: '60px 0', justifyContent: 'center' }}>
             <div style={{ width: '20px', height: '20px', border: '2px solid #e5e7eb', borderTop: '2px solid black', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-            Carregando previsao...
+            Carregando previsão...
           </div>
         )}
 

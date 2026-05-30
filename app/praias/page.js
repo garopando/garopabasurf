@@ -13,8 +13,8 @@ const praias = [
   { slug: 'ferrugem-norte', nome: 'Ferrugem Norte', lat: -28.075091, lon: -48.624343 },
   { slug: 'ferrugem-sul', nome: 'Ferrugem Sul', lat: -28.081375, lon: -48.627925 },
   { slug: 'barra', nome: 'Barra', lat: -28.086159, lon: -48.630842 },
-  { slug: 'siriu-norte', nome: 'Siriu Norte', lat: -27.974714, lon: -48.627251 },
-  { slug: 'siriu-meio', nome: 'Siriu - Meio de Praia', lat: -27.990017, lon: -48.630352 },
+  { slug: 'siriu-norte', nome: 'Siriú Norte', lat: -27.974714, lon: -48.627251 },
+  { slug: 'siriu-meio', nome: 'Siriú - Meio de Praia', lat: -27.990017, lon: -48.630352 },
   { slug: 'gamboa', nome: 'Gamboa', lat: -27.959332, lon: -48.624417 },
   { slug: 'ouvidor', nome: 'Ouvidor', lat: -28.105132, lon: -48.635622 },
   { slug: 'central', nome: 'Praia Central', lat: -28.017217, lon: -48.624413 },
@@ -148,7 +148,7 @@ export default function PraiasPage() {
               + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:15px;font-weight:700;color:#111;display:flex;align-items:center;gap:5px;">' + (d.vento!=null?Math.round(d.vento)+' km/h '+direcaoVento(d.dir)+' '+setaVento(d.dir,14):'--') + '</div></div>'
               + '</div>'
           }
-          const html = '<div style="cursor:pointer;" onclick="window.location.href=\'/praias/' + p.slug + '\'"><div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo + '<div style="margin-top:8px;font-size:11px;color:#3b82f6;font-weight:700;">Ver previsao completa &rarr;</div></div>'
+          const html = '<div style="cursor:pointer;" onclick="window.location.href=\'/praias/' + p.slug + '\'"><div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo + '<div style="margin-top:8px;font-size:11px;color:#3b82f6;font-weight:700;">Ver previsão completa &rarr;</div></div>'
           marker.setPopupContent(html)
         }
         if (sufixo === 'm') {
@@ -242,7 +242,7 @@ export default function PraiasPage() {
       <div className='hidden md:flex' style={{ paddingTop: '64px', height: 'calc(100vh - 64px)' }}>
         <div style={{ width: '45%', overflowY: 'auto', padding: '32px' }}>
           <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', marginBottom: '8px', color: 'black' }}>Surf Spots Garopaba</h1>
-          <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5', marginBottom: '24px' }}>Explore os picos no mapa. Movimente a tela para ver as condicoes e as ondas de cada praia da Capital Catarinense do Surf.</p>
+          <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5', marginBottom: '24px' }}>Explore os picos no mapa. Movimente a tela para ver as condições e as ondas de cada praia da Capital Catarinense do Surf.</p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
             {praias.map(function(praia) {
               const d = dados[praia.slug] || {}
@@ -284,7 +284,7 @@ export default function PraiasPage() {
         <div ref={mapRefMobile} style={{ width: '100%', height: '300px' }} />
         <div style={{ padding: '16px' }}>
           <h1 className={lexend.className} style={{ fontSize: '26px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', marginBottom: '6px' }}>Surf Spots Garopaba</h1>
-          <p style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.5', marginBottom: '18px' }}>Explore os picos no mapa. Movimente a tela para ver as condicoes e as ondas de cada praia da Capital Catarinense do Surf.</p>
+          <p style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.5', marginBottom: '18px' }}>Explore os picos no mapa. Movimente a tela para ver as condições e as ondas de cada praia da Capital Catarinense do Surf.</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {praias.map(function(praia) {
               const d = dados[praia.slug] || {}

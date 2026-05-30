@@ -35,7 +35,7 @@ export default function Noticias() {
     <section className='w-full py-10'>
       <div className='max-w-[70%] mx-auto hidden md:block'>
         <div className='flex items-center justify-between mb-6'>
-          <h2 className={lexend.className} style={{ fontSize: '28px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Noticias</h2>
+          <h2 className={lexend.className} style={{ fontSize: '28px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Notícias</h2>
           <a href='/noticias' className='px-5 py-2 bg-black text-white border border-black rounded-[10px] text-sm font-medium hover:bg-white hover:text-black transition'>Ver mais</a>
         </div>
         <div className='grid grid-cols-3 gap-3'>
@@ -44,7 +44,7 @@ export default function Noticias() {
       </div>
       <div className='md:hidden px-4 w-full'>
         <div className='flex items-center justify-between mb-4 px-4'>
-          <h2 className={lexend.className} style={{ fontSize: '24px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Noticias</h2>
+          <h2 className={lexend.className} style={{ fontSize: '24px', color: 'black', letterSpacing: '-0.06em', WebkitTextStroke: '0.5px black' }}>Notícias</h2>
           <a href='/noticias' className='px-4 py-2 bg-black text-white rounded-[10px] text-xs font-medium'>Ver mais</a>
         </div>
         <div style={{ display: 'flex', gap: '12px', overflowX: 'auto', paddingBottom: '8px', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>

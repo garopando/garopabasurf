@@ -8,7 +8,7 @@ const praias = [
   { nome: 'Silveira Sul', slug: 'silveira-sul', lat: -28.044575, lon: -48.608818 },
   { nome: 'Silveira Norte', slug: 'silveira-norte', lat: -28.035384, lon: -48.603403 },
   { nome: 'Ferrugem Norte', slug: 'ferrugem-norte', lat: -28.075091, lon: -48.624343 },
-  { nome: 'Siriu Meio', slug: 'siriu-meio', lat: -27.990017, lon: -48.630352 },
+  { nome: 'Siriú Meio', slug: 'siriu-meio', lat: -27.990017, lon: -48.630352 },
   { nome: 'Praia Central', slug: 'central', lat: -28.017217, lon: -48.624413 },
 ]
 

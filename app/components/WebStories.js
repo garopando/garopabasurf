@@ -6,7 +6,7 @@ export default function WebStories() {
     { id: 3, titulo: 'Ferrugem perfeita', img: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80' },
     { id: 4, titulo: 'Melhores picos', img: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=400&q=80' },
     { id: 5, titulo: 'Fim de semana epic', img: 'https://images.unsplash.com/photo-1455264745730-cb3b76250827?w=400&q=80' },
-    { id: 6, titulo: 'Siriu on fire', img: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=400&q=80' },
+    { id: 6, titulo: 'Siriú on fire', img: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?w=400&q=80' },
     { id: 7, titulo: 'Gamboa tubos', img: 'https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=400&q=80' },
     { id: 8, titulo: 'Verao chegando', img: 'https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=400&q=80' },
   ]

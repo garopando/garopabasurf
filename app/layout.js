@@ -15,14 +15,14 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
   title: "GaropabaSurf - Previsão de ondas em Garopaba",
-  description: "A melhor previsao de ondas de Garopaba, Silveira, Ferrugem, Siriu, Gamboa e regiao. Altura, periodo, direcao, vento e mares em tempo real para surfistas de Santa Catarina.",
+  description: "A melhor previsão de ondas de Garopaba, Silveira, Ferrugem, Siriú, Gamboa e região. Altura, período, direção, vento e marés em tempo real para surfistas de Santa Catarina.",
   keywords: [
     "previsao de ondas Garopaba",
     "surf Garopaba",
     "ondas Garopaba hoje",
     "Praia do Silveira",
     "Praia da Ferrugem",
-    "Praia do Siriu",
+    "Praia do Siriú",
     "Gamboa surf",
     "surf Santa Catarina",
     "previsao surf SC",
@@ -75,7 +75,7 @@ export const metadata = {
     url: "https://garopabasurf.app",
     siteName: "GaropabaSurf",
     title: "GaropabaSurf - Previsao de Ondas em Garopaba e Regiao",
-    description: "A melhor previsao de ondas de Garopaba, Silveira, Ferrugem, Siriu, Gamboa e regiao. Dados em tempo real para surfistas de Santa Catarina.",
+    description: "A melhor previsão de ondas de Garopaba, Silveira, Ferrugem, Siriú, Gamboa e região. Dados em tempo real para surfistas de Santa Catarina.",
     images: [
       {
         url: "https://www.waves.com.br/wp-content/uploads/2018/10/13-Praia-do-Silveira-foto-Ailton-Souza-photography.jpg",
@@ -88,7 +88,7 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "GaropabaSurf - Previsao de Ondas em Garopaba",
-    description: "A melhor previsao de ondas de Garopaba e regiao. Silveira, Ferrugem, Siriu, Gamboa e mais.",
+    description: "A melhor previsão de ondas de Garopaba e região. Silveira, Ferrugem, Siriú, Gamboa e mais.",
     images: ["https://www.waves.com.br/wp-content/uploads/2018/10/13-Praia-do-Silveira-foto-Ailton-Souza-photography.jpg"],
     creator: "@garopabasurf",
   },
@@ -136,7 +136,7 @@ export default function RootLayout({ children }) {
               "@type": "WebSite",
               "name": "GaropabaSurf",
               "url": "https://garopabasurf.app",
-              "description": "Previsao de ondas em Garopaba e regiao - Silveira, Ferrugem, Siriu, Gamboa",
+              "description": "Previsão de ondas em Garopaba e região - Silveira, Ferrugem, Siriú, Gamboa",
               "inLanguage": "pt-BR",
               "publisher": {
                 "@type": "Organization",
