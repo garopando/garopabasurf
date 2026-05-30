@@ -127,7 +127,7 @@ export default function PraiasPage() {
               + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:15px;font-weight:700;color:#111;display:flex;align-items:center;gap:5px;">' + (d.vento!=null?Math.round(d.vento)+' km/h '+direcaoVento(d.dir)+' '+setaVento(d.dir,14):'--') + '</div></div>'
               + '</div>'
           }
-          const html = '<div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo
+          const html = '<div style="cursor:pointer;" onclick="window.location.href=\'/praias/' + p.slug + '\'"><div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo + '<div style="margin-top:8px;font-size:11px;color:#3b82f6;font-weight:700;">Ver previsao completa &rarr;</div></div>'
           marker.setPopupContent(html)
         }
         if (sufixo === 'm') {
