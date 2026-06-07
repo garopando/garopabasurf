@@ -1,0 +1,98 @@
+'use client'
+import { useState } from 'react'
+import { Young_Serif } from 'next/font/google'
+import { Lexend } from 'next/font/google'
+import Link from 'next/link'
+import { useAuth } from './AuthContext'
+
+const youngSerif = Young_Serif({ subsets: ['latin'], weight: '400' })
+const lexend = Lexend({ subsets: ['latin'], weight: '500' })
+
+const links = [
+  { href: '/', label: 'Principal' },
+  { href: '/praias', label: 'Praias' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/eventos', label: 'Eventos' },
+  { href: '/contato', label: 'Contato' },
+]
+
+export default function Navbar() {
+  const [aberto, setAberto] = useState(false)
+  const { user, perfil, abrirModal, sair } = useAuth()
+  const [menuPerfil, setMenuPerfil] = useState(false)
+  const ehAdmin = user && user.email === 'ailtonsza@gmail.com'
+  return (
+    <div className='fixed top-0 left-0 w-full bg-black' style={{ zIndex: 9999 }}>
+      <nav className='hidden md:flex max-w-[70%] mx-auto text-white px-6 py-4 items-center justify-between'>
+        <Link href='/' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <img src='/garopabasurf.png' alt='GaropabaSurf' style={{ height: '36px', width: 'auto', display: 'block' }} />
+        </Link>
+        <ul className='flex gap-2' style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+          {links.map(function(l) {
+            return (
+              <li key={l.href}>
+                <a href={l.href} className={lexend.className} style={{ fontSize: '14px', color: 'white', textDecoration: 'none', borderRadius: '10px', padding: '8px 16px', display: 'block' }} onMouseEnter={function(e) { e.currentTarget.style.background = 'white'; e.currentTarget.style.color = 'black' }} onMouseLeave={function(e) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'white' }}>
+                  {l.label}
+                </a>
+              </li>
+            )
+          })}
+          <li style={{ marginLeft: '8px', display: 'flex', alignItems: 'center' }}>
+            {user ? (
+              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                <button onClick={function() { setMenuPerfil(!menuPerfil) }} style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                  <div style={{ width: '34px', height: '34px', borderRadius: '50%', background: '#374151', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '14px', fontWeight: '700', overflow: 'hidden' }}>
+                    {perfil && (perfil.foto_url || perfil.avatar_url) ? <img src={perfil.foto_url || perfil.avatar_url} alt='' style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfil && perfil.nome ? perfil.nome[0].toUpperCase() : 'U')}
+                  </div>
+                </button>
+                {menuPerfil && (
+                  <div style={{ position: 'absolute', right: 0, top: '46px', background: '#fff', borderRadius: '12px', boxShadow: '0 4px 20px rgba(0,0,0,0.18)', minWidth: '160px', overflow: 'hidden', zIndex: 10000 }}>
+                    <a href='/perfil' className={lexend.className} style={{ display: 'block', padding: '12px 16px', fontSize: '14px', color: '#111', textDecoration: 'none', borderBottom: '1px solid #f3f4f6' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Meu perfil</a>
+                    <a href='/favoritos' className={lexend.className} style={{ display: 'block', padding: '12px 16px', fontSize: '14px', color: '#111', textDecoration: 'none', borderBottom: '1px solid #f3f4f6' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Favoritos</a>
+                    {ehAdmin && (
+                      <a href='/admin' className={lexend.className} style={{ display: 'block', padding: '12px 16px', fontSize: '14px', color: '#111', textDecoration: 'none', borderBottom: '1px solid #f3f4f6' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Admin</a>
+                    )}
+                    <button onClick={function() { sair(); setMenuPerfil(false) }} className={lexend.className} style={{ width: '100%', textAlign: 'left', padding: '12px 16px', background: 'none', border: 'none', fontSize: '14px', color: '#111', cursor: 'pointer' }} onMouseEnter={function(e){ e.currentTarget.style.background='#f3f4f6' }} onMouseLeave={function(e){ e.currentTarget.style.background='none' }}>Sair</button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button onClick={abrirModal} className={lexend.className} style={{ fontSize: '14px', color: 'black', background: 'white', border: 'none', borderRadius: '10px', padding: '8px 18px', cursor: 'pointer', fontWeight: '700' }}>Entrar</button>
+            )}
+          </li>
+        </ul>
+      </nav>
+      <div className='md:hidden'>
+        <div className='flex items-center justify-between px-4 py-4'>
+          <div style={{ width: '40px' }} />
+          <Link href='/' style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+            <img src='/garopabasurf.png' alt='GaropabaSurf' style={{ height: '32px', width: 'auto', display: 'block' }} />
+          </Link>
+          <button onClick={function() { setAberto(!aberto) }} style={{ background: 'none', border: 'none', color: 'white', fontSize: '24px', cursor: 'pointer', width: '40px', textAlign: 'right' }}>
+            {aberto ? 'x' : '='}
+          </button>
+        </div>
+        {aberto && (
+          <div className='flex flex-col px-4 pb-4 gap-1'>
+            {links.map(function(l) {
+              return (
+                <a key={l.href} href={l.href} className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px', borderRadius: '10px' }} onClick={function() { setAberto(false) }}>
+                  {l.label}
+                </a>
+              )
+            })}
+            {user ? (
+              <>
+                <a href='/perfil' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px' }} onClick={function() { setAberto(false) }}>Meu perfil</a>
+                {ehAdmin && <a href='/admin' className={lexend.className} style={{ display: 'block', padding: '10px 16px', color: 'white', textDecoration: 'none', fontSize: '15px' }} onClick={function() { setAberto(false) }}>Admin</a>}
+                <button onClick={function() { sair(); setAberto(false) }} className={lexend.className} style={{ textAlign: 'left', padding: '10px 16px', color: '#9ca3af', background: 'none', border: 'none', fontSize: '15px', cursor: 'pointer' }}>Sair</button>
+              </>
+            ) : (
+              <button onClick={function() { abrirModal(); setAberto(false) }} className={lexend.className} style={{ textAlign: 'center', padding: '12px', margin: '4px 0', color: 'black', background: 'white', border: 'none', borderRadius: '10px', fontSize: '15px', fontWeight: '700', cursor: 'pointer' }}>Entrar</button>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

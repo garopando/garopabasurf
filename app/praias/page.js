@@ -1,0 +1,325 @@
+'use client'
+import { Lexend } from 'next/font/google'
+import { useEffect, useState, useRef } from 'react'
+import { useAuth } from '../components/AuthContext'
+import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
+
+const lexend = Lexend({ subsets: ['latin'], weight: '700' })
+
+const praias = [
+  { slug: 'silveira-sul', nome: 'Silveira Sul', lat: -28.044575, lon: -48.608818 },
+  { slug: 'silveira-norte', nome: 'Silveira Norte', lat: -28.035384, lon: -48.603403 },
+  { slug: 'ferrugem-norte', nome: 'Ferrugem Norte', lat: -28.075091, lon: -48.624343 },
+  { slug: 'ferrugem-sul', nome: 'Ferrugem Sul', lat: -28.081375, lon: -48.627925 },
+  { slug: 'barra', nome: 'Barra', lat: -28.086159, lon: -48.630842 },
+  { slug: 'siriu-norte', nome: 'Siriú Norte', lat: -27.974714, lon: -48.627251 },
+  { slug: 'siriu-meio', nome: 'Siriú - Meio de Praia', lat: -27.990017, lon: -48.630352 },
+  { slug: 'gamboa', nome: 'Gamboa', lat: -27.959332, lon: -48.624417 },
+  { slug: 'ouvidor', nome: 'Ouvidor', lat: -28.105132, lon: -48.635622 },
+  { slug: 'central', nome: 'Praia Central', lat: -28.017217, lon: -48.624413 },
+]
+
+function getMapUrl(lat, lon, w, h) {
+  return 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=' + (lon-0.008) + ',' + (lat-0.004) + ',' + (lon+0.008) + ',' + (lat+0.004) + '&bboxSR=4326&imageSR=4326&size=' + w + ',' + h + '&f=image'
+}
+
+function setaSvg(graus, cor, t) {
+  return '<svg width="' + t + '" height="' + t + '" viewBox="0 0 24 24" style="transform:rotate(' + (graus + 180) + 'deg);"><path d="M12 2 L18 20 L12 16 L6 20 Z" fill="' + cor + '"/></svg>'
+}
+
+function setasOverlay(ventoDir, swellDir) {
+  let h = '<div style="display:flex;gap:8px;align-items:center;">'
+  if (ventoDir != null) h += '<div class="seta-overlay" title="Vento">' + setaSvg(ventoDir, '#f97316', 26) + '</div>'
+  if (swellDir != null) h += '<div class="seta-overlay" style="animation-delay:0.4s" title="Swell">' + setaSvg(swellDir, '#06b6d4', 26) + '</div>'
+  h += '</div>'
+  return h
+}
+
+function setaVento(graus, tamanho) {
+  if (graus == null) return ''
+  const t = tamanho || 14
+  return '<svg width="' + t + '" height="' + t + '" viewBox="0 0 24 24" style="transform:rotate(' + (graus + 180) + 'deg);display:inline-block;vertical-align:middle;"><path d="M12 2 L18 20 L12 16 L6 20 Z" fill="#111"/></svg>'
+}
+
+function direcaoVento(graus) {
+  if (graus == null) return ''
+  const dirs = ['N','NE','L','SE','S','SO','O','NO']
+  return dirs[Math.round(graus / 45) % 8]
+}
+
+function corOnda(alturaM, ventoKmh) {
+  if (alturaM == null) return '#9ca3af'
+  if (alturaM >= 0.8 && alturaM <= 2.5 && ventoKmh < 15) return '#22c55e'
+  if (alturaM >= 0.5 && ventoKmh < 25) return '#eab308'
+  return '#ef4444'
+}
+
+function classificar(alturaM, ventoKmh) {
+  if (alturaM == null) return { label: '--', cor: '#9ca3af' }
+  if (alturaM >= 0.8 && alturaM <= 2.5 && ventoKmh < 15) return { label: 'BOM', cor: '#22c55e' }
+  if (alturaM >= 0.5 && ventoKmh < 25) return { label: 'REGULAR', cor: '#eab308' }
+  return { label: 'FRACO', cor: '#ef4444' }
+}
+
+function SetaVentoEl({ graus }) {
+  if (graus == null) return null
+  return <span style={{ display: 'inline-block', verticalAlign: 'middle' }} dangerouslySetInnerHTML={{ __html: setaVento(graus, 14) }} />
+}
+
+export default function PraiasPage() {
+  const [dados, setDados] = useState({})
+  const { alternarFavorito, ehFavorito } = useAuth()
+  const mapRefDesktop = useRef(null)
+  const mapRefMobile = useRef(null)
+  const mapInstance = useRef(null)
+  const markersRef = useRef({})
+  const dadosRef = useRef({})
+  const abertoRef = useRef(null)
+
+  function atualizarPin(slug, sufixo, d) {
+    if (!d) return
+    const el = document.getElementById('pin-' + slug + '-' + sufixo)
+    if (el) {
+      el.style.background = corOnda(d.altura, d.vento)
+      el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
+    }
+  }
+
+  useEffect(function() {
+    const hoje = new Date().toISOString().slice(0, 10)
+    praias.forEach(function(p) {
+      const marineUrl = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&hourly=wave_height&current=wave_direction&start_date=' + hoje + '&end_date=' + hoje + '&timezone=America/Sao_Paulo'
+      const meteoUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + p.lat + '&longitude=' + p.lon + '&current=windspeed_10m,winddirection_10m&timezone=America/Sao_Paulo'
+      Promise.all([fetch(marineUrl).then(function(r){return r.json()}), fetch(meteoUrl).then(function(r){return r.json()})])
+        .then(function(res) {
+          let min = null, max = null
+          if (res[0] && res[0].hourly && res[0].hourly.wave_height) {
+            const vals = res[0].hourly.wave_height.filter(function(v){ return v != null })
+            if (vals.length) { min = Math.min.apply(null, vals); max = Math.max.apply(null, vals) }
+          }
+          const vento = res[1] && res[1].current ? res[1].current.windspeed_10m : null
+          const dir = res[1] && res[1].current ? res[1].current.winddirection_10m : null
+          const swellDir = res[0] && res[0].current ? res[0].current.wave_direction : null
+          setDados(function(prev) {
+            const novo = Object.assign({}, prev)
+            novo[p.slug] = { min: min, max: max, altura: max, vento: vento, dir: dir, swellDir: swellDir }
+            dadosRef.current = novo
+            return novo
+          })
+        })
+        .catch(function() {})
+    })
+  }, [])
+
+  useEffect(function() {
+    const link = document.createElement('link')
+    link.rel = 'stylesheet'
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
+    document.head.appendChild(link)
+    if (!document.getElementById('seta-anim-css')) {
+      const st = document.createElement('style')
+      st.id = 'seta-anim-css'
+      st.textContent = '@keyframes setaPulse { 0%,100% { transform: translateY(0); opacity: 0.85 } 50% { transform: translateY(-4px); opacity: 1 } } .seta-overlay { animation: setaPulse 1.4s ease-in-out infinite; }'
+      document.head.appendChild(st)
+    }
+    function montar(alvo, sufixo) {
+      if (!alvo || alvo._leaflet_id) return
+      const L = window.L
+      const map = L.map(alvo).setView([-28.03, -48.62], 12)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { attribution: '' }).addTo(map)
+      praias.forEach(function(p) {
+        const icon = L.divIcon({
+          className: '',
+          html: '<div id="pin-' + p.slug + '-' + sufixo + '" style="display:inline-block;background:#9ca3af;color:#fff;font-weight:800;font-size:15px;letter-spacing:-0.02em;padding:7px 16px;border-radius:999px;box-shadow:0 4px 12px rgba(0,0,0,0.25);white-space:nowrap;border:2.5px solid #fff;font-family:system-ui,sans-serif;">--</div>',
+          iconSize: [90, 36],
+          iconAnchor: [45, 18]
+        })
+        const marker = L.marker([p.lat, p.lon], { icon: icon }).addTo(map)
+        marker.bindPopup('<div style="font-weight:700;font-size:15px;margin-bottom:4px;">' + p.nome + '</div><div id="pop-' + p.slug + '" style="font-size:13px;color:#666;">Carregando...</div>', { closeButton: false })
+        function montarPopup() {
+          const d = dadosRef.current[p.slug]
+          let corpo = 'Carregando...'
+          if (d) {
+            const q = classificar(d.altura, d.vento)
+            corpo = '<div style="font-weight:800;font-size:13px;color:' + q.cor + ';letter-spacing:0.05em;margin-bottom:8px;">' + q.label + '</div>'
+              + '<div style="display:flex;gap:18px;">'
+              + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Surf</div><div style="font-size:15px;font-weight:700;color:#111;">' + ((d.min!=null&&d.max!=null)?d.min.toFixed(1)+'-'+d.max.toFixed(1)+'m':'--') + '</div></div>'
+              + '<div><div style="font-size:10px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;">Vento</div><div style="font-size:15px;font-weight:700;color:#111;display:flex;align-items:center;gap:5px;">' + (d.vento!=null?Math.round(d.vento)+' km/h '+direcaoVento(d.dir)+' '+setaVento(d.dir,14):'--') + '</div></div>'
+              + '</div>'
+          }
+          const html = '<div style="cursor:pointer;" onclick="window.location.href=\'/praias/' + p.slug + '\'"><div style="font-weight:800;font-size:16px;margin-bottom:6px;color:#111;">' + p.nome + '</div>' + corpo + '<div style="margin-top:8px;font-size:11px;color:#3b82f6;font-weight:700;">Ver previsão completa &rarr;</div></div>'
+          marker.setPopupContent(html)
+        }
+        if (sufixo === 'm') {
+          marker.on('click', function() {
+            if (abertoRef.current === p.slug) {
+              window.location.href = '/praias/' + p.slug
+            } else {
+              montarPopup()
+              marker.openPopup()
+              abertoRef.current = p.slug
+            }
+          })
+          marker.on('popupclose', function() { if (abertoRef.current === p.slug) abertoRef.current = null })
+        } else {
+          marker.on('mouseover', function() { montarPopup(); marker.openPopup() })
+          marker.on('mouseout', function() { marker.closePopup() })
+          marker.on('click', function() { window.location.href = '/praias/' + p.slug })
+        }
+        markersRef.current[p.slug] = marker
+        const overlayIcon = L.divIcon({ className: '', html: '<div id="setas-' + p.slug + '-' + sufixo + '" style="display:none;"></div>', iconSize: [60, 30], iconAnchor: [30, 55] })
+        const overlayMarker = L.marker([p.lat, p.lon], { icon: overlayIcon, interactive: false }).addTo(map)
+        function mostrarSetas() {
+          const d = dadosRef.current[p.slug]
+          const el = document.getElementById('setas-' + p.slug + '-' + sufixo)
+          if (el && d) { el.innerHTML = setasOverlay(d.dir, d.swellDir); el.style.display = 'block' }
+        }
+        function esconderSetas() {
+          const el = document.getElementById('setas-' + p.slug + '-' + sufixo)
+          if (el) el.style.display = 'none'
+        }
+        marker.on('popupopen', mostrarSetas)
+      })
+      setTimeout(function() { map.invalidateSize() }, 200)
+      praias.forEach(function(p) { atualizarPin(p.slug, sufixo, dadosRef.current[p.slug]) })
+    }
+    function init() {
+      montar(mapRefDesktop.current, 'd')
+      montar(mapRefMobile.current, 'm')
+    }
+    if (window.L) {
+      init()
+    } else {
+      const script = document.createElement('script')
+      script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+      script.onload = init
+      document.body.appendChild(script)
+    }
+  }, [])
+
+  useEffect(function() {
+    // atualiza pilulas
+    praias.forEach(function(p) {
+      const d = dados[p.slug]
+      if (!d) return
+      ;['d','m'].forEach(function(suf) {
+        const el = document.getElementById('pin-' + p.slug + '-' + suf)
+        if (el) {
+          el.style.background = corOnda(d.altura, d.vento)
+          el.textContent = (d.min != null && d.max != null) ? (d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm') : '--'
+        }
+      })
+      const m = markersRef.current[p.slug]
+      if (m) {
+        const q = classificar(d.altura, d.vento)
+        const html = '<div style="font-weight:700;font-size:15px;margin-bottom:6px;">' + p.nome + '</div>'
+          + '<div style="font-weight:700;font-size:12px;color:' + q.cor + ';margin-bottom:6px;">' + q.label + '</div>'
+          + '<div style="font-size:13px;color:#111;"><b>' + ((d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--') + '</b> &nbsp; ' + (d.vento != null ? Math.round(d.vento) + ' km/h' : '') + '</div>'
+        m.setPopupContent(html)
+      }
+    })
+  }, [dados])
+
+  function Coracao({ slug }) {
+    const fav = ehFavorito(slug)
+    return (
+      <button
+        onClick={function(e) { e.preventDefault(); e.stopPropagation(); alternarFavorito(slug) }}
+        style={{ position: 'absolute', top: '10px', right: '10px', width: '34px', height: '34px', borderRadius: '50%', background: 'rgba(255,255,255,0.92)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 1px 4px rgba(0,0,0,0.2)', zIndex: 2 }}
+        aria-label='Favoritar'>
+        <svg width='18' height='18' viewBox='0 0 24 24' fill={fav ? '#ef4444' : 'none'} stroke={fav ? '#ef4444' : '#6b7280'} strokeWidth='2'>
+          <path d='M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z'/>
+        </svg>
+      </button>
+    )
+  }
+
+  return (
+    <div className='min-h-screen bg-white'>
+      <Navbar />
+      <div className='hidden md:flex' style={{ paddingTop: '64px', height: 'calc(100vh - 64px)' }}>
+        <div style={{ width: '45%', overflowY: 'auto', padding: '32px' }}>
+          <h1 className={lexend.className} style={{ fontSize: '32px', fontWeight: '700', letterSpacing: '-0.06em', marginBottom: '8px', color: 'black' }}>Surf Spots Garopaba</h1>
+          <p style={{ fontSize: '14px', color: '#6b7280', lineHeight: '1.5', marginBottom: '24px' }}>Explore os picos no mapa. Movimente a tela para ver as condições e as ondas de cada praia da Capital Catarinense do Surf.</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '16px' }}>
+            {praias.map(function(praia) {
+              const d = dados[praia.slug] || {}
+              const q = classificar(d.altura, d.vento)
+              return (
+                <a key={praia.slug} href={'/praias/' + praia.slug} style={{ textDecoration: 'none', borderRadius: '14px', border: '1px solid #eceef1', overflow: 'hidden', background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.04)', transition: 'box-shadow 0.2s' }}>
+                  <div style={{ position: 'relative' }}><img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '130px', objectFit: 'cover', display: 'block' }} /><Coracao slug={praia.slug} /></div>
+                  <div style={{ padding: '14px' }}>
+                    <h3 className={lexend.className} style={{ fontSize: '17px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{praia.nome}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '800', color: q.cor, letterSpacing: '0.03em' }}>{q.label}</span>
+                      <div style={{ display: 'flex', gap: '3px', flex: 1 }}>
+                        {[0,1,2,3,4].map(function(i) {
+                          const ativo = q.label === 'BOM' ? 5 : q.label === 'REGULAR' ? 3 : q.label === 'FRACO' ? 1 : 0
+                          return <span key={i} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i < ativo ? q.cor : '#e5e7eb' }} />
+                        })}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '20px' }}>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Surf</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{(d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--'}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black', display: 'flex', alignItems: 'center', gap: '5px' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}{d.vento != null && <SetaVentoEl graus={d.dir} />}</div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+        <div ref={mapRefDesktop} style={{ width: '55%', height: '100%' }} />
+      </div>
+
+      <div className='md:hidden' style={{ paddingTop: '64px', paddingBottom: '80px' }}>
+        <div ref={mapRefMobile} style={{ width: '100%', height: '300px' }} />
+        <div style={{ padding: '16px' }}>
+          <h1 className={lexend.className} style={{ fontSize: '26px', fontWeight: '700', letterSpacing: '-0.06em', color: 'black', marginBottom: '6px' }}>Surf Spots Garopaba</h1>
+          <p style={{ fontSize: '13px', color: '#6b7280', lineHeight: '1.5', marginBottom: '18px' }}>Explore os picos no mapa. Movimente a tela para ver as condições e as ondas de cada praia da Capital Catarinense do Surf.</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            {praias.map(function(praia) {
+              const d = dados[praia.slug] || {}
+              const q = classificar(d.altura, d.vento)
+              return (
+                <a key={praia.slug} href={'/praias/' + praia.slug} style={{ textDecoration: 'none', borderRadius: '14px', border: '1px solid #eceef1', overflow: 'hidden', background: '#fff', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
+                  <div style={{ position: 'relative' }}><img src={getMapUrl(praia.lat, praia.lon, 400, 240)} alt={praia.nome} style={{ width: '100%', height: '140px', objectFit: 'cover', display: 'block' }} /><Coracao slug={praia.slug} /></div>
+                  <div style={{ padding: '14px' }}>
+                    <h3 className={lexend.className} style={{ fontSize: '18px', fontWeight: '700', color: 'black', letterSpacing: '-0.04em', marginBottom: '8px' }}>{praia.nome}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                      <span style={{ fontSize: '12px', fontWeight: '800', color: q.cor, letterSpacing: '0.03em' }}>{q.label}</span>
+                      <div style={{ display: 'flex', gap: '3px', flex: 1 }}>
+                        {[0,1,2,3,4].map(function(i) {
+                          const ativo = q.label === 'BOM' ? 5 : q.label === 'REGULAR' ? 3 : q.label === 'FRACO' ? 1 : 0
+                          return <span key={i} style={{ flex: 1, height: '4px', borderRadius: '2px', background: i < ativo ? q.cor : '#e5e7eb' }} />
+                        })}
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', gap: '20px' }}>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Surf</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black' }}>{(d.min != null && d.max != null) ? d.min.toFixed(1) + '-' + d.max.toFixed(1) + 'm' : '--'}</div>
+                      </div>
+                      <div>
+                        <div style={{ fontSize: '10px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Vento</div>
+                        <div style={{ fontSize: '16px', fontWeight: '700', color: 'black', display: 'flex', alignItems: 'center', gap: '5px' }}>{d.vento != null ? Math.round(d.vento) + ' km/h ' + direcaoVento(d.dir) : '--'}{d.vento != null && <SetaVentoEl graus={d.dir} />}</div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              )
+            })}
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </div>
+  )
+}
