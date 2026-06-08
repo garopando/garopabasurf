@@ -73,15 +73,11 @@ function curvaPath(vals, largura, altura) {
 
 function GraficoFundo({ vals }) {
   if (!vals || vals.length === 0) return null
-  const limpos = vals.filter(function(v){ return v != null })
-  const maxV = limpos.length ? Math.max.apply(null, limpos) : 1
+  const largura = 1000, altura = 100
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'flex-end', gap: '2px', padding: '0 1px', zIndex: 0 }}>
-      {vals.map(function(v, i) {
-        const h = v != null && maxV > 0 ? Math.max(8, (v / maxV) * 100) : 8
-        return <div key={i} style={{ flex: 1, height: h + '%', background: '#cdeeeb', borderRadius: '2px 2px 0 0' }} />
-      })}
-    </div>
+    <svg viewBox={'0 0 ' + largura + ' ' + altura} preserveAspectRatio='none' style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0 }}>
+      <path d={curvaPath(vals, largura, altura)} fill='#dbe4ec' opacity='0.6' />
+    </svg>
   )
 }
 
