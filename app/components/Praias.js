@@ -75,11 +75,18 @@ function GraficoFundo({ vals }) {
   if (!vals || vals.length === 0) return null
   const limpos = vals.filter(function(v){ return v != null })
   const maxV = limpos.length ? Math.max.apply(null, limpos) : 1
+  function cor(v) {
+    if (v == null) return '#cdeeeb'
+    const r = v / (maxV || 1)
+    if (r < 0.4) return '#cdeeeb'
+    if (r < 0.7) return '#9bdbd5'
+    return '#5dcaa5'
+  }
   return (
-    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'flex-end', gap: '1px', zIndex: 0, opacity: 0.5 }}>
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'flex-end', gap: '3px', padding: '0 2px', zIndex: 0, opacity: 0.55 }}>
       {vals.map(function(v, i) {
         const h = v != null && maxV > 0 ? Math.max(6, (v / maxV) * 100) : 6
-        return <div key={i} style={{ flex: 1, height: h + '%', background: '#5dcaa5', borderRadius: '1px 1px 0 0' }} />
+        return <div key={i} style={{ flex: 1, height: h + '%', background: cor(v), borderRadius: '2px 2px 0 0' }} />
       })}
     </div>
   )
