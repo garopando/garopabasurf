@@ -73,11 +73,15 @@ function curvaPath(vals, largura, altura) {
 
 function GraficoFundo({ vals }) {
   if (!vals || vals.length === 0) return null
-  const largura = 1000, altura = 100
+  const limpos = vals.filter(function(v){ return v != null })
+  const maxV = limpos.length ? Math.max.apply(null, limpos) : 1
   return (
-    <svg viewBox={'0 0 ' + largura + ' ' + altura} preserveAspectRatio='none' style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 0 }}>
-      <path d={curvaPath(vals, largura, altura)} fill='#dbe4ec' opacity='0.6' />
-    </svg>
+    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'flex-end', gap: '1px', zIndex: 0, opacity: 0.5 }}>
+      {vals.map(function(v, i) {
+        const h = v != null && maxV > 0 ? Math.max(6, (v / maxV) * 100) : 6
+        return <div key={i} style={{ flex: 1, height: h + '%', background: '#5dcaa5', borderRadius: '1px 1px 0 0' }} />
+      })}
+    </div>
   )
 }
 
@@ -85,6 +89,7 @@ export default function Praias() {
   const [dados, setDados] = useState({})
   const [dias, setDias] = useState([])
   const [atual, setAtual] = useState({})
+  const [horas, setHoras] = useState({})
 
   const ranqueadas = praias.slice().sort(function(a, b) {
     const ca = atual[a.slug] || {}
@@ -94,7 +99,7 @@ export default function Praias() {
 
   useEffect(function() {
     praias.forEach(function(p) {
-      const url = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&daily=wave_height_max&current=wave_height&forecast_days=5&timezone=America/Sao_Paulo'
+      const url = 'https://marine-api.open-meteo.com/v1/marine?latitude=' + p.lat + '&longitude=' + p.lon + '&daily=wave_height_max&hourly=wave_height&current=wave_height&forecast_days=5&timezone=America/Sao_Paulo'
       fetch(url).then(function(r){return r.json()}).then(function(res) {
         if (res && res.daily && res.daily.time) {
           if (dias.length === 0) {
@@ -109,6 +114,13 @@ export default function Praias() {
             novo[p.slug] = res.daily.wave_height_max
             return novo
           })
+          if (res.hourly && res.hourly.wave_height) {
+            setHoras(function(prev) {
+              const novo = Object.assign({}, prev)
+              novo[p.slug] = res.hourly.wave_height.filter(function(v, i){ return i % 3 === 0 })
+              return novo
+            })
+          }
           const ondaAgora = res.current ? res.current.wave_height : null
           setAtual(function(prev) {
             const novo = Object.assign({}, prev)
@@ -148,7 +160,7 @@ export default function Praias() {
           const vals = dados[p.slug] || []
           return (
             <a key={p.slug} href={'/praias/' + p.slug} onMouseEnter={function(e){ e.currentTarget.style.background='#f7f9fb' }} onMouseLeave={function(e){ e.currentTarget.style.background='transparent' }} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '160px repeat(5, 1fr)', alignItems: 'center', padding: '14px 0', borderTop: '1px solid #f3f4f6', position: 'relative', borderRadius: '8px', transition: 'background 0.15s' }}>
-              <div style={{ position: 'absolute', left: '160px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={vals} /></div>
+              <div style={{ position: 'absolute', left: '160px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={horas[p.slug] || []} /></div>
               <div className={lexend.className} style={{ fontSize: '16px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em', position: 'relative', zIndex: 1 }}>{p.nome}</div>
               {[0,1,2,3,4].map(function(i) {
                 const v = vals[i]
@@ -200,7 +212,7 @@ export default function Praias() {
               const vals = dados[p.slug] || []
               return (
                 <a key={p.slug} href={'/praias/' + p.slug} style={{ textDecoration: 'none', display: 'grid', gridTemplateColumns: '110px repeat(5, 1fr)', alignItems: 'center', padding: '12px 0', borderTop: '1px solid #f3f4f6', position: 'relative', borderRadius: '8px' }}>
-                  <div style={{ position: 'absolute', left: '110px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={vals} /></div>
+                  <div style={{ position: 'absolute', left: '110px', right: 0, top: 0, bottom: 0, zIndex: 0 }}><GraficoFundo vals={horas[p.slug] || []} /></div>
                   <div className={lexend.className} style={{ fontSize: '14px', color: '#111', fontWeight: '500', letterSpacing: '-0.03em', position: 'relative', zIndex: 1 }}>{p.nome}</div>
                   {[0,1,2,3,4].map(function(i) {
                     const v = vals[i]
